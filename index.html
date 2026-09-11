@@ -128,6 +128,10 @@ nav button.on{color:var(--accent);box-shadow:inset 0 2px 0 var(--accent)}
 .bars{display:flex;gap:2px;margin-top:7px}
 .bars i{flex:1;height:4px;border-radius:2px}
 .mini svg{display:block;width:100%;height:100%}
+.mmw{position:relative;overflow:hidden;background:var(--map-bg)}
+.mmt{position:absolute;inset:0;filter:var(--tilefx)}
+.mmt img{position:absolute;width:256px;height:256px;max-width:none}
+.mmw svg{position:absolute;inset:0;width:100%;height:100%}
 
 .legend{margin-top:18px;padding:14px;background:var(--sheet);border:1px solid var(--rule-soft);border-radius:12px}
 .legend h4{margin:0 0 10px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);font-weight:600}
@@ -347,9 +351,12 @@ function statusTxt(s){
   if(s.state==='resting') return 'Μη διαθέσιμο';
   return 'Διαθέσιμος';
 }
+/* Περιοχές που μετρούν ως μία, όσο κοντά κι αν τις γράφει το φύλλο */
+var TOWN_ALIAS={'Διασταύρωση Παλαιοκάστρου':'Παλαιόκαστρο','Διασταύρωση':'Παλαιόκαστρο'};
+function townOf(t){ var n=String(t.town||'').trim(); return TOWN_ALIAS[n]||n; }
 function all(){ var now=new Date();
   return D.territories.filter(function(t){ return String(t.active).toUpperCase()!=='FALSE'; })
-    .map(function(t){ t.s=statusOf(t,now); return t; }); }
+    .map(function(t){ t.town=townOf(t); t.s=statusOf(t,now); return t; }); }
 function byId(id){ return all().filter(function(t){ return t.id===id; })[0]; }
 function inTown(n){ return all().filter(function(t){ return t.town===n; }); }
 function match(t){ if(!q) return true;
@@ -374,61 +381,60 @@ function wy(lat,z){ var r=lat*Math.PI/180;
  * Μικρός χάρτης σε SVG: αληθινά πλακίδια OpenStreetMap στο φόντο
  * και από πάνω τα πολύγωνα. Χωρίς Leaflet — ελαφρύ για λίστες.
  */
-function miniSvg(list,w,h,highlight,noTiles){
-  var b=bboxOf(list);
-  if(!b) return '<svg viewBox="0 0 '+w+' '+h+'"><rect width="'+w+'" height="'+h+'" fill="var(--map-bg)"/></svg>';
-  var pad=0.10;
+function projOf(list,w,h,pad){
+  var b=bboxOf(list); if(!b) return null;
+  pad=pad==null?0.05:pad;
   var z=1;
   for(var zz=18;zz>=1;zz--){
     var pw=Math.abs(wx(b[3],zz)-wx(b[1],zz)), ph=Math.abs(wy(b[0],zz)-wy(b[2],zz));
     if(pw<=w*(1-2*pad) && ph<=h*(1-2*pad)){ z=zz; break; }
   }
   var x0=wx(b[1],z), x1=wx(b[3],z), y0=wy(b[2],z), y1=wy(b[0],z);
-  var ox=(w-(x1-x0))/2-x0, oy=(h-(y1-y0))/2-y0;
-  var uid='m'+Math.random().toString(36).slice(2,8);
-  /* Το CSS filter δεν εφαρμόζεται αξιόπιστα σε <image> μέσα σε SVG στο Safari/iOS,
-     γι' αυτό το ίδιο εφέ γίνεται εδώ με γνήσιο SVG filter — ίδιο αποτέλεσμα με
-     τους μεγάλους χάρτες (σκούρο: μαύρο φόντο, ανοιχτοί δρόμοι). */
-  var dk=document.documentElement.getAttribute('data-theme')!=='light';
-  var invert=dk?'<feComponentTransfer><feFuncR type="table" tableValues="1 0"/>'+
-    '<feFuncG type="table" tableValues="1 0"/><feFuncB type="table" tableValues="1 0"/>'+
-    '</feComponentTransfer>':'';
-  var br=dk?0.62:1.16;   /* brightness, μετά contrast .62 — ίδια σειρά με το CSS filter */
-  var lin=function(s,i){ return '<feComponentTransfer>'+
-    '<feFuncR type="linear" slope="'+s+'" intercept="'+i+'"/>'+
-    '<feFuncG type="linear" slope="'+s+'" intercept="'+i+'"/>'+
-    '<feFuncB type="linear" slope="'+s+'" intercept="'+i+'"/></feComponentTransfer>'; };
-  var tfx='<filter id="'+uid+'f" color-interpolation-filters="sRGB">'+
-    '<feColorMatrix type="saturate" values="0"/>'+invert+lin(br,0)+lin(0.62,0.19)+'</filter>';
-  var g='<svg viewBox="0 0 '+w+' '+h+'" aria-hidden="true">'+
-    '<defs><clipPath id="'+uid+'"><rect width="'+w+'" height="'+h+'"/></clipPath>'+tfx+'</defs>'+
-    '<rect width="'+w+'" height="'+h+'" fill="var(--map-bg)"/><g clip-path="url(#'+uid+')">';
-  if(!noTiles){
-    var tx0=Math.floor((0-ox)/256), tx1=Math.floor((w-ox)/256);
-    var ty0=Math.floor((0-oy)/256), ty1=Math.floor((h-oy)/256);
-    var n=Math.pow(2,z), count=0;
-    g+='<g class="tiles-img" filter="url(#'+uid+'f)">';
-    for(var tx=tx0;tx<=tx1&&count<8;tx++) for(var ty=ty0;ty<=ty1&&count<8;ty++){
-      if(ty<0||ty>=n) continue;
-      var xx=((tx%n)+n)%n;
-      g+='<image href="https://tile.openstreetmap.org/'+z+'/'+xx+'/'+ty+'.png" '+
-         'x="'+(tx*256+ox).toFixed(1)+'" y="'+(ty*256+oy).toFixed(1)+'" width="256" height="256"/>';
-      count++;
-    }
-    g+='</g>';
-  }
+  return {z:z, ox:(w-(x1-x0))/2-x0, oy:(h-(y1-y0))/2-y0};
+}
+function polyPaths(list,p,highlight){
+  var out='';
   list.forEach(function(t){
     var gg=geoOf(t.id); if(!gg||!gg.polygons) return;
     var hi=!highlight||t.id===highlight;
     var c=highlight?(t.id===highlight?col(t.s):'var(--idle)'):colMode(t.s);
-    gg.polygons.forEach(function(p){
-      var d=p.coords.map(function(cc,i){
-        return (i?'L':'M')+(wx(cc[1],z)+ox).toFixed(1)+' '+(wy(cc[0],z)+oy).toFixed(1); }).join('')+'Z';
-      g+='<path d="'+d+'" fill="'+c+'" fill-opacity="'+(hi?.55:.16)+'" stroke="'+c+'" '+
-         'stroke-width="'+(hi?1.5:1)+'" stroke-linejoin="round"/>';
+    gg.polygons.forEach(function(pl){
+      var d=pl.coords.map(function(cc,i){
+        return (i?'L':'M')+(wx(cc[1],p.z)+p.ox).toFixed(1)+' '+(wy(cc[0],p.z)+p.oy).toFixed(1); }).join('')+'Z';
+      out+='<path d="'+d+'" fill="'+c+'" fill-opacity="'+(hi?.55:.16)+'" stroke="'+c+'" '+
+        'stroke-width="'+(hi?1.5:1)+'" stroke-linejoin="round"/>';
     });
   });
-  return g+'</g></svg>';
+  return out;
+}
+/** Μικρογραφία χωρίς πλακίδια — μόνο τα σχήματα. Ελαφριά, για λίστες. */
+function miniSvg(list,w,h,highlight){
+  var p=projOf(list,w,h);
+  if(!p) return '<svg viewBox="0 0 '+w+' '+h+'"><rect width="'+w+'" height="'+h+'" fill="var(--map-bg)"/></svg>';
+  return '<svg viewBox="0 0 '+w+' '+h+'" aria-hidden="true">'+
+    '<rect width="'+w+'" height="'+h+'" fill="var(--map-bg)"/>'+polyPaths(list,p,highlight)+'</svg>';
+}
+/**
+ * Μικρός χάρτης ΜΕ πλακίδια: κανονικές <img> μέσα σε div, όπως ακριβώς κάνει
+ * και το Leaflet στους μεγάλους χάρτες — το CSS filter δουλεύει έτσι παντού,
+ * ενώ σε <image> μέσα σε SVG το Safari/iOS το αγνοεί.
+ */
+function miniTiles(list,w,h,highlight){
+  var p=projOf(list,w,h);
+  if(!p) return '<div class="mmw" style="width:'+w+'px;height:'+h+'px"></div>';
+  var tx0=Math.floor((0-p.ox)/256), tx1=Math.floor((w-p.ox)/256);
+  var ty0=Math.floor((0-p.oy)/256), ty1=Math.floor((h-p.oy)/256);
+  var n=Math.pow(2,p.z), count=0, imgs='';
+  for(var tx=tx0;tx<=tx1&&count<12;tx++) for(var ty=ty0;ty<=ty1&&count<12;ty++){
+    if(ty<0||ty>=n) continue;
+    var xx=((tx%n)+n)%n;
+    imgs+='<img alt="" src="https://tile.openstreetmap.org/'+p.z+'/'+xx+'/'+ty+'.png" '+
+      'style="left:'+(tx*256+p.ox).toFixed(1)+'px;top:'+(ty*256+p.oy).toFixed(1)+'px">';
+    count++;
+  }
+  return '<div class="mmw" style="width:'+w+'px;height:'+h+'px">'+
+    '<div class="mmt">'+imgs+'</div>'+
+    '<svg viewBox="0 0 '+w+' '+h+'" aria-hidden="true">'+polyPaths(list,p,highlight)+'</svg></div>';
 }
 
 /* ---------- Leaflet: μόνο για μεγάλους χάρτες ---------- */
@@ -458,7 +464,7 @@ function drawLeaflet(elId,list,opts){
     if(main) (g.points||[]).forEach(function(pt){
       L.circleMarker(pt.at,{radius:5,color:'#fff',weight:2,fillColor:c,fillOpacity:1}).addTo(m); });
   });
-  if(b) m.fitBounds(b,{padding:[20,20]}); else m.setView([40.27,23.27],11);
+  if(b) m.fitBounds(b,{padding:[10,10]}); else m.setView([40.27,23.27],11);
   setTimeout(function(){ try{ m.invalidateSize(); }catch(e){} },60);
   return m;
 }
@@ -584,7 +590,7 @@ function viewMap(){
     '<div class="sum"><b style="color:var(--n5)">'+old.length+'</b><span>12+ μήνες</span></div></div><div class="tiles">';
   towns.forEach(function(tn,idx){
     h+='<button class="tile" onclick="openTown(\''+esc(tn.name)+'\')">'+
-      '<div class="mini" data-mm="'+idx+'">'+miniSvg(tn.list,150,96,null,true)+'</div><div class="ft">'+
+      '<div class="mini" data-mm="'+idx+'">'+miniSvg(tn.list,150,96)+'</div><div class="ft">'+
       '<div class="tn">'+esc(tn.name)+'</div>'+
       '<div class="tc">'+tn.list.length+' τομείς'+(tn.need>0?' · '+monthsTxt(tn.need>900?Infinity:tn.need):'')+'</div>'+
       '<div class="bars">'+tn.list.map(function(t){ return '<i style="background:'+colMode(t.s)+'"></i>'; }).join('')+
@@ -601,14 +607,14 @@ function lazyTiles(towns){
   var els=document.querySelectorAll('.mini[data-mm]');
   if(!('IntersectionObserver' in window)){
     els.forEach(function(el){ var tn=towns[+el.getAttribute('data-mm')];
-      if(tn) el.innerHTML=miniSvg(tn.list,150,96); });
+      if(tn) el.innerHTML=miniTiles(tn.list,el.clientWidth||150,el.clientHeight||96); });
     return;
   }
   var io=new IntersectionObserver(function(entries){
     entries.forEach(function(en){
       if(!en.isIntersecting) return;
       var el=en.target, tn=towns[+el.getAttribute('data-mm')];
-      if(tn) el.innerHTML=miniSvg(tn.list,150,96);
+      if(tn) el.innerHTML=miniTiles(tn.list,el.clientWidth||150,el.clientHeight||96);
       io.unobserve(el);
     });
   },{rootMargin:'250px 0px'});
@@ -675,7 +681,7 @@ function rowFor(t,peers){
   else if(s.state==='resting') dt='επεστράφη '+fmt(s.lastReturned);
   else dt=s.never?'δεν εργάστηκε ποτέ':'επεστράφη '+fmt(s.lastReturned);
   return '<button class="row" onclick="open_(\''+t.id+'\')">'+
-    '<div class="thumb">'+miniSvg(peers||inTown(t.town),52,44,t.id,true)+'</div>'+
+    '<div class="thumb">'+miniSvg(peers||inTown(t.town),52,44,t.id)+'</div>'+
     '<div class="info"><div class="nm">'+esc(t.name)+'</div><div class="dt">'+dt+'</div></div>'+
     valFor(t)+'</button>';
 }
@@ -697,7 +703,7 @@ function viewList(){
   if(place==='all')
     h+='<div class="seg">'+
       '<button class="'+(filter==='ready'?'on':'')+'" onclick="filter=\'ready\';render()">Διαθέσιμοι '+ready.length+'</button>'+
-      '<button class="'+(filter==='resting'?'on':'')+'" onclick="filter=\'resting\';render()">Ανάπαυση '+rest.length+'</button>'+
+      '<button class="'+(filter==='resting'?'on':'')+'" onclick="filter=\'resting\';render()">Μη διαθέσιμοι '+rest.length+'</button>'+
       '<button class="'+(filter==='out'?'on':'')+'" onclick="filter=\'out\';render()">Δοσμένοι '+out.length+'</button></div>';
   h+='<div class="chips">'+places.map(function(p){
     return '<button class="chip '+(place===p?'on':'')+'" onclick="place=\''+esc(p)+'\';render()">'+
@@ -760,7 +766,7 @@ function viewPeople(){
       p.list.map(function(t){
         return '<button class="pitem" onclick="open_(\''+t.id+'\')">'+
           '<span class="pstem"></span>'+
-          '<span class="thumb">'+miniSvg(inTown(t.town),44,38,t.id,true)+'</span>'+
+          '<span class="thumb">'+miniSvg(inTown(t.town),44,38,t.id)+'</span>'+
           '<span class="info"><span class="nm">'+esc(t.name)+'</span>'+
           '<span class="dt">έως '+fmt(t.s.dueOn)+'</span></span>'+
           pill(t.s)+'</button>'; }).join('')+
@@ -780,7 +786,7 @@ function viewPerson(){
     h+='<h3>Έχει τώρα</h3>';
     p.list.forEach(function(t){
       h+='<button class="row" onclick="open_(\''+t.id+'\')">'+
-        '<div class="thumb">'+miniSvg(inTown(t.town),52,44,t.id,true)+'</div>'+
+        '<div class="thumb">'+miniSvg(inTown(t.town),52,44,t.id)+'</div>'+
         '<div class="info"><div class="nm">'+esc(t.name)+'</div>'+
         '<div class="dt">'+esc(t.town)+' · από '+fmt(t.s.dateOut)+' · έως '+fmt(t.s.dueOn)+'</div></div>'+
         valFor(t)+'</button>'; });
