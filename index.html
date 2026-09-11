@@ -43,7 +43,10 @@ header{flex:0 0 auto;padding:calc(13px + var(--safe-t)) 16px 10px;border-bottom:
 h1{margin:0;font-size:20px;font-weight:700;letter-spacing:-.02em}
 .sub{color:var(--faint);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;margin-top:3px}
 .hbtns{display:flex;gap:2px;flex:0 0 auto}
-.hbtns button{font-size:16px;color:var(--faint);padding:4px 6px;border-radius:8px}
+.hbtns button{width:36px;height:36px;display:flex;align-items:center;justify-content:center;
+  color:var(--muted);border-radius:10px}
+.hbtns button:active{background:var(--raised)}
+.hbtns svg{width:19px;height:19px;display:block}
 main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 16px 24px}
 nav{flex:0 0 auto;display:flex;border-top:1px solid var(--rule-soft);background:var(--sheet);padding-bottom:var(--safe-b)}
 nav button{flex:1;padding:12px 4px 14px;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
@@ -148,6 +151,12 @@ nav button.on{color:var(--accent);box-shadow:inset 0 2px 0 var(--accent)}
 .leaflet-container{background:var(--map-bg);font:inherit}
 .leaflet-control-attribution{font-size:9px;background:rgba(128,128,128,.16)!important;color:var(--faint)!important}
 .leaflet-control-attribution a{color:var(--muted)!important}
+.leaflet-control-zoom{border:1px solid var(--rule)!important;border-radius:9px!important;overflow:hidden;
+  box-shadow:0 6px 18px -8px rgba(0,0,0,.5)!important}
+.leaflet-control-zoom a{background:var(--sheet)!important;color:var(--text)!important;
+  border-color:var(--rule)!important}
+.leaflet-control-zoom a:hover{background:var(--raised)!important}
+.leaflet-control-zoom-in{border-bottom:1px solid var(--rule)!important}
 #full{position:fixed;inset:0;z-index:1000;background:var(--ground);display:none;flex-direction:column}
 #full.on{display:flex}
 #full .bar{flex:0 0 auto;display:flex;justify-content:space-between;align-items:center;gap:12px;
@@ -179,8 +188,10 @@ h3{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--fa
 
 .scrim{position:fixed;inset:0;background:rgba(8,11,14,.62);display:flex;align-items:flex-end;z-index:1100}
 .card{background:var(--sheet);border-top:1px solid var(--rule);border-radius:16px 16px 0 0;width:100%;
-  padding:10px 16px calc(18px + var(--safe-b));max-height:88vh;overflow-y:auto}
-.grab{display:block;width:36px;height:4px;border-radius:99px;background:var(--rule);margin:2px auto 14px}
+  padding:10px 16px calc(18px + var(--safe-b));max-height:88vh;max-height:88svh;overflow-y:auto;
+  overscroll-behavior:contain;touch-action:pan-y}
+.grab{display:block;width:36px;height:4px;border-radius:99px;background:var(--rule);margin:2px auto 14px;
+  touch-action:none}
 .card h2{margin:0 0 4px;font-size:17px;font-weight:700}
 .card .cs{font-size:12px;color:var(--faint);margin-bottom:14px}
 .opt{display:flex;align-items:center;gap:12px;padding:12px;margin-bottom:8px;border:1px solid var(--rule-soft);
@@ -191,7 +202,7 @@ h3{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--fa
   background:var(--accent-wash);border:1px solid var(--accent-dim);color:var(--accent);font-size:16px}
 label{display:block;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);margin:12px 0 5px}
 input,select{width:100%;background:var(--raised);border:1px solid var(--rule);border-radius:9px;
-  padding:11px 12px;color:var(--text);font:inherit}
+  padding:11px 12px;color:var(--text);font:inherit;font-size:16px}
 .check{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:13.5px;color:var(--muted)}
 .check input{width:20px;height:20px;flex:0 0 auto;accent-color:var(--accent)}
 
@@ -224,9 +235,17 @@ input,select{width:100%;background:var(--raised);border:1px solid var(--rule);bo
   <header>
     <div><h1 id="ttl">Τομείς</h1><div class="sub" id="sub">φόρτωση…</div></div>
     <div class="hbtns">
-      <button onclick="openReport()" title="Αναφορά / Εκτύπωση">⎙</button>
-      <button id="themeBtn" onclick="toggleTheme()" title="Φωτεινό / σκοτεινό">◐</button>
-      <button onclick="openSettings()" title="Ρυθμίσεις">⚙</button>
+      <button onclick="openReport()" title="Αναφορά / Εκτύπωση">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/>
+        </svg>
+      </button>
+      <button id="themeBtn" onclick="toggleTheme()" title="Φωτεινό / σκοτεινό"></button>
+      <button onclick="openSettings()" title="Ρυθμίσεις">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+      </button>
     </div>
   </header>
   <main id="main"><div class="empty"><span class="spin"></span><br><br>Φόρτωση…</div></main>
@@ -302,7 +321,6 @@ function statusOf(t,now){
   return {state:'ready',rested:r,band:r<6?1:r<8?2:r<10?3:r<12?4:5,lastReturned:ld,rows:rows};
 }
 function isOut(s){ return ['out','due','overdue'].indexOf(s.state)>=0; }
-function cssVar(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
 function col(s){
   if(s.state==='overdue') return 'var(--coral)';
   if(s.state==='due') return 'var(--amber)';
@@ -376,7 +394,7 @@ function miniSvg(list,w,h,highlight,noTiles){
     var ty0=Math.floor((0-oy)/256), ty1=Math.floor((h-oy)/256);
     var n=Math.pow(2,z), count=0;
     g+='<g class="tiles-img" opacity=".85">';
-    for(var tx=tx0;tx<=tx1&&count<12;tx++) for(var ty=ty0;ty<=ty1&&count<12;ty++){
+    for(var tx=tx0;tx<=tx1&&count<8;tx++) for(var ty=ty0;ty<=ty1&&count<8;ty++){
       if(ty<0||ty>=n) continue;
       var xx=((tx%n)+n)%n;
       g+='<image href="https://tile.openstreetmap.org/'+z+'/'+xx+'/'+ty+'.png" '+
@@ -441,11 +459,15 @@ function closeFull(){ $('#full').classList.remove('on');
 function fullTown(n,focus){ openFull(n,inTown(n).length+' τομείς',inTown(n),focus); }
 
 /* ---------- θέμα, δεδομένα ---------- */
+var SUN_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+
+  '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+var MOON_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+
+  '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
 function applyTheme(){
   var t=localStorage.getItem('tomeis_theme');
   if(!t) t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';
   document.documentElement.setAttribute('data-theme',t);
-  var b=$('#themeBtn'); if(b) b.textContent=t==='light'?'☾':'☀';
+  var b=$('#themeBtn'); if(b) b.innerHTML=t==='light'?MOON_SVG:SUN_SVG;
 }
 function toggleTheme(){ var c=document.documentElement.getAttribute('data-theme');
   localStorage.setItem('tomeis_theme',c==='light'?'dark':'light'); applyTheme(); render(); }
@@ -546,9 +568,9 @@ function viewMap(){
     '<div class="sum"><b>'+ready.length+'</b><span>διαθέσιμοι</span></div>'+
     '<div class="sum"><b>'+rest.length+'</b><span>μη διαθέσιμοι</span></div>'+
     '<div class="sum"><b style="color:var(--n5)">'+old.length+'</b><span>12+ μήνες</span></div></div><div class="tiles">';
-  towns.forEach(function(tn){
+  towns.forEach(function(tn,idx){
     h+='<button class="tile" onclick="openTown(\''+esc(tn.name)+'\')">'+
-      '<div class="mini">'+miniSvg(tn.list,150,96)+'</div><div class="ft">'+
+      '<div class="mini" data-mm="'+idx+'">'+miniSvg(tn.list,150,96,null,true)+'</div><div class="ft">'+
       '<div class="tn">'+esc(tn.name)+'</div>'+
       '<div class="tc">'+tn.list.length+' τομείς'+(tn.need>0?' · '+monthsTxt(tn.need>900?Infinity:tn.need):'')+'</div>'+
       '<div class="bars">'+tn.list.map(function(t){ return '<i style="background:'+colMode(t.s)+'"></i>'; }).join('')+
@@ -557,6 +579,26 @@ function viewMap(){
   h+='</div>'+legend();
   if(!towns.length) h=searchBox('Αναζήτηση')+'<div class="empty">Καμία περιοχή.</div>';
   $('#main').innerHTML=h;
+  lazyTiles(towns);
+}
+/** Φορτώνει τα πλακίδια χάρτη (φόντο) μόνο για τα tiles που μπαίνουν στην οθόνη —
+ * αλλιώς ένα τηλέφωνο ζητάει δεκάδες εικόνες ταυτόχρονα και όλα αργούν. */
+function lazyTiles(towns){
+  var els=document.querySelectorAll('.mini[data-mm]');
+  if(!('IntersectionObserver' in window)){
+    els.forEach(function(el){ var tn=towns[+el.getAttribute('data-mm')];
+      if(tn) el.innerHTML=miniSvg(tn.list,150,96); });
+    return;
+  }
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(!en.isIntersecting) return;
+      var el=en.target, tn=towns[+el.getAttribute('data-mm')];
+      if(tn) el.innerHTML=miniSvg(tn.list,150,96);
+      io.unobserve(el);
+    });
+  },{rootMargin:'250px 0px'});
+  els.forEach(function(el){ io.observe(el); });
 }
 function legend(){
   var free=mapMode!=='work', work=mapMode!=='free';
@@ -785,7 +827,18 @@ function modal(html){
   var d=document.createElement('div'); d.className='scrim';
   d.innerHTML='<div class="card"><span class="grab"></span>'+html+'</div>';
   d.onclick=function(e){ if(e.target===d) d.remove(); };
-  document.body.appendChild(d); return d;
+  document.body.appendChild(d);
+  var card=d.querySelector('.card'), grab=d.querySelector('.grab');
+  var sy=0, dy=0, dragging=false;
+  grab.addEventListener('touchstart',function(e){ dragging=true; sy=e.touches[0].clientY; dy=0;
+    card.style.transition='none'; },{passive:true});
+  grab.addEventListener('touchmove',function(e){ if(!dragging) return;
+    dy=Math.max(0,e.touches[0].clientY-sy); card.style.transform='translateY('+dy+'px)'; },{passive:true});
+  grab.addEventListener('touchend',function(){ if(!dragging) return; dragging=false;
+    card.style.transition='transform .22s ease';
+    if(dy>70){ card.style.transform='translateY(100%)'; setTimeout(function(){ d.remove(); },200); }
+    else card.style.transform=''; });
+  return d;
 }
 function doGiveOut(id){
   var t=byId(id);
