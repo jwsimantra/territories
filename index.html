@@ -1,0 +1,1079 @@
+<!doctype html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Τομείς</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+:root{
+  --ground:#151A20; --sheet:#1D242C; --raised:#262F39;
+  --rule:#313C48; --rule-soft:#252E37;
+  --text:#E4EBF2; --muted:#93A3B3; --faint:#6B7A88;
+  --accent:#6FD3C0; --accent-ink:#0F1A18; --accent-dim:#3E8C7E; --accent-wash:rgba(111,211,192,.10);
+  --amber:#EBB37A; --coral:#E88C76; --blue:#7FA6E8; --slate:#5A6875;
+  --n1:#27544E; --n2:#336F66; --n3:#43907F; --n4:#5FBCA8; --n5:#9DECDA;
+  --idle:#7E8D9B;
+  --map-bg:#10151A;
+  --tilefx:grayscale(1) invert(1) brightness(.62) contrast(.62);
+  --safe-b:env(safe-area-inset-bottom,0px); --safe-t:env(safe-area-inset-top,0px);
+}
+:root[data-theme="light"]{
+  --ground:#F2F5F4; --sheet:#FFFFFF; --raised:#EAEFEE;
+  --rule:#D2D9D7; --rule-soft:#E5EAE9;
+  --text:#151C22; --muted:#57646F; --faint:#84919D;
+  --accent:#127966; --accent-ink:#FFFFFF; --accent-dim:#9BD3C7; --accent-wash:rgba(18,121,102,.08);
+  --amber:#A96A21; --coral:#BC4C33; --blue:#3665BE; --slate:#8A97A2;
+  --n1:#D3E9E3; --n2:#A4D6C8; --n3:#69B8A3; --n4:#2F8B76; --n5:#0B5B4D;
+  --idle:#9BA7AE;
+  --map-bg:#F6F7F7;
+  --tilefx:grayscale(1) brightness(1.16) contrast(.62);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+body{background:var(--ground);color:var(--text);
+  font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif;
+  overscroll-behavior-y:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+#app{display:flex;flex-direction:column;height:100%}
+header{flex:0 0 auto;padding:calc(13px + var(--safe-t)) 16px 10px;border-bottom:1px solid var(--rule-soft);
+  display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+h1{margin:0;font-size:20px;font-weight:700;letter-spacing:-.02em}
+.sub{color:var(--faint);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;margin-top:3px}
+.hbtns{display:flex;gap:2px;flex:0 0 auto}
+.hbtns button{font-size:16px;color:var(--faint);padding:4px 6px;border-radius:8px}
+main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 16px 24px}
+nav{flex:0 0 auto;display:flex;border-top:1px solid var(--rule-soft);background:var(--sheet);padding-bottom:var(--safe-b)}
+nav button{flex:1;padding:12px 4px 14px;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
+nav button.on{color:var(--accent);box-shadow:inset 0 2px 0 var(--accent)}
+
+.search{display:flex;align-items:center;gap:9px;background:var(--sheet);border:1px solid var(--rule-soft);
+  border-radius:10px;padding:0 12px;margin-bottom:9px}
+.search input{flex:1;background:none;border:0;padding:10px 0;color:var(--text);font:inherit;min-width:0}
+.search input::placeholder{color:var(--faint)}
+.search span,.search button{color:var(--faint);font-size:14px}
+
+/* συμπαγής εναλλαγή */
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:2px;background:var(--raised);
+  border:1px solid var(--rule);border-radius:8px;padding:2px;margin-bottom:10px}
+.seg button{padding:6px 2px;border-radius:6px;font-size:11px;color:var(--muted);line-height:1.3}
+.seg button.on{background:var(--accent);color:var(--accent-ink);font-weight:700}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:11px}
+.chip{font-size:11.5px;padding:5px 10px;border-radius:99px;border:1px solid var(--rule);color:var(--muted)}
+.chip.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:700}
+.sums{display:flex;gap:8px;margin-bottom:12px}
+.sum{flex:1;background:var(--sheet);border:1px solid var(--rule-soft);border-radius:10px;padding:8px 10px}
+.sum b{display:block;font-size:20px;font-weight:700;letter-spacing:-.02em;line-height:1.1;font-variant-numeric:tabular-nums}
+.sum span{font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);display:block;margin-top:2px}
+
+.row{display:flex;gap:10px;align-items:center;background:var(--sheet);border:1px solid var(--rule-soft);
+  border-radius:12px;padding:9px 11px 9px 9px;margin-bottom:8px;width:100%;text-align:left}
+.row .thumb{width:52px;height:44px;border-radius:8px;overflow:hidden;flex:0 0 auto;background:var(--map-bg)}
+.row .thumb svg{display:block;width:100%;height:100%}
+.row .info{flex:1;min-width:0}
+.row .nm{font-size:14.5px;font-weight:600;letter-spacing:-.01em}
+.row .dt{font-size:11.5px;color:var(--faint);margin-top:2px}
+.row .val{text-align:right;font-size:15px;font-weight:700;font-variant-numeric:tabular-nums;flex:0 0 auto}
+.row .val em{display:block;font-style:normal;font-size:9px;letter-spacing:.08em;color:var(--faint);
+  font-weight:400;margin-top:1px;text-transform:uppercase}
+.pill{font-size:10px;font-weight:700;letter-spacing:.05em;padding:4px 8px;border-radius:99px;
+  white-space:nowrap;text-transform:uppercase;flex:0 0 auto}
+.pill.ok{color:var(--accent);background:var(--accent-wash);border:1px solid var(--accent-dim)}
+.pill.due{color:var(--amber);background:rgba(235,179,122,.14);border:1px solid rgba(235,179,122,.4)}
+.pill.late{color:var(--coral);background:rgba(232,140,118,.14);border:1px solid rgba(232,140,118,.45)}
+.pill.out{color:var(--blue);background:rgba(127,166,232,.14);border:1px solid rgba(127,166,232,.4)}
+.pill.rest{color:var(--muted);background:var(--raised);border:1px solid var(--rule)}
+
+/* ομάδα ατόμου */
+.pgroup{background:var(--sheet);border:1px solid var(--rule-soft);border-radius:13px;
+  margin-bottom:10px;overflow:hidden}
+.phead{display:flex;align-items:center;gap:11px;padding:11px 12px;width:100%;text-align:left;
+  border-bottom:1px solid var(--rule-soft)}
+.phead .av{width:36px;height:36px;border-radius:11px;flex:0 0 auto;display:grid;place-items:center;
+  background:var(--accent-wash);border:1px solid var(--accent-dim);color:var(--accent);
+  font-size:13px;font-weight:700}
+.phead .info{flex:1;min-width:0;display:block}
+.phead .info>span{display:block}
+.phead .nm{font-size:15.5px;font-weight:600;letter-spacing:-.01em}
+.phead .dt{font-size:11px;color:var(--faint);margin-top:2px}
+.phead .count{flex:0 0 auto;min-width:34px;height:34px;padding:0 9px;border-radius:10px;
+  background:var(--raised);border:1px solid var(--rule);color:var(--text);
+  font-size:15px;font-weight:700;display:grid;place-items:center;font-variant-numeric:tabular-nums}
+.plist{padding:4px 8px 8px}
+.pitem{display:flex;align-items:center;gap:10px;padding:8px 6px 8px 0;width:100%;text-align:left;position:relative}
+.pitem+.pitem{border-top:1px solid var(--rule-soft)}
+.pstem{width:20px;flex:0 0 auto;align-self:stretch;position:relative}
+.pstem::before{content:"";position:absolute;left:9px;top:-9px;bottom:50%;border-left:1.5px solid var(--rule)}
+.pstem::after{content:"";position:absolute;left:9px;top:50%;width:9px;border-top:1.5px solid var(--rule)}
+.pitem:last-child .pstem::before{bottom:50%}
+.pitem .thumb{width:44px;height:38px;border-radius:7px;overflow:hidden;flex:0 0 auto;background:var(--map-bg)}
+.pitem .thumb svg{display:block;width:100%;height:100%}
+.pitem .info{flex:1;min-width:0;display:block}
+.pitem .info>span{display:block}
+.pitem .nm{font-size:13.5px;font-weight:600}
+.pitem .dt{font-size:11px;color:var(--faint);margin-top:1px}
+
+/* πλακίδια περιοχών */
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tile{background:var(--sheet);border:1px solid var(--rule-soft);border-radius:12px;overflow:hidden;text-align:left;padding:0}
+.tile .mini{height:96px;background:var(--map-bg)}
+.tile .ft{padding:8px 9px 9px}
+.tile .tn{font-size:13px;font-weight:600;letter-spacing:-.01em}
+.tile .tc{font-size:10px;color:var(--faint);margin-top:2px}
+.bars{display:flex;gap:2px;margin-top:7px}
+.bars i{flex:1;height:4px;border-radius:2px}
+.mini svg{display:block;width:100%;height:100%}
+.mini .tiles-img{filter:var(--tilefx)}
+
+.legend{margin-top:18px;padding:14px;background:var(--sheet);border:1px solid var(--rule-soft);border-radius:12px}
+.legend h4{margin:0 0 10px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);font-weight:600}
+.lramp{display:flex;gap:3px}
+.lramp i{flex:1;height:18px;border-radius:3px}
+.lramplab{display:flex;gap:3px;margin-top:5px}
+.lramplab span{flex:1;text-align:center;font-size:9.5px;color:var(--faint);font-variant-numeric:tabular-nums}
+.lgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;margin-top:14px}
+.lgrid div{display:flex;gap:8px;align-items:center;font-size:12px;color:var(--muted)}
+.lgrid i{width:14px;height:9px;border-radius:2px;flex:0 0 auto}
+
+.mapbox{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--rule-soft);
+  margin-bottom:12px;background:var(--map-bg)}
+.mapbox .lf{height:230px}
+.mapbox.big .lf{height:310px}
+.expand{position:absolute;right:8px;bottom:8px;z-index:500;background:var(--sheet);
+  border:1px solid var(--rule);border-radius:9px;padding:7px 11px;font-size:12px;font-weight:600;
+  box-shadow:0 6px 18px -8px rgba(0,0,0,.6)}
+.leaflet-tile-pane{filter:var(--tilefx)}
+.leaflet-container{background:var(--map-bg);font:inherit}
+.leaflet-control-attribution{font-size:9px;background:rgba(128,128,128,.16)!important;color:var(--faint)!important}
+.leaflet-control-attribution a{color:var(--muted)!important}
+#full{position:fixed;inset:0;z-index:1000;background:var(--ground);display:none;flex-direction:column}
+#full.on{display:flex}
+#full .bar{flex:0 0 auto;display:flex;justify-content:space-between;align-items:center;gap:12px;
+  padding:calc(10px + var(--safe-t)) 14px 10px;border-bottom:1px solid var(--rule-soft)}
+#full .bar b{font-size:15px;font-weight:600}
+#full .bar span{display:block;font-size:10.5px;color:var(--faint);letter-spacing:.08em;text-transform:uppercase;margin-top:2px}
+#full .lf{flex:1}
+.maplbl{background:var(--sheet);border:1px solid var(--rule);color:var(--text);border-radius:7px;
+  box-shadow:none;font-weight:600;font-size:12px;padding:3px 8px}
+.maplbl::before{display:none}
+
+.btns{display:flex;gap:8px;margin-bottom:12px}
+.btn{flex:1;text-align:center;padding:13px 6px;border-radius:10px;font-size:14.5px;font-weight:600;
+  background:var(--raised);border:1px solid var(--rule)}
+.btn.pri{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.warn{color:var(--coral);border-color:rgba(232,140,118,.45)}
+.btn:disabled{opacity:.45}
+.back{color:var(--faint);font-size:13.5px;padding:2px 0 12px}
+.kv{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--rule-soft);font-size:14px}
+.kv:last-of-type{border-bottom:0}
+.kv span{color:var(--faint);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;padding-top:3px}
+.kv b{font-weight:600;text-align:right}
+h3{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin:22px 0 8px;font-weight:600}
+.hist div{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--rule-soft);
+  color:var(--muted);font-size:13px}
+.hist div:last-child{border-bottom:0}
+.hist b{color:var(--text);font-weight:600}
+.empty{text-align:center;color:var(--faint);padding:40px 20px;font-size:14px}
+
+.scrim{position:fixed;inset:0;background:rgba(8,11,14,.62);display:flex;align-items:flex-end;z-index:1100}
+.card{background:var(--sheet);border-top:1px solid var(--rule);border-radius:16px 16px 0 0;width:100%;
+  padding:10px 16px calc(18px + var(--safe-b));max-height:88vh;overflow-y:auto}
+.grab{display:block;width:36px;height:4px;border-radius:99px;background:var(--rule);margin:2px auto 14px}
+.card h2{margin:0 0 4px;font-size:17px;font-weight:700}
+.card .cs{font-size:12px;color:var(--faint);margin-bottom:14px}
+.opt{display:flex;align-items:center;gap:12px;padding:12px;margin-bottom:8px;border:1px solid var(--rule-soft);
+  border-radius:11px;background:var(--raised);width:100%;text-align:left}
+.opt b{display:block;font-size:14.5px;font-weight:600}
+.opt small{display:block;font-size:11.5px;color:var(--faint);margin-top:2px}
+.opt .ic{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;flex:0 0 auto;
+  background:var(--accent-wash);border:1px solid var(--accent-dim);color:var(--accent);font-size:16px}
+label{display:block;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);margin:12px 0 5px}
+input,select{width:100%;background:var(--raised);border:1px solid var(--rule);border-radius:9px;
+  padding:11px 12px;color:var(--text);font:inherit}
+.check{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:13.5px;color:var(--muted)}
+.check input{width:20px;height:20px;flex:0 0 auto;accent-color:var(--accent)}
+
+#toast{position:fixed;left:16px;right:16px;bottom:calc(72px + var(--safe-b));background:var(--raised);
+  border:1px solid var(--accent-dim);border-radius:11px;padding:12px 14px;display:none;z-index:1200;
+  align-items:center;gap:12px;box-shadow:0 12px 30px -12px rgba(0,0,0,.7)}
+#toast.on{display:flex}
+#toast span{flex:1;font-size:13.5px}
+#toast button{color:var(--accent);font-weight:700;font-size:13px}
+.spin{width:18px;height:18px;border:2px solid var(--rule);border-top-color:var(--accent);
+  border-radius:50%;animation:sp .7s linear infinite;display:inline-block;vertical-align:-3px}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+#printArea{display:none}
+@media print{
+  body *{visibility:hidden}
+  #printArea,#printArea *{visibility:visible}
+  #printArea{display:block;position:absolute;left:0;top:0;width:100%;padding:0;margin:0}
+  .rhead h1{font-size:18px;margin:0 0 3px}
+  .rhead div{font-size:11px;color:#333}
+  .rtab{width:100%;border-collapse:collapse;margin-top:14px;font-size:10.5px}
+  .rtab th,.rtab td{border:1px solid #999;padding:3px 6px;text-align:left;vertical-align:top}
+  .rtab th{background:#eee}
+}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <header>
+    <div><h1 id="ttl">Τομείς</h1><div class="sub" id="sub">φόρτωση…</div></div>
+    <div class="hbtns">
+      <button onclick="openReport()" title="Αναφορά / Εκτύπωση">⎙</button>
+      <button id="themeBtn" onclick="toggleTheme()" title="Φωτεινό / σκοτεινό">◐</button>
+      <button onclick="openSettings()" title="Ρυθμίσεις">⚙</button>
+    </div>
+  </header>
+  <main id="main"><div class="empty"><span class="spin"></span><br><br>Φόρτωση…</div></main>
+  <nav>
+    <button data-tab="map" class="on" onclick="go('map')">Χάρτης</button>
+    <button data-tab="list" onclick="go('list')">Τομείς</button>
+    <button data-tab="people" onclick="go('people')">Άτομα</button>
+  </nav>
+</div>
+
+<div id="full"><div class="bar"><div id="fullTtl"></div>
+  <button class="btn" style="flex:0 0 auto;padding:9px 16px" onclick="closeFull()">Κλείσιμο</button></div>
+  <div class="lf" id="fullMap"></div></div>
+
+<div id="toast"><span id="toastMsg"></span><button id="toastAct"></button></div>
+<div id="printArea"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+/* ==================================================================
+   Η ΜΟΝΗ ΓΡΑΜΜΗ ΠΟΥ ΙΣΩΣ ΧΡΕΙΑΣΤΕΙ ΝΑ ΑΛΛΑΞΕΙΣ
+   ================================================================== */
+var API = 'https://script.google.com/macros/s/AKfycbwRUO7Zf1Ngkx3HSNbu1DjIjPaAo2RWF8MSYGdJZIZeLDE3k5Nk_gogN6YNIiYw8ffi/exec';
+/* ================================================================== */
+
+var D={territories:[],assignments:[],people:[],settings:{},geo:null};
+var tab='map', filter='ready', pfilter='all', place='all', mapMode='free', q='',
+    detail=null, person=null, town=null, undoTimer=null, lmaps={};
+
+function $(s){ return document.querySelector(s); }
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+function today(){ return new Date().toISOString().slice(0,10); }
+function pd(s){ if(!s) return null; var p=String(s).slice(0,10).split('-');
+  return p.length===3?new Date(+p[0],+p[1]-1,+p[2]):null; }
+function fmt(d){ d=(typeof d==='string')?pd(d):d; if(!d) return '—';
+  return d.toLocaleDateString('el-GR',{day:'2-digit',month:'short',year:'numeric'}); }
+function addM(d,n){ var x=new Date(d.getTime()),day=x.getDate(); x.setMonth(x.getMonth()+n);
+  if(x.getDate()<day) x.setDate(0); return x; }
+function dys(a,b){ return Math.round((b-a)/86400000); }
+function monthsSince(d,now){ var m=(now.getFullYear()-d.getFullYear())*12+(now.getMonth()-d.getMonth());
+  if(now.getDate()<d.getDate()) m--; return m+Math.max(0,dys(addM(d,m),now))/30; }
+function dur(days){ days=Math.abs(Math.round(days));
+  if(days<14) return {n:days,u:days===1?'ημέρα':'ημέρες'};
+  if(days<60) return {n:Math.round(days/7),u:'εβδομάδες'};
+  var m=days/30.44; return {n:(m<10?m.toFixed(1):Math.round(m)),u:'μήνες'}; }
+function durTxt(d){ var x=dur(d); return x.n+' '+x.u; }
+function monthsTxt(m){ if(m===Infinity) return 'ποτέ';
+  if(m<1) return Math.round(m*30.44)+' ημέρες';
+  if(m<2) return Math.round(m*30.44/7)+' εβδομάδες';
+  return (m<10?m.toFixed(1):Math.round(m))+' μήνες'; }
+function initials(n){ return String(n).split(/\s+/).filter(Boolean).slice(0,2)
+  .map(function(w){ return w[0]; }).join('').toUpperCase(); }
+
+/* ---------- κατάσταση ---------- */
+function statusOf(t,now){
+  var rows=D.assignments.filter(function(a){ return a.territory_id===t.id; });
+  rows.sort(function(a,b){ return String(a.date_out).localeCompare(String(b.date_out)); });
+  var open=null; rows.forEach(function(r){ if(!r.date_in) open=r; });
+  if(open){
+    var out=pd(open.date_out), due=addM(out,D.settings.hold_months), left=dys(now,due);
+    return {state:left<0?'overdue':(left<=D.settings.warn_days?'due':'out'),
+      holder:open.person,rowId:open.row_id,dateOut:out,dueOn:due,
+      daysLeft:left,daysHeld:dys(out,now),rows:rows};
+  }
+  var rets=rows.filter(function(r){return r.date_in;}).map(function(r){return r.date_in;}).sort();
+  var last=rets.length?rets[rets.length-1]:(t.last_completed||'');
+  if(!last) return {state:'ready',rested:Infinity,never:true,band:5,rows:rows};
+  var ld=pd(last), r=monthsSince(ld,now);
+  if(r<D.settings.rest_months) return {state:'resting',rested:r,lastReturned:ld,readyOn:addM(ld,D.settings.rest_months),rows:rows};
+  return {state:'ready',rested:r,band:r<6?1:r<8?2:r<10?3:r<12?4:5,lastReturned:ld,rows:rows};
+}
+function isOut(s){ return ['out','due','overdue'].indexOf(s.state)>=0; }
+function cssVar(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+function col(s){
+  if(s.state==='overdue') return 'var(--coral)';
+  if(s.state==='due') return 'var(--amber)';
+  if(s.state==='out') return 'var(--blue)';
+  if(s.state==='resting') return 'var(--slate)';
+  return ['','var(--n1)','var(--n2)','var(--n3)','var(--n4)','var(--n5)'][s.band||1];
+}
+function colMode(s){
+  if(mapMode==='free') return isOut(s)?'var(--idle)':col(s);
+  if(mapMode==='work') return isOut(s)?col(s):'var(--idle)';
+  return col(s);
+}
+function pill(s){
+  if(s.state==='overdue') return '<span class="pill late">'+durTxt(s.daysLeft)+' πέρασαν</span>';
+  if(s.state==='due') return '<span class="pill due">'+durTxt(s.daysLeft)+'</span>';
+  if(s.state==='out') return '<span class="pill out">'+durTxt(s.daysLeft)+'</span>';
+  if(s.state==='resting') return '<span class="pill rest">μη διαθέσιμο</span>';
+  return '<span class="pill ok">διαθέσιμος</span>';
+}
+function statusTxt(s){
+  if(s.state==='overdue') return 'Εκπρόθεσμο · '+durTxt(s.daysLeft)+' πέρασαν';
+  if(s.state==='due') return 'Λήγει σε '+durTxt(s.daysLeft);
+  if(s.state==='out') return 'Δοσμένος · απομένουν '+durTxt(s.daysLeft);
+  if(s.state==='resting') return 'Μη διαθέσιμο';
+  return 'Διαθέσιμος';
+}
+function all(){ var now=new Date();
+  return D.territories.filter(function(t){ return String(t.active).toUpperCase()!=='FALSE'; })
+    .map(function(t){ t.s=statusOf(t,now); return t; }); }
+function byId(id){ return all().filter(function(t){ return t.id===id; })[0]; }
+function inTown(n){ return all().filter(function(t){ return t.town===n; }); }
+function match(t){ if(!q) return true;
+  return (t.name+' '+t.town+' '+t.id+' '+(t.s.holder||'')).toLowerCase().indexOf(q.toLowerCase())>=0; }
+
+/* ---------- γεωμετρία & πλακίδια χάρτη ---------- */
+function geoOf(id){ return D.geo&&D.geo.maps?D.geo.maps[id]:null; }
+function bboxOf(list){
+  var b=null;
+  list.forEach(function(t){ var g=geoOf(t.id); if(!g||!g.polygons) return;
+    g.polygons.forEach(function(p){ p.coords.forEach(function(c){
+      if(!b) b=[c[0],c[1],c[0],c[1]];
+      else{ b[0]=Math.min(b[0],c[0]); b[1]=Math.min(b[1],c[1]);
+            b[2]=Math.max(b[2],c[0]); b[3]=Math.max(b[3],c[1]); } }); }); });
+  return b;
+}
+function wx(lng,z){ return (lng+180)/360*256*Math.pow(2,z); }
+function wy(lat,z){ var r=lat*Math.PI/180;
+  return (1-Math.log(Math.tan(r)+1/Math.cos(r))/Math.PI)/2*256*Math.pow(2,z); }
+
+/**
+ * Μικρός χάρτης σε SVG: αληθινά πλακίδια OpenStreetMap στο φόντο
+ * και από πάνω τα πολύγωνα. Χωρίς Leaflet — ελαφρύ για λίστες.
+ */
+function miniSvg(list,w,h,highlight,noTiles){
+  var b=bboxOf(list);
+  if(!b) return '<svg viewBox="0 0 '+w+' '+h+'"><rect width="'+w+'" height="'+h+'" fill="var(--map-bg)"/></svg>';
+  var pad=0.10;
+  var z=1;
+  for(var zz=18;zz>=1;zz--){
+    var pw=Math.abs(wx(b[3],zz)-wx(b[1],zz)), ph=Math.abs(wy(b[0],zz)-wy(b[2],zz));
+    if(pw<=w*(1-2*pad) && ph<=h*(1-2*pad)){ z=zz; break; }
+  }
+  var x0=wx(b[1],z), x1=wx(b[3],z), y0=wy(b[2],z), y1=wy(b[0],z);
+  var ox=(w-(x1-x0))/2-x0, oy=(h-(y1-y0))/2-y0;
+  var uid='m'+Math.random().toString(36).slice(2,8);
+  var g='<svg viewBox="0 0 '+w+' '+h+'" aria-hidden="true">'+
+    '<defs><clipPath id="'+uid+'"><rect width="'+w+'" height="'+h+'"/></clipPath></defs>'+
+    '<rect width="'+w+'" height="'+h+'" fill="var(--map-bg)"/><g clip-path="url(#'+uid+')">';
+  if(!noTiles){
+    var tx0=Math.floor((0-ox)/256), tx1=Math.floor((w-ox)/256);
+    var ty0=Math.floor((0-oy)/256), ty1=Math.floor((h-oy)/256);
+    var n=Math.pow(2,z), count=0;
+    g+='<g class="tiles-img" opacity=".85">';
+    for(var tx=tx0;tx<=tx1&&count<12;tx++) for(var ty=ty0;ty<=ty1&&count<12;ty++){
+      if(ty<0||ty>=n) continue;
+      var xx=((tx%n)+n)%n;
+      g+='<image href="https://tile.openstreetmap.org/'+z+'/'+xx+'/'+ty+'.png" '+
+         'x="'+(tx*256+ox).toFixed(1)+'" y="'+(ty*256+oy).toFixed(1)+'" width="256" height="256"/>';
+      count++;
+    }
+    g+='</g>';
+  }
+  list.forEach(function(t){
+    var gg=geoOf(t.id); if(!gg||!gg.polygons) return;
+    var hi=!highlight||t.id===highlight;
+    var c=highlight?(t.id===highlight?col(t.s):'var(--idle)'):colMode(t.s);
+    gg.polygons.forEach(function(p){
+      var d=p.coords.map(function(cc,i){
+        return (i?'L':'M')+(wx(cc[1],z)+ox).toFixed(1)+' '+(wy(cc[0],z)+oy).toFixed(1); }).join('')+'Z';
+      g+='<path d="'+d+'" fill="'+c+'" fill-opacity="'+(hi?.55:.16)+'" stroke="'+c+'" '+
+         'stroke-width="'+(hi?1.5:1)+'" stroke-linejoin="round"/>';
+    });
+  });
+  return g+'</g></svg>';
+}
+
+/* ---------- Leaflet: μόνο για μεγάλους χάρτες ---------- */
+function osm(){ return L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+  {maxZoom:19,attribution:'© OpenStreetMap'}); }
+function drawLeaflet(elId,list,opts){
+  opts=opts||{};
+  var el=document.getElementById(elId); if(!el) return;
+  if(lmaps[elId]){ try{ lmaps[elId].remove(); }catch(e){} }
+  var m=L.map(el,{zoomControl:opts.zoom!==false,attributionControl:true});
+  lmaps[elId]=m; osm().addTo(m);
+  var b=null, focus=opts.focus;
+  list.forEach(function(t){
+    var g=geoOf(t.id); if(!g||!g.polygons) return;
+    var main = !focus || t.id===focus;
+    var c = main?col(t.s):'var(--idle)';
+    g.polygons.forEach(function(p){
+      var poly=L.polygon(p.coords,{color:c,weight:main?2.6:1.5,fillOpacity:main?.32:.16,
+        fillColor:c,interactive:true}).addTo(m);
+      poly.on('click',function(){
+        if(opts.onPick && (!focus || t.id!==focus)) opts.onPick(t.id);
+        else poly.bindTooltip(t.name,{className:'maplbl',direction:'top'}).openTooltip();
+      });
+      if(!opts.quiet) poly.bindTooltip(t.name,{className:'maplbl',direction:'center',sticky:true});
+      b=b?b.extend(poly.getBounds()):poly.getBounds();   // πάντα όλη η περιοχή
+    });
+    if(main) (g.points||[]).forEach(function(pt){
+      L.circleMarker(pt.at,{radius:5,color:'#fff',weight:2,fillColor:c,fillOpacity:1}).addTo(m); });
+  });
+  if(b) m.fitBounds(b,{padding:[20,20]}); else m.setView([40.27,23.27],11);
+  setTimeout(function(){ try{ m.invalidateSize(); }catch(e){} },60);
+  return m;
+}
+function openFull(title,sub,list,focus){
+  $('#fullTtl').innerHTML='<b>'+esc(title)+'</b><span>'+esc(sub)+'</span>';
+  $('#full').classList.add('on');
+  setTimeout(function(){ drawLeaflet('fullMap',list,{focus:focus,
+    onPick:function(id){ closeFull(); open_(id); }}); },30);
+}
+function closeFull(){ $('#full').classList.remove('on');
+  if(lmaps.fullMap){ try{ lmaps.fullMap.remove(); }catch(e){} delete lmaps.fullMap; } }
+function fullTown(n,focus){ openFull(n,inTown(n).length+' τομείς',inTown(n),focus); }
+
+/* ---------- θέμα, δεδομένα ---------- */
+function applyTheme(){
+  var t=localStorage.getItem('tomeis_theme');
+  if(!t) t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';
+  document.documentElement.setAttribute('data-theme',t);
+  var b=$('#themeBtn'); if(b) b.textContent=t==='light'?'☾':'☀';
+}
+function toggleTheme(){ var c=document.documentElement.getAttribute('data-theme');
+  localStorage.setItem('tomeis_theme',c==='light'?'dark':'light'); applyTheme(); render(); }
+function cacheGet(){ try{ return JSON.parse(localStorage.getItem('tomeis_data')||'null'); }catch(e){ return null; } }
+function cacheSet(o){ try{ localStorage.setItem('tomeis_data',JSON.stringify(o)); }catch(e){} }
+function pin(){ return localStorage.getItem('tomeis_pin')||''; }
+function apply(j){
+  D.territories=j.territories||[]; D.assignments=j.assignments||[]; D.people=j.people||[];
+  D.settings=j.settings||{};
+  D.settings.hold_months=+(D.settings.hold_months||4);
+  D.settings.rest_months=+(D.settings.rest_months||4);
+  D.settings.warn_days=+(D.settings.warn_days||14);
+  if(j.boundaries) D.geo=j.boundaries;
+}
+function load(){
+  var c=cacheGet(); if(c){ apply(c); render(); }
+  fetch(API+'?geo=0',{redirect:'follow'}).then(function(r){return r.json();})
+    .then(function(j){
+      if(!j.ok) throw new Error(j.error||'σφάλμα');
+      apply(j); render();
+      var k=cacheGet()||{}; j.boundaries=k.boundaries||D.geo||null; cacheSet(j);
+      return fetch(API,{redirect:'follow'}).then(function(r){return r.json();})
+        .then(function(g){ if(g.ok&&g.boundaries){ D.geo=g.boundaries; cacheSet(g); render(); } });
+    })
+    .catch(function(e){
+      if(!cacheGet()) $('#main').innerHTML='<div class="empty">Δεν φόρτωσαν τα δεδομένα.<br><br>'+
+        esc(e.message)+'<br><br><button class="btn" onclick="load()">Δοκίμασε ξανά</button></div>';
+      else toast('Χωρίς σύνδεση — παλιά δεδομένα');
+    });
+}
+function post(body,done){
+  if(!pin()){ askPin(function(){ post(body,done); }); return; }
+  body.pin=pin();
+  fetch(API,{method:'POST',redirect:'follow',
+    headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)})
+    .then(function(r){return r.json();})
+    .then(function(j){
+      if(!j.ok){ if(/PIN/i.test(j.error||'')){ localStorage.removeItem('tomeis_pin');
+        askPin(function(){ post(body,done); }); return; }
+        alert('Σφάλμα: '+j.error); return; }
+      done(j);
+    }).catch(function(e){ alert('Δεν αποθηκεύτηκε: '+e.message); });
+}
+function refresh(){ fetch(API+'?geo=0',{redirect:'follow'}).then(function(r){return r.json();})
+  .then(function(j){ if(j.ok){ var k=cacheGet()||{}; j.boundaries=k.boundaries||D.geo;
+    apply(j); cacheSet(j); render(); } }).catch(function(){}); }
+function toast(msg,lab,act){
+  $('#toastMsg').textContent=msg; var b=$('#toastAct');
+  if(lab){ b.textContent=lab; b.style.display=''; b.onclick=function(){ hideToast(); act(); }; }
+  else b.style.display='none';
+  $('#toast').classList.add('on'); clearTimeout(undoTimer);
+  undoTimer=setTimeout(hideToast,lab?12000:3500);
+}
+function hideToast(){ $('#toast').classList.remove('on'); clearTimeout(undoTimer); }
+
+/* ---------- πλοήγηση ---------- */
+function go(t){ tab=t; detail=null; person=null; town=null; q='';
+  document.querySelectorAll('nav button').forEach(function(b){ b.classList.toggle('on',b.dataset.tab===t); });
+  render(); $('#main').scrollTop=0; }
+function open_(id){ detail=id; person=null; render(); $('#main').scrollTop=0; }
+function openTown(n){ town=n; tab='list'; detail=null; person=null;
+  document.querySelectorAll('nav button').forEach(function(b){ b.classList.toggle('on',b.dataset.tab==='list'); });
+  render(); $('#main').scrollTop=0; }
+function openPerson(n){ person=n; detail=null; render(); $('#main').scrollTop=0; }
+function searchBox(ph){
+  return '<div class="search"><span>⌕</span><input id="q" placeholder="'+ph+'" value="'+esc(q)+'" '+
+    'oninput="q=this.value;rerender()">'+(q?'<button onclick="q=\'\';render()">✕</button>':'')+'</div>';
+}
+function rerender(){ var e=document.getElementById('q'), p=e?e.selectionStart:0; render();
+  var n=document.getElementById('q'); if(n){ n.focus(); try{ n.setSelectionRange(p,p); }catch(x){} } }
+function render(){
+  Object.keys(lmaps).forEach(function(k){ if(k!=='fullMap'){ try{ lmaps[k].remove(); }catch(e){} delete lmaps[k]; } });
+  if(detail) return viewDetail();
+  if(person) return viewPerson();
+  if(tab==='map') return viewMap();
+  if(tab==='list') return town?viewTown():viewList();
+  viewPeople();
+}
+
+/* ================= ΧΑΡΤΗΣ ================= */
+function viewMap(){
+  var ts=all().filter(match);
+  var ready=ts.filter(function(t){return t.s.state==='ready';});
+  var rest=ts.filter(function(t){return t.s.state==='resting';});
+  var old=ready.filter(function(t){return t.s.rested>=12;});
+  var by={}; ts.forEach(function(t){ (by[t.town]=by[t.town]||[]).push(t); });
+  var towns=Object.keys(by).map(function(n){
+    var need=0; by[n].forEach(function(t){ if(t.s.state==='ready') need=Math.max(need,t.s.rested===Infinity?999:t.s.rested); });
+    return {name:n,list:by[n],need:need}; }).sort(function(a,b){ return b.need-a.need; });
+
+  $('#ttl').textContent='Χάρτης'; $('#sub').textContent=towns.length+' περιοχές · '+ts.length+' τομείς';
+
+  var h=searchBox('Αναζήτηση περιοχής ή τομέα')+
+    '<div class="seg">'+[['free','Διαθέσιμοι'],['work','Δοσμένοι'],['both','Όλα']].map(function(m){
+      return '<button class="'+(mapMode===m[0]?'on':'')+'" onclick="mapMode=\''+m[0]+'\';render()">'+m[1]+'</button>';
+    }).join('')+'</div>'+
+    '<div class="sums">'+
+    '<div class="sum"><b>'+ready.length+'</b><span>διαθέσιμοι</span></div>'+
+    '<div class="sum"><b>'+rest.length+'</b><span>μη διαθέσιμοι</span></div>'+
+    '<div class="sum"><b style="color:var(--n5)">'+old.length+'</b><span>12+ μήνες</span></div></div><div class="tiles">';
+  towns.forEach(function(tn){
+    h+='<button class="tile" onclick="openTown(\''+esc(tn.name)+'\')">'+
+      '<div class="mini">'+miniSvg(tn.list,150,96)+'</div><div class="ft">'+
+      '<div class="tn">'+esc(tn.name)+'</div>'+
+      '<div class="tc">'+tn.list.length+' τομείς'+(tn.need>0?' · '+monthsTxt(tn.need>900?Infinity:tn.need):'')+'</div>'+
+      '<div class="bars">'+tn.list.map(function(t){ return '<i style="background:'+colMode(t.s)+'"></i>'; }).join('')+
+      '</div></div></button>';
+  });
+  h+='</div>'+legend();
+  if(!towns.length) h=searchBox('Αναζήτηση')+'<div class="empty">Καμία περιοχή.</div>';
+  $('#main').innerHTML=h;
+}
+function legend(){
+  var free=mapMode!=='work', work=mapMode!=='free';
+  var h='<div class="legend"><h4>Τι σημαίνουν τα χρώματα</h4>';
+  if(free){
+    h+='<div class="lramp">'+[1,2,3,4,5].map(function(i){ return '<i style="background:var(--n'+i+')"></i>'; }).join('')+'</div>'+
+      '<div class="lramplab"><span>4–6</span><span>6–8</span><span>8–10</span><span>10–12</span><span>12+</span></div>'+
+      '<p style="margin:7px 0 0;font-size:11px;color:var(--faint);text-align:center">μήνες από την τελευταία επιστροφή</p>';
+  }
+  h+='<div class="lgrid">';
+  if(work) h+='<div><i style="background:var(--blue)"></i>δοσμένος</div>'+
+    '<div><i style="background:var(--amber)"></i>λήγει σύντομα</div>'+
+    '<div><i style="background:var(--coral)"></i>εκπρόθεσμος</div>';
+  if(free) h+='<div><i style="background:var(--slate)"></i>μη διαθέσιμο</div>';
+  if(mapMode!=='both') h+='<div><i style="background:var(--idle)"></i>εκτός προβολής</div>';
+  return h+'</div></div>';
+}
+
+/* ================= ΜΙΑ ΠΕΡΙΟΧΗ (όλα τα δεδομένα) ================= */
+function groupSections(list){
+  var g={ready:[],resting:[],out:[]};
+  list.forEach(function(t){ g[isOut(t.s)?'out':t.s.state].push(t); });
+  g.ready.sort(function(a,b){ return (b.s.rested===Infinity?1e9:b.s.rested)-(a.s.rested===Infinity?1e9:a.s.rested); });
+  g.resting.sort(function(a,b){ return a.s.readyOn-b.s.readyOn; });
+  g.out.sort(function(a,b){ return a.s.daysLeft-b.s.daysLeft; });
+  var h='';
+  [['ready','Διαθέσιμοι'],['out','Δοσμένοι'],['resting','Μη διαθέσιμοι']].forEach(function(sec){
+    if(!g[sec[0]].length) return;
+    h+='<h3>'+sec[1]+' · '+g[sec[0]].length+'</h3>';
+    g[sec[0]].forEach(function(t){ h+=rowFor(t,list); });
+  });
+  if(!list.length) h='<div class="empty">Κανένας τομέας.</div>';
+  return h;
+}
+function viewTown(){
+  var list=inTown(town);
+  $('#ttl').textContent=town; $('#sub').textContent=list.length+' τομείς · όλα';
+  var h='<button class="back" onclick="town=null;render()">‹ Όλες οι περιοχές</button>'+
+    '<div class="mapbox big"><div class="lf" id="townMap"></div>'+
+    '<button class="expand" onclick="fullTown(\''+esc(town)+'\')">Πλήρης οθόνη</button></div>'+
+    groupSections(list);
+  $('#main').innerHTML=h;
+  drawLeaflet('townMap',list,{onPick:open_});
+}
+
+/* ================= ΤΟΜΕΙΣ ================= */
+function valFor(t){
+  var s=t.s;
+  if(isOut(s)){ var d=dur(s.daysLeft);
+    return '<div class="val" style="color:'+col(s)+'">'+d.n+'<em>'+(s.daysLeft<0?'πέρασαν':'μένουν')+'</em></div>'; }
+  if(s.state==='resting'){ var r=dur(dys(new Date(),s.readyOn));
+    return '<div class="val" style="color:var(--slate)">'+r.n+'<em>ως έτοιμος</em></div>'; }
+  var m=s.rested;
+  return '<div class="val" style="color:'+col(s)+'">'+(m===Infinity?'—':(m<10?m.toFixed(1):Math.round(m)))+'<em>μήνες</em></div>';
+}
+function rowFor(t,peers){
+  var s=t.s,dt;
+  if(isOut(s)) dt=esc(s.holder)+' · από '+fmt(s.dateOut);
+  else if(s.state==='resting') dt='επεστράφη '+fmt(s.lastReturned);
+  else dt=s.never?'δεν εργάστηκε ποτέ':'επεστράφη '+fmt(s.lastReturned);
+  return '<button class="row" onclick="open_(\''+t.id+'\')">'+
+    '<div class="thumb">'+miniSvg(peers||inTown(t.town),52,44,t.id,true)+'</div>'+
+    '<div class="info"><div class="nm">'+esc(t.name)+'</div><div class="dt">'+dt+'</div></div>'+
+    valFor(t)+'</button>';
+}
+function viewList(){
+  var ts=all();
+  var ready=ts.filter(function(t){return t.s.state==='ready';});
+  var rest=ts.filter(function(t){return t.s.state==='resting';});
+  var out=ts.filter(function(t){return isOut(t.s);});
+  var places=['all'].concat(Object.keys(ts.reduce(function(a,t){a[t.town]=1;return a;},{}))
+    .sort(function(a,b){ return a.localeCompare(b,'el'); }));
+  if(places.indexOf(place)<0) place='all';
+
+  $('#ttl').textContent='Τομείς';
+  $('#sub').textContent = place==='all'
+    ? (filter==='out'?'πρώτα οι εκπρόθεσμοι':'πρώτα όσοι περιμένουν πιο πολύ')
+    : place+' · όλα';
+
+  var h=searchBox('Αναζήτηση τομέα, περιοχής, ατόμου');
+  if(place==='all')
+    h+='<div class="seg">'+
+      '<button class="'+(filter==='ready'?'on':'')+'" onclick="filter=\'ready\';render()">Διαθέσιμοι '+ready.length+'</button>'+
+      '<button class="'+(filter==='resting'?'on':'')+'" onclick="filter=\'resting\';render()">Ανάπαυση '+rest.length+'</button>'+
+      '<button class="'+(filter==='out'?'on':'')+'" onclick="filter=\'out\';render()">Δοσμένοι '+out.length+'</button></div>';
+  h+='<div class="chips">'+places.map(function(p){
+    return '<button class="chip '+(place===p?'on':'')+'" onclick="place=\''+esc(p)+'\';render()">'+
+      (p==='all'?'Όλες':esc(p))+'</button>'; }).join('')+'</div>';
+
+  if(place!=='all'){
+    var pl=inTown(place).filter(match);
+    h+='<div class="mapbox"><div class="lf" id="plMap"></div>'+
+       '<button class="expand" onclick="fullTown(\''+esc(place)+'\')">Πλήρης οθόνη</button></div>'+
+       groupSections(pl);
+    $('#main').innerHTML=h;
+    drawLeaflet('plMap',inTown(place),{onPick:open_});
+    return;
+  }
+  var pool=(filter==='ready'?ready:filter==='resting'?rest:out).filter(match);
+  pool.sort(function(a,b){ if(filter==='out') return a.s.daysLeft-b.s.daysLeft;
+    return (b.s.rested===Infinity?1e9:b.s.rested)-(a.s.rested===Infinity?1e9:a.s.rested); });
+  if(!pool.length) h+='<div class="empty">Κανένας τομέας εδώ.</div>';
+  pool.forEach(function(t){ h+=rowFor(t); });
+  $('#main').innerHTML=h;
+}
+
+/* ================= ΑΤΟΜΑ ================= */
+function peopleRows(){
+  var map={};
+  all().forEach(function(t){ if(!isOut(t.s)) return; (map[t.s.holder]=map[t.s.holder]||[]).push(t); });
+  return Object.keys(map).map(function(n){
+    var list=map[n]; list.sort(function(a,b){ return a.s.daysLeft-b.s.daysLeft; });
+    return {name:n,list:list,worst:list[0].s}; });
+}
+function viewPeople(){
+  var rows=peopleRows();
+  var late=rows.filter(function(p){ return p.worst.state==='overdue'; });
+  var soon=rows.filter(function(p){ return p.worst.state==='due'; });
+  var pool=pfilter==='late'?late:pfilter==='soon'?soon:rows;
+  pool=pool.filter(function(p){ if(!q) return true;
+    return (p.name+' '+p.list.map(function(t){return t.name+' '+t.town;}).join(' '))
+      .toLowerCase().indexOf(q.toLowerCase())>=0; });
+  pool.sort(function(a,b){ return a.worst.daysLeft-b.worst.daysLeft; });
+
+  $('#ttl').textContent='Άτομα';
+  $('#sub').textContent=rows.length+' κρατούν τομείς · '+late.length+' εκπρόθεσμοι';
+
+  var h=searchBox('Αναζήτηση ατόμου ή τομέα')+
+    '<div class="seg">'+[['all','Όλοι '+rows.length],['late','Εκπρόθ. '+late.length],
+      ['soon','Λήγουν '+soon.length]].map(function(f){
+      return '<button class="'+(pfilter===f[0]?'on':'')+'" onclick="pfilter=\''+f[0]+'\';render()">'+f[1]+'</button>';
+    }).join('')+'</div>';
+
+  if(!pool.length) h+='<div class="empty">Κανένα άτομο εδώ.</div>';
+  pool.forEach(function(p){
+    h+='<div class="pgroup">'+
+      '<button class="phead" onclick="openPerson(\''+esc(p.name)+'\')">'+
+        '<span class="av">'+esc(initials(p.name))+'</span>'+
+        '<span class="info"><span class="nm">'+esc(p.name)+'</span>'+
+        '<span class="dt">'+esc(p.list.map(function(t){return t.town;})
+            .filter(function(v,i,a){return a.indexOf(v)===i;}).join(', '))+'</span></span>'+
+        '<span class="count">'+p.list.length+'</span></button>'+
+      '<div class="plist">'+
+      p.list.map(function(t){
+        return '<button class="pitem" onclick="open_(\''+t.id+'\')">'+
+          '<span class="pstem"></span>'+
+          '<span class="thumb">'+miniSvg(inTown(t.town),44,38,t.id,true)+'</span>'+
+          '<span class="info"><span class="nm">'+esc(t.name)+'</span>'+
+          '<span class="dt">έως '+fmt(t.s.dueOn)+'</span></span>'+
+          pill(t.s)+'</button>'; }).join('')+
+      '</div></div>';
+  });
+  $('#main').innerHTML=h;
+}
+function viewPerson(){
+  var p=peopleRows().filter(function(x){ return x.name===person; })[0];
+  var hist=D.assignments.filter(function(a){ return a.person===person; })
+    .sort(function(a,b){ return String(b.date_out).localeCompare(String(a.date_out)); });
+  if(!p && !hist.length){ person=null; return render(); }
+  $('#ttl').textContent=person;
+  $('#sub').textContent=(p?p.list.length:0)+' τομείς τώρα · '+hist.length+' συνολικά';
+  var h='<button class="back" onclick="person=null;render()">‹ Πίσω</button>';
+  if(p){
+    h+='<h3>Έχει τώρα</h3>';
+    p.list.forEach(function(t){
+      h+='<button class="row" onclick="open_(\''+t.id+'\')">'+
+        '<div class="thumb">'+miniSvg(inTown(t.town),52,44,t.id,true)+'</div>'+
+        '<div class="info"><div class="nm">'+esc(t.name)+'</div>'+
+        '<div class="dt">'+esc(t.town)+' · από '+fmt(t.s.dateOut)+' · έως '+fmt(t.s.dueOn)+'</div></div>'+
+        valFor(t)+'</button>'; });
+  } else h+='<div class="empty">Δεν κρατά τομέα αυτή τη στιγμή.</div>';
+  h+='<h3>Ιστορικό</h3><div class="hist">';
+  hist.forEach(function(r){ var t=byId(r.territory_id);
+    h+='<div><b>'+esc(t?t.name:r.territory_id)+'</b><span>'+fmt(r.date_out)+' → '+
+      (r.date_in?fmt(r.date_in):'—')+'</span></div>'; });
+  $('#main').innerHTML=h+'</div>';
+}
+
+/* ================= ΛΕΠΤΟΜΕΡΕΙΑ ================= */
+function viewDetail(){
+  var t=byId(detail); if(!t){ detail=null; return render(); }
+  var s=t.s, out=isOut(s), peers=inTown(t.town);
+  $('#ttl').textContent=t.name; $('#sub').textContent=t.id+' · '+t.town;
+
+  var h='<button class="back" onclick="detail=null;render()">‹ Πίσω</button>'+
+    '<div class="mapbox big"><div class="lf" id="dMap"></div>'+
+    '<button class="expand" onclick="fullTown(\''+esc(t.town)+'\',\''+t.id+'\')">Πλήρης οθόνη</button></div>'+
+    '<p style="margin:-6px 0 12px;font-size:11.5px;color:var(--faint);text-align:center">'+
+      'οι υπόλοιποι τομείς της περιοχής φαίνονται αχνοί — πάτησέ τους για να τους ανοίξεις</p>'+
+    '<div class="btns">'+
+      (out?'<button class="btn pri" onclick="doTakeBack(\''+t.id+'\')">Επιστροφή</button>'
+          :'<button class="btn pri" onclick="doGiveOut(\''+t.id+'\')">Παράδοση</button>')+
+      '<button class="btn" onclick="doShare(\''+t.id+'\')"'+(t.mymaps_id?'':' disabled')+'>Κοινοποίηση</button></div>';
+
+  if(out){
+    h+='<div class="kv"><span>Κάτοχος</span><b><button onclick="openPerson(\''+esc(s.holder)+'\')" '+
+        'style="color:var(--accent);font-weight:600">'+esc(s.holder)+'</button></b></div>'+
+       '<div class="kv"><span>Δόθηκε</span><b>'+fmt(s.dateOut)+'</b></div>'+
+       '<div class="kv"><span>Επιστροφή έως</span><b style="color:'+col(s)+'">'+fmt(s.dueOn)+'</b></div>'+
+       '<div class="kv"><span>'+(s.daysLeft<0?'Καθυστέρηση':'Απομένουν')+'</span>'+
+        '<b style="color:'+col(s)+'">'+durTxt(s.daysLeft)+'</b></div>'+
+       '<div class="kv"><span>Στα χέρια του</span><b>'+durTxt(s.daysHeld)+'</b></div>';
+  } else if(s.state==='resting'){
+    h+='<div class="kv"><span>Επεστράφη</span><b>'+fmt(s.lastReturned)+'</b></div>'+
+       '<div class="kv"><span>Μη διαθέσιμο</span><b>'+monthsTxt(s.rested)+'</b></div>'+
+       '<div class="kv"><span>Έτοιμος</span><b>'+fmt(s.readyOn)+'</b></div>';
+  } else {
+    h+='<div class="kv"><span>Τελευταία επιστροφή</span><b>'+(s.never?'ποτέ':fmt(s.lastReturned))+'</b></div>'+
+       '<div class="kv"><span>Περιμένει</span><b style="color:'+col(s)+'">'+monthsTxt(s.rested)+'</b></div>';
+  }
+  h+='<h3>Ιστορικό</h3><div class="hist">';
+  var rs=s.rows.slice().reverse();
+  if(!rs.length) h+='<div>Καμία εγγραφή</div>';
+  rs.forEach(function(r){ h+='<div><b>'+esc(r.person)+'</b><span>'+fmt(r.date_out)+' → '+
+    (r.date_in?fmt(r.date_in):'—')+'</span></div>'; });
+  $('#main').innerHTML=h+'</div>';
+
+  var g=geoOf(t.id);
+  if(g&&g.polygons&&g.polygons.length) drawLeaflet('dMap',peers,{focus:t.id,quiet:true,onPick:open_});
+  else document.getElementById('dMap').innerHTML=
+    '<div class="empty" style="padding:84px 20px">'+(t.mymaps_id?'Ο χάρτης φορτώνει…':'Δεν έχει σχεδιαστεί χάρτης')+'</div>';
+}
+
+/* ================= ΕΝΕΡΓΕΙΕΣ ================= */
+function modal(html){
+  var d=document.createElement('div'); d.className='scrim';
+  d.innerHTML='<div class="card"><span class="grab"></span>'+html+'</div>';
+  d.onclick=function(e){ if(e.target===d) d.remove(); };
+  document.body.appendChild(d); return d;
+}
+function doGiveOut(id){
+  var t=byId(id);
+  var names=D.people.filter(function(p){ return String(p.active).toUpperCase()!=='FALSE'; })
+    .map(function(p){ return p.name; }).sort(function(a,b){ return a.localeCompare(b,'el'); });
+  var d=modal('<h2>Παράδοση</h2><div class="cs">'+esc(t.name)+'</div>'+
+    '<label>Από τη λίστα</label><select id="gP"><option value="">— γράψε όνομα παρακάτω —</option>'+
+      names.map(function(n){ return '<option>'+esc(n)+'</option>'; }).join('')+'</select>'+
+    '<label>Ή γράψε όνομα</label><input id="gN" placeholder="Επώνυμο Όνομα">'+
+    '<div class="check" id="gSaveWrap"><input type="checkbox" id="gSave" checked>'+
+      '<label for="gSave" style="margin:0;text-transform:none;letter-spacing:0;font-size:13.5px;color:var(--muted)">'+
+      'Αποθήκευση στη λίστα ατόμων</label></div>'+
+    '<label>Ημερομηνία</label><input type="date" id="gD" value="'+today()+'">'+
+    '<div class="btns" style="margin-top:18px"><button class="btn" id="gX">Άκυρο</button>'+
+    '<button class="btn pri" id="gO">Παράδοση</button></div>');
+  var sel=d.querySelector('#gP'), inp=d.querySelector('#gN'), wrap=d.querySelector('#gSaveWrap');
+  function sync(){ wrap.style.display = (!sel.value && inp.value.trim()) ? '' : 'none'; }
+  sel.onchange=function(){ if(this.value) inp.value=''; sync(); };
+  inp.oninput=function(){ if(this.value.trim()) sel.value=''; sync(); };
+  sync();
+  d.querySelector('#gX').onclick=function(){ d.remove(); };
+  d.querySelector('#gO').onclick=function(){
+    var typed=inp.value.trim(), name=sel.value||typed;
+    if(!name){ alert('Διάλεξε ή γράψε όνομα'); return; }
+    var save=!sel.value && typed && d.querySelector('#gSave').checked;
+    var date=d.querySelector('#gD').value; d.remove();
+    var send=function(){ post({action:'giveOut',territory:id,person:name,date:date},function(j){
+      refresh(); toast(t.name+' → '+name,'Αναίρεση',function(){
+        post({action:'undo',rowId:j.rowId},function(){ refresh(); toast('Αναιρέθηκε'); }); }); }); };
+    if(save) post({action:'savePerson',name:name},send); else send();
+  };
+}
+function doTakeBack(id){
+  var t=byId(id), s=t.s;
+  var d=modal('<h2>Επιστροφή</h2><div class="cs">'+esc(t.name)+' · '+esc(s.holder)+'</div>'+
+    '<label>Ημερομηνία</label><input type="date" id="rD" value="'+today()+'">'+
+    '<div class="btns" style="margin-top:18px"><button class="btn" id="rX">Άκυρο</button>'+
+    '<button class="btn pri" id="rO">Επιστροφή</button></div>');
+  d.querySelector('#rX').onclick=function(){ d.remove(); };
+  d.querySelector('#rO').onclick=function(){ var date=d.querySelector('#rD').value; d.remove();
+    post({action:'takeBack',territory:id,date:date},function(){ refresh(); toast(t.name+' επεστράφη'); }); };
+}
+function doShare(id){
+  var t=byId(id); if(!t.mymaps_id) return;
+  var s=t.s, link='https://www.google.com/maps/d/viewer?mid='+t.mymaps_id;
+  var msg=t.name+'\n'+link+(s.dueOn?('\nΕπιστροφή έως '+fmt(s.dueOn)):'');
+  var d=modal('<h2>Κοινοποίηση</h2><div class="cs">'+esc(t.name)+'</div>'+
+    '<button class="opt" id="sP"><span class="ic">▤</span><div><b>Κάρτα PDF</b>'+
+      '<small>A6, έτοιμη για εκτύπωση</small></div></button>'+
+    '<button class="opt" id="sL"><span class="ic">🔗</span><div><b>Αποστολή συνδέσμου</b>'+
+      '<small>Ανοίγει στο Google Maps</small></div></button>'+
+    '<button class="opt" id="sQ"><span class="ic">▦</span><div><b>QR κωδικός</b>'+
+      '<small>Σκανάρισμα από κοντά</small></div></button>'+
+    '<button class="opt" id="sC"><span class="ic">⧉</span><div><b>Αντιγραφή κειμένου</b>'+
+      '<small>Στο πρόχειρο</small></div></button>');
+  d.querySelector('#sP').onclick=function(){ d.remove(); makeCard(t); };
+  d.querySelector('#sL').onclick=function(){ d.remove();
+    if(navigator.share) navigator.share({text:msg}).catch(function(){}); else { copy(msg); toast('Αντιγράφηκε'); } };
+  d.querySelector('#sC').onclick=function(){ d.remove(); copy(msg); toast('Αντιγράφηκε'); };
+  d.querySelector('#sQ').onclick=function(){ d.remove();
+    var qr=qrcode(0,'M'); qr.addData(link); qr.make();
+    var m=modal('<h2>'+esc(t.name)+'</h2><div class="cs">Σκανάρετε με την κάμερα</div>'+
+      '<div style="background:#fff;padding:14px;border-radius:14px;max-width:250px;margin:0 auto">'+
+      qr.createSvgTag({cellSize:5,margin:0,scalable:true})+'</div>'+
+      '<div class="btns" style="margin-top:18px"><button class="btn pri" id="qX">Έτοιμο</button></div>');
+    m.querySelector('#qX').onclick=function(){ m.remove(); };
+  };
+}
+function copy(s){
+  if(navigator.clipboard) navigator.clipboard.writeText(s).catch(function(){});
+  else { var ta=document.createElement('textarea'); ta.value=s; document.body.appendChild(ta);
+    ta.select(); try{ document.execCommand('copy'); }catch(e){} ta.remove(); }
+}
+
+/* ================= ΚΑΡΤΑ A6 (PDF) =================
+   Ζωγραφίζεται σε canvas και μπαίνει στο PDF ως εικόνα.
+   Έτσι τα ελληνικά βγαίνουν σωστά χωρίς να ενσωματώσουμε γραμματοσειρά. */
+function loadImg(url){
+  return new Promise(function(res){
+    var i=new Image(); i.crossOrigin='anonymous';
+    i.onload=function(){ res(i); }; i.onerror=function(){ res(null); }; i.src=url; });
+}
+function makeCard(t){
+  toast('Δημιουργία κάρτας…');
+  var s=t.s, W=1240, H=1748, M=64;               // A6 στα 300dpi
+  var cv=document.createElement('canvas'); cv.width=W; cv.height=H;
+  var c=cv.getContext('2d');
+  var F='-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif';
+  c.fillStyle='#FBFAF7'; c.fillRect(0,0,W,H);
+  c.fillStyle='#1A1F24';
+
+  var num=(t.id||'').replace(/^T/,'');
+  c.font='700 78px '+F; c.textAlign='right'; c.fillText(num,W-M,M+72);
+  c.textAlign='left';
+  c.font='700 62px '+F; c.fillText(t.name,M,M+62);
+  c.font='400 30px '+F; c.fillStyle='#6D7780'; c.fillText(t.town,M,M+108);
+  c.strokeStyle='#1A1F24'; c.lineWidth=4;
+  c.beginPath(); c.moveTo(M,M+140); c.lineTo(W-M,M+140); c.stroke();
+
+  var mapY=M+180, mapH=880, mapW=W-M*2;
+  var g=geoOf(t.id), b=g?bboxOf([t]):null;
+
+  function finish(){
+    var y=mapY+mapH+56;
+    var notes=(D.settings.card_notes||'').trim();
+    if(notes){
+      c.fillStyle='#EDEFEA'; c.fillRect(M,y,mapW,150);
+      c.fillStyle='#1A1F24'; c.fillRect(M,y,7,150);
+      c.font='400 27px '+F; c.fillStyle='#31383E';
+      wrap(c,notes,M+26,y+46,mapW-52,38); y+=190;
+    }
+    c.strokeStyle='#C9CFD3'; c.lineWidth=2;
+    c.beginPath(); c.moveTo(M,y); c.lineTo(W-M,y); c.stroke(); y+=52;
+    c.fillStyle='#6D7780'; c.font='400 24px '+F;
+    c.fillText('ΔΟΘΗΚΕ',M,y); c.fillText('ΕΠΙΣΤΡΟΦΗ ΕΩΣ',M+340,y);
+    c.fillStyle='#1A1F24'; c.font='600 34px '+F;
+    c.fillText(s.dateOut?fmt(s.dateOut):'________',M,y+46);
+    c.fillText(s.dueOn?fmt(s.dueOn):'________',M+340,y+46);
+    if(s.holder){ c.fillStyle='#6D7780'; c.font='400 24px '+F; c.fillText('ΣΕ',M,y+110);
+      c.fillStyle='#1A1F24'; c.font='600 34px '+F; c.fillText(s.holder,M,y+156); }
+
+    if(t.mymaps_id){
+      var qr=qrcode(0,'M'); qr.addData('https://www.google.com/maps/d/viewer?mid='+t.mymaps_id); qr.make();
+      var n=qr.getModuleCount(), size=230, cell=size/n, qx=W-M-size, qy=y-6;
+      c.fillStyle='#FFF'; c.fillRect(qx-10,qy-10,size+20,size+20);
+      c.fillStyle='#1A1F24';
+      for(var r2=0;r2<n;r2++) for(var k=0;k<n;k++) if(qr.isDark(r2,k))
+        c.fillRect(qx+k*cell,qy+r2*cell,cell+.5,cell+.5);
+      c.fillStyle='#6D7780'; c.font='400 20px '+F; c.textAlign='center';
+      c.fillText('Google Maps',qx+size/2,qy+size+34); c.textAlign='left';
+    }
+    c.fillStyle='#98A0A7'; c.font='400 19px '+F; c.textAlign='center';
+    c.fillText('© OpenStreetMap · '+fmt(new Date()),W/2,H-40); c.textAlign='left';
+
+    var jsPDF=window.jspdf.jsPDF;
+    var pdf=new jsPDF({unit:'mm',format:[105,148],orientation:'portrait'});
+    pdf.addImage(cv.toDataURL('image/jpeg',0.92),'JPEG',0,0,105,148);
+    var fn=(t.id||'tomeas')+'.pdf';
+    var blob=pdf.output('blob');
+    var file=null;
+    try{ file=new File([blob],fn,{type:'application/pdf'}); }catch(e){}
+    if(file && navigator.canShare && navigator.canShare({files:[file]}))
+      navigator.share({files:[file],text:t.name}).catch(function(){});
+    else { var u=URL.createObjectURL(blob); var a=document.createElement('a');
+      a.href=u; a.download=fn; a.click(); setTimeout(function(){ URL.revokeObjectURL(u); },4000); }
+    toast('Η κάρτα είναι έτοιμη');
+  }
+
+  if(!b){ c.fillStyle='#EDEFEA'; c.fillRect(M,mapY,mapW,mapH); finish(); return; }
+
+  var pad=0.10, z=1;
+  for(var zz=18;zz>=1;zz--){
+    var pw=Math.abs(wx(b[3],zz)-wx(b[1],zz)), ph=Math.abs(wy(b[0],zz)-wy(b[2],zz));
+    if(pw<=mapW*(1-2*pad)/2.2 && ph<=mapH*(1-2*pad)/2.2){ z=zz; break; }
+  }
+  var scale=2.2;
+  var x0=wx(b[1],z), x1=wx(b[3],z), y0=wy(b[2],z), y1=wy(b[0],z);
+  var ox=(mapW/scale-(x1-x0))/2-x0, oy=(mapH/scale-(y1-y0))/2-y0;
+  var tx0=Math.floor((0-ox)/256), tx1=Math.floor((mapW/scale-ox)/256);
+  var ty0=Math.floor((0-oy)/256), ty1=Math.floor((mapH/scale-oy)/256);
+  var jobs=[];
+  for(var tx=tx0;tx<=tx1;tx++) for(var ty=ty0;ty<=ty1;ty++){
+    var nn=Math.pow(2,z); if(ty<0||ty>=nn) continue;
+    jobs.push({u:'https://tile.openstreetmap.org/'+z+'/'+(((tx%nn)+nn)%nn)+'/'+ty+'.png',x:tx,y:ty});
+  }
+  c.save(); c.beginPath(); c.rect(M,mapY,mapW,mapH); c.clip();
+  c.fillStyle='#EDEFEA'; c.fillRect(M,mapY,mapW,mapH);
+  Promise.all(jobs.slice(0,20).map(function(j){ return loadImg(j.u).then(function(img){ return {img:img,j:j}; }); }))
+   .then(function(res){
+      res.forEach(function(r){ if(!r.img) return;
+        c.drawImage(r.img, M+(r.j.x*256+ox)*scale, mapY+(r.j.y*256+oy)*scale, 256*scale, 256*scale); });
+      var gg=geoOf(t.id);
+      if(gg&&gg.polygons) gg.polygons.forEach(function(p){
+        c.beginPath();
+        p.coords.forEach(function(cc,i){
+          var X=M+(wx(cc[1],z)+ox)*scale, Y=mapY+(wy(cc[0],z)+oy)*scale;
+          if(i) c.lineTo(X,Y); else c.moveTo(X,Y); });
+        c.closePath();
+        c.fillStyle='rgba(20,90,78,.22)'; c.fill();
+        c.strokeStyle='#0E5E50'; c.lineWidth=7; c.stroke();
+      });
+      c.restore();
+      c.strokeStyle='#C9CFD3'; c.lineWidth=2; c.strokeRect(M,mapY,mapW,mapH);
+      finish();
+   });
+}
+function wrap(c,text,x,y,maxW,lh){
+  var words=String(text).split(/\s+/), line='', yy=y;
+  words.forEach(function(w){
+    var test=line?line+' '+w:w;
+    if(c.measureText(test).width>maxW && line){ c.fillText(line,x,yy); yy+=lh; line=w; }
+    else line=test; });
+  if(line) c.fillText(line,x,yy);
+}
+
+function askPin(then){
+  var d=modal('<h2>PIN</h2><div class="cs">Χρειάζεται μόνο για αποθήκευση. Θα το θυμάται.</div>'+
+    '<input id="pI" type="tel" inputmode="numeric" placeholder="······" '+
+    'style="text-align:center;font-size:22px;letter-spacing:.4em">'+
+    '<div class="btns" style="margin-top:18px"><button class="btn" id="pX">Άκυρο</button>'+
+    '<button class="btn pri" id="pO">Εντάξει</button></div>');
+  setTimeout(function(){ d.querySelector('#pI').focus(); },80);
+  d.querySelector('#pX').onclick=function(){ d.remove(); };
+  d.querySelector('#pO').onclick=function(){ var v=d.querySelector('#pI').value.trim(); if(!v) return;
+    localStorage.setItem('tomeis_pin',v); d.remove(); then(); };
+}
+function reportRange_(){
+  var ys=String(D.settings.year_starts||'09-01'), mm=(+ys.slice(0,2))||9, dd=(+ys.slice(3,5))||1;
+  var now=new Date(), curStart=new Date(now.getFullYear(),mm-1,dd);
+  if(now<curStart) curStart=new Date(now.getFullYear()-1,mm-1,dd);
+  var lastStart=new Date(curStart.getFullYear()-1,mm-1,dd);
+  var lastEnd=new Date(curStart.getTime()-86400000);
+  return {from:lastStart.toISOString().slice(0,10), to:lastEnd.toISOString().slice(0,10)};
+}
+function openReport(){
+  var rg=reportRange_();
+  var d=modal('<h2>Αναφορά έτους</h2><div class="cs">Διάλεξε την περίοδο — προεπιλογή η τελευταία περίοδος υπηρεσίας</div>'+
+    '<label>Από</label><input type="date" id="rF" value="'+rg.from+'">'+
+    '<label>Έως</label><input type="date" id="rT" value="'+rg.to+'">'+
+    '<div class="btns" style="margin-top:18px"><button class="btn" id="rX">Άκυρο</button>'+
+    '<button class="btn pri" id="rO">Δημιουργία & Εκτύπωση</button></div>');
+  d.querySelector('#rX').onclick=function(){ d.remove(); };
+  d.querySelector('#rO').onclick=function(){
+    var f=d.querySelector('#rF').value, t=d.querySelector('#rT').value; d.remove();
+    buildReport(f,t);
+  };
+}
+function buildReport(from,to){
+  var rows=all().slice().sort(function(a,b){
+    var tc=a.town.localeCompare(b.town,'el'); if(tc) return tc;
+    return a.name.localeCompare(b.name,'el',{numeric:true}); });
+  var h='<div class="rhead"><h1>Αναφορά Ανάθεσης Τομέων</h1>'+
+    '<div>Περίοδος: '+fmt(pd(from))+' – '+fmt(pd(to))+'</div>'+
+    '<div>Εκτυπώθηκε: '+fmt(new Date())+'</div></div>'+
+    '<table class="rtab"><thead><tr><th>Τομέας</th><th>Περιοχή</th><th>Κάτοχος</th>'+
+    '<th>Παράδοση</th><th>Επιστροφή</th><th>Κατάσταση σήμερα</th></tr></thead><tbody>';
+  rows.forEach(function(t){
+    var inPeriod=(t.s.rows||[]).filter(function(r){
+      var out=String(r.date_out||'').slice(0,10), din=String(r.date_in||'').slice(0,10);
+      return out<=to && (!din||din>=from);
+    }).sort(function(a,b){ return String(a.date_out).localeCompare(String(b.date_out)); });
+    if(!inPeriod.length){
+      h+='<tr><td>'+esc(t.name)+'</td><td>'+esc(t.town)+'</td><td colspan="3" style="color:#888">καμία κίνηση</td>'+
+        '<td>'+esc(statusTxt(t.s))+'</td></tr>';
+    } else {
+      inPeriod.forEach(function(r,i){
+        h+='<tr><td>'+(i===0?esc(t.name):'')+'</td><td>'+(i===0?esc(t.town):'')+'</td>'+
+          '<td>'+esc(r.person)+'</td><td>'+fmt(pd(r.date_out))+'</td><td>'+(r.date_in?fmt(pd(r.date_in)):'—')+'</td>'+
+          '<td>'+(i===0?esc(statusTxt(t.s)):'')+'</td></tr>';
+      });
+    }
+  });
+  h+='</tbody></table>';
+  document.getElementById('printArea').innerHTML=h;
+  setTimeout(function(){ window.print(); },60);
+}
+function openSettings(){
+  var withMap=D.territories.filter(function(t){ return t.mymaps_id; }).length, ok=0, bad=[];
+  if(D.geo) D.territories.forEach(function(t){ if(!t.mymaps_id) return;
+    var g=geoOf(t.id); if(g&&g.polygons&&g.polygons.length) ok++; else bad.push(t.id); });
+  var d=modal('<h2>Ρυθμίσεις</h2><div class="cs">Αποθηκεύονται στο φύλλο</div>'+
+    '<label>Μήνες κράτησης</label><input type="number" id="sH" value="'+D.settings.hold_months+'" min="1" max="24">'+
+    '<label>Μήνες μη διαθεσιμότητας</label><input type="number" id="sR" value="'+D.settings.rest_months+'" min="0" max="24">'+
+    '<label>Προειδοποίηση (ημέρες πριν)</label><input type="number" id="sW" value="'+D.settings.warn_days+'" min="0" max="90">'+
+    '<div class="btns" style="margin-top:16px"><button class="btn pri" id="sS">Αποθήκευση</button></div>'+
+    '<h3>Χάρτες</h3><div class="kv"><span>Φορτώθηκαν</span><b'+(bad.length?' style="color:var(--coral)"':'')+'>'+
+      (D.geo?ok+' από '+withMap:'—')+'</b></div>'+
+    (bad.length?'<div class="kv"><span>Πρόβλημα</span><b style="color:var(--coral)">'+bad.join(', ')+'</b></div>':'')+
+    '<div class="btns" style="margin-top:12px"><button class="btn" id="sM">Ανανέωση χαρτών</button></div>'+
+    '<h3>PIN</h3>'+
+    '<p style="margin:0 0 10px;font-size:12.5px;color:var(--faint);line-height:1.5">'+
+      'Το PIN είναι αποθηκευμένο σε αυτό το τηλέφωνο. Σβήσ\' το αν δώσεις το τηλέφωνο '+
+      'σε κάποιον άλλον ή αν το έγραψες λάθος — θα το ζητήσει ξανά την επόμενη φορά.'+
+    '</p><div class="btns"><button class="btn warn" id="sP">Διαγραφή PIN από αυτό το τηλέφωνο</button></div>');
+  d.querySelector('#sS').onclick=function(){
+    var v=[['hold_months',d.querySelector('#sH').value],['rest_months',d.querySelector('#sR').value],
+           ['warn_days',d.querySelector('#sW').value]]; d.remove();
+    var i=0; (function next(){ if(i>=v.length){ refresh(); toast('Αποθηκεύτηκε'); return; }
+      var x=v[i++]; post({action:'saveSetting',key:x[0],value:x[1]},next); })(); };
+  d.querySelector('#sM').onclick=function(){ d.remove(); toast('Ανανέωση χαρτών…');
+    post({action:'refreshMaps'},function(){
+      fetch(API,{redirect:'follow'}).then(function(r){return r.json();}).then(function(g){
+        if(g.ok&&g.boundaries){ D.geo=g.boundaries; cacheSet(g); render(); toast('Οι χάρτες ανανεώθηκαν'); } }); }); };
+  d.querySelector('#sP').onclick=function(){ localStorage.removeItem('tomeis_pin'); d.remove(); toast('Το PIN διαγράφηκε'); };
+}
+
+applyTheme();
+load();
+</script>
+</body>
+</html>
