@@ -37,7 +37,8 @@ body{background:var(--ground);color:var(--text);
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
-#app{display:flex;flex-direction:column;height:100%}
+#app{display:flex;flex-direction:column;height:100%;max-width:560px;margin:0 auto;
+  box-shadow:0 0 0 1px var(--rule-soft)}
 header{flex:0 0 auto;padding:calc(13px + var(--safe-t)) 16px 10px;border-bottom:1px solid var(--rule-soft);
   display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
 h1{margin:0;font-size:20px;font-weight:700;letter-spacing:-.02em}
@@ -479,19 +480,24 @@ function tileSpan(p,w,h){
 function miniTiles(list,w,h,highlight){
   var p=projOf(list,w,h);
   if(!p) return '<div class="mmw" style="width:'+w+'px;height:'+h+'px"></div>';
-  var MAX=4, sp=tileSpan(p,w,h);
-  while(p.z>3 && (sp.x1-sp.x0+1)*(sp.y1-sp.y0+1)>MAX){
-    p=projAt(list,w,h,p.z-1); sp=tileSpan(p,w,h);
-  }
-  var n=Math.pow(2,p.z), imgs='', count=0;
+  /* Ο αριθμός πλακιδίων εξαρτάται από το ΜΕΓΕΘΟΣ του πλαισίου, όχι από το ζουμ —
+     γι' αυτό δεν κάνουμε ποτέ ζουμ-άουτ για να λιγοστέψουν. Αν χρειάζονται πολλά,
+     κρατάμε όσα είναι πιο κοντά στο κέντρο (οι άκρες μένουν κενές, δεν πειράζει). */
+  var MAX=8, n=Math.pow(2,p.z), sp=tileSpan(p,w,h), cands=[];
   for(var tx=sp.x0;tx<=sp.x1;tx++) for(var ty=sp.y0;ty<=sp.y1;ty++){
-    if(ty<0||ty>=n||count>=MAX) continue;
-    var xx=((tx%n)+n)%n;
-    imgs+='<img alt="" data-src="0" data-z="'+p.z+'" data-x="'+xx+'" data-y="'+ty+'" '+
-      'onerror="tileFail(this)" src="'+tileUrl(0,p.z,xx,ty)+'" '+
-      'style="left:'+(tx*256+p.ox).toFixed(1)+'px;top:'+(ty*256+p.oy).toFixed(1)+'px">';
-    count++;
+    if(ty<0||ty>=n) continue;
+    var left=tx*256+p.ox, top=ty*256+p.oy;
+    var dx=(left+128)-w/2, dy=(top+128)-h/2;
+    cands.push({tx:tx,ty:ty,left:left,top:top,d:dx*dx+dy*dy});
   }
+  cands.sort(function(a,b){ return a.d-b.d; });
+  var imgs='';
+  cands.slice(0,MAX).forEach(function(t){
+    var xx=((t.tx%n)+n)%n;
+    imgs+='<img alt="" data-src="0" data-z="'+p.z+'" data-x="'+xx+'" data-y="'+t.ty+'" '+
+      'onerror="tileFail(this)" src="'+tileUrl(0,p.z,xx,t.ty)+'" '+
+      'style="left:'+t.left.toFixed(1)+'px;top:'+t.top.toFixed(1)+'px">';
+  });
   return '<div class="mmw" style="width:'+w+'px;height:'+h+'px">'+
     '<div class="mmt">'+imgs+'</div>'+
     '<svg viewBox="0 0 '+w+' '+h+'" aria-hidden="true">'+polyPaths(list,p,highlight)+'</svg></div>';
@@ -571,15 +577,34 @@ function apply(j){
   D.settings.warn_days=+(D.settings.warn_days||14);
   if(j.boundaries) D.geo=j.boundaries;
 }
+/* Τα όρια αλλάζουν μόνο όταν σχεδιάσεις χάρτη — οπότε μένουν στο τηλέφωνο
+   και τα ξαναζητάμε το πολύ μία φορά την ημέρα. Έτσι το άνοιγμα είναι
+   στιγμιαίο· η «Ανανέωση χαρτών» τα φέρνει αμέσως όποτε θες. */
+var GEO_MAX_AGE=24*3600*1000;
+function geoAge(){ var t=+(localStorage.getItem('tomeis_geo_at')||0); return t?Date.now()-t:Infinity; }
+function fetchGeo(then){
+  var t0=Date.now();
+  return fetch(API,{redirect:'follow'}).then(function(r){ return r.text(); })
+    .then(function(txt){
+      var g; try{ g=JSON.parse(txt); }catch(e){ return; }
+      if(g.ok&&g.boundaries){
+        D.geo=g.boundaries;
+        try{ localStorage.setItem('tomeis_geo_at',String(Date.now()));
+             localStorage.setItem('tomeis_geo_ms',String(Date.now()-t0)); }catch(e){}
+        cacheSet(g); render(); if(then) then(g);
+      }
+    }).catch(function(){});
+}
 function load(){
   var c=cacheGet(); if(c){ apply(c); render(); }
+  var haveGeo=!!(D.geo&&D.geo.maps&&Object.keys(D.geo.maps).length);
   fetch(API+'?geo=0',{redirect:'follow'}).then(function(r){return r.json();})
     .then(function(j){
       if(!j.ok) throw new Error(j.error||'σφάλμα');
       apply(j); render();
       var k=cacheGet()||{}; j.boundaries=k.boundaries||D.geo||null; cacheSet(j);
-      return fetch(API,{redirect:'follow'}).then(function(r){return r.json();})
-        .then(function(g){ if(g.ok&&g.boundaries){ D.geo=g.boundaries; cacheSet(g); render(); } });
+      var missing=D.territories.some(function(t){ return t.mymaps_id && !geoOf(t.id); });
+      if(!haveGeo || missing || geoAge()>GEO_MAX_AGE) fetchGeo();
     })
     .catch(function(e){
       if(!cacheGet()) $('#main').innerHTML='<div class="empty">Δεν φόρτωσαν τα δεδομένα.<br><br>'+
@@ -1314,6 +1339,9 @@ function openSettings(){
     '<h3>Χάρτες</h3><div class="kv"><span>Φορτώθηκαν</span><b'+(bad.length?' style="color:var(--coral)"':'')+'>'+
       (D.geo?ok+' από '+withMap:'—')+'</b></div>'+
     (bad.length?'<div class="kv"><span>Πρόβλημα</span><b style="color:var(--coral)">'+bad.join(', ')+'</b></div>':'')+
+    '<div class="kv"><span>Ηλικία ορίων</span><b>'+(isFinite(geoAge())?durTxt(geoAge()/86400000):'—')+'</b></div>'+
+    '<div class="kv"><span>Τελευταίο κατέβασμα</span><b>'+
+      ((+localStorage.getItem('tomeis_geo_ms')||0)?Math.round(localStorage.getItem('tomeis_geo_ms')/1000)+' δευτ.':'—')+'</b></div>'+
     '<p style="margin:8px 0 10px;font-size:12.5px;color:var(--faint);line-height:1.5">'+
       'Η «Ανανέωση χαρτών» ξαναδιαβάζει τα όρια από το Google My Maps. Χρειάζεται μόνο '+
       'όταν σχεδιάσεις νέο τομέα ή αλλάξεις ένα σχήμα — αλλιώς τα όρια κρατιούνται '+
@@ -1327,18 +1355,12 @@ function openSettings(){
   d.querySelector('#sM').onclick=function(){ d.remove();
     toast('Ανανέωση χαρτών… μπορεί να πάρει ένα λεπτό');
     post({action:'refreshMaps'},function(){
-      fetch(API,{redirect:'follow'}).then(function(r){ return r.text(); })
-        .then(function(txt){
-          var g; try{ g=JSON.parse(txt); }catch(e){
-            toast('Οι χάρτες καθαρίστηκαν — θα φορτώσουν με το επόμενο άνοιγμα'); return; }
-          if(g.ok&&g.boundaries){ D.geo=g.boundaries; cacheSet(g); render();
-            var miss=D.territories.filter(function(t){ if(!t.mymaps_id) return false;
-              var x=geoOf(t.id); return !(x&&x.polygons&&x.polygons.length); });
-            toast(miss.length?('Ανανεώθηκαν — δεν φόρτωσαν: '+miss.map(function(t){return t.id;}).join(', '))
-                             :'Οι χάρτες ανανεώθηκαν'); }
-          else toast('Ανανεώθηκαν, αλλά δεν ήρθαν όρια');
-        })
-        .catch(function(){ toast('Οι χάρτες καθαρίστηκαν — θα φορτώσουν με το επόμενο άνοιγμα'); });
+      fetchGeo(function(){
+        var miss=D.territories.filter(function(t){ if(!t.mymaps_id) return false;
+          var x=geoOf(t.id); return !(x&&x.polygons&&x.polygons.length); });
+        toast(miss.length?('Ανανεώθηκαν — δεν φόρτωσαν: '+miss.map(function(t){return t.id;}).join(', '))
+                         :'Οι χάρτες ανανεώθηκαν');
+      });
     }); };
 }
 
