@@ -30,10 +30,10 @@
   --tilefx:grayscale(1) brightness(1.16) contrast(.62);
 }
 
-/* Ελεύθεροι: κλίμακα αναμονής a1→a5 · μπλε = δικός σου · γκρι = σε χρήση */
-:root{ --a1:#7FA79C; --a2:#6CCB9C; --a3:#D9CF5E; --a4:#F0A657; --a5:#F4705A;
+/* Ελεύθεροι: συνεχής κλίμακα πράσινο→κίτρινο→κόκκινο (ageCol) · μπλε = δικός σου · γκρι = σε χρήση */
+:root{
   --ok:#2FA37F; --ok-soft:rgba(47,163,127,.14); --mine:#4A82D6; --mine-soft:rgba(74,130,214,.14); }
-:root[data-theme="light"]{ --a1:#B4CEC6; --a2:#74C29A; --a3:#E2CC4E; --a4:#EE9443; --a5:#DE4F37;
+:root[data-theme="light"]{
   --ok:#127A5C; --ok-soft:rgba(18,122,92,.10); --mine:#25508F; --mine-soft:rgba(37,80,143,.10); }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%}
@@ -137,7 +137,7 @@ input,select{width:100%;background:var(--raised);border:1px solid var(--rule);bo
 .town-nm{font-size:14px;font-weight:700;letter-spacing:.02em;text-transform:uppercase;color:var(--muted)}
 .town-ct{font-size:12px;color:var(--ok);font-weight:700;background:var(--ok-soft);
   padding:3px 8px;border-radius:99px}
-.town-map{height:210px;background:var(--map-bg);position:relative;overflow:hidden}
+.town-map{height:240px;background:var(--map-bg);position:relative;overflow:hidden}
 .town-map .mmw,.town-map>svg{width:100%!important;height:100%!important;display:block}
 /* Chips: αριθμοί ελεύθερων τομέων, χρωματισμένοι κατά αναμονή */
 .free-chips{display:flex;flex-wrap:wrap;gap:7px;padding:10px 12px 8px}
@@ -146,31 +146,21 @@ input,select{width:100%;background:var(--raised);border:1px solid var(--rule);bo
 .fchip:active{opacity:.7}
 .fc-num{font-size:16px;font-weight:800;line-height:1.1}
 .fc-age{font-size:10px;font-weight:600;opacity:.85;white-space:nowrap}
-/* 1 = μικρή αναμονή → 5 = μεγάλη: από ψυχρό σε θερμό, όλο και πιο έντονο */
-.age-1{background:var(--a1)} .age-2{background:var(--a2)} .age-3{background:var(--a3)}
-.age-4{background:var(--a4)} .age-5{background:var(--a5)}
-.fchip.age-1{opacity:.8}
-.fchip.age-5{box-shadow:0 0 0 2px var(--sheet),0 0 0 4px var(--a5)}
-.fchip.age-4,.fchip.age-5{min-width:50px}
-.fchip.age-5 .fc-num{font-size:18px}
 .town-none{padding:8px 14px 10px;font-size:13px;color:var(--faint)}
 .leaflet-tooltip.numlbl{background:transparent;border:0;box-shadow:none;padding:0;
   font-weight:800;font-size:13px;color:var(--text);
   text-shadow:0 0 3px var(--map-bg),0 0 3px var(--map-bg),0 0 2px var(--map-bg)}
 .leaflet-tooltip.numlbl::before{display:none}
-/* Εισαγωγή αριθμού τομέα */
-.town-inp{display:flex;align-items:center;gap:8px;padding:8px 12px 10px;border-top:1px solid var(--rule-soft)}
-.town-inp label{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);white-space:nowrap}
-.town-inp input{width:64px;background:var(--raised);border:1px solid var(--rule);border-radius:9px;
-  padding:8px 10px;color:var(--text);font:inherit;font-size:15px;text-align:center;-moz-appearance:textfield}
-.town-inp input::-webkit-outer-spin-button,.town-inp input::-webkit-inner-spin-button{-webkit-appearance:none}
-.go-btn{background:var(--accent);color:var(--accent-ink);border-radius:9px;padding:8px 16px;
-  font-size:14px;font-weight:700;flex:0 0 auto}
-.go-btn:active{opacity:.8}
 /* Επεξήγηση χρωμάτων */
-.age-legend{display:flex;align-items:center;gap:6px;padding:10px 16px 2px;flex-wrap:wrap}
-.age-legend span{font-size:11px;color:var(--faint)}
-.al-dot{width:10px;height:10px;border-radius:50%;display:inline-block;flex:0 0 auto}
+.age-legend{background:var(--sheet);border:1px solid var(--rule-soft);border-radius:14px;
+  padding:12px 14px 10px;margin:0 0 14px}
+.al-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+.al-top b{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.al-bar{height:18px;border-radius:99px}
+.al-ticks{display:flex;justify-content:space-between;margin-top:5px;font-size:12.5px;font-weight:700;color:var(--muted)}
+.al-more{display:flex;gap:14px;margin-top:10px;font-size:12px;color:var(--faint)}
+.al-more span{display:flex;align-items:center;gap:6px}
+.al-dot{width:12px;height:12px;border-radius:4px;display:inline-block;flex:0 0 auto}
 .al-dot.busy{background:var(--idle);opacity:.5} .al-dot.mine{background:var(--mine)}
 /* Σύνδεσμος */
 .lnk{color:var(--accent);font-weight:600;background:none;border:0;cursor:pointer;font:inherit;padding:0}
@@ -202,7 +192,7 @@ input,select{width:100%;background:var(--raised);border:1px solid var(--rule);bo
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 /* ==================================================================
-   Σελίδα αδελφών — ίδια δεδομένα, ίδια εμφάνιση με την εφαρμογή του
+   Σελίδα αιτήσεων — ίδια δεδομένα, ίδια εμφάνιση με την εφαρμογή του
    υπευθύνου, αλλά μόνο: τι είναι ελεύθερο, ζήτησέ το, τι έχω.
    ================================================================== */
 var API = 'https://script.google.com/macros/s/AKfycbwRUO7Zf1Ngkx3HSNbu1DjIjPaAo2RWF8MSYGdJZIZeLDE3k5Nk_gogN6YNIiYw8ffi/exec';
@@ -296,7 +286,7 @@ function projOf(list,w,h,pad){
   return {z:z, ox:(w-(x1-x0))/2-x0, oy:(h-(y1-y0))/2-y0};
 }
 function numOf(t){ return String(t.id||'').replace(/^T0*/,''); }
-function fillOp(s){ if(s.state==='ready') return .28+.1*(s.band||1); return s.mine?.5:.16; }
+function fillOp(s){ if(s.mine) return .5; if(s.state==='ready') return .32+.3*ageT(s.rested); return .16; }
 /* σημείο ετικέτας: κέντρο βάρους του μεγαλύτερου πολυγώνου (σε pixel) */
 function labelPt(gg,p){
   var best=null, ba=-1;
@@ -557,7 +547,10 @@ function drawLeaflet(elId,list,opts){
   opts=opts||{};
   var el=document.getElementById(elId); if(!el) return;
   if(lmaps[elId]){ try{ lmaps[elId].remove(); }catch(e){} }
-  var m=L.map(el,{zoomControl:opts.zoom!==false,attributionControl:true});
+  var mo={zoomControl:opts.zoom!==false,attributionControl:true};
+  var touch=L.Browser.touch;
+  if(opts.town){ mo.zoomSnap=.25; mo.zoomDelta=.75; mo.scrollWheelZoom=false; mo.dragging=!touch; }
+  var m=L.map(el,mo);
   lmaps[elId]=m; osm(m);
   var b=null, focus=opts.focus;
   list.forEach(function(t){
@@ -577,15 +570,29 @@ function drawLeaflet(elId,list,opts){
     if(main) (g.points||[]).forEach(function(pt){
       L.circleMarker(pt.at,{radius:5,color:'#fff',weight:2,fillColor:c,fillOpacity:1}).addTo(m); });
   });
-  if(b) m.fitBounds(b,{padding:[10,10]}); else m.setView([40.27,23.27],11);
+  if(b) m.fitBounds(b,{padding:opts.town?[6,6]:[10,10]}); else m.setView([40.27,23.27],11);
+  /* στο κινητό: με ένα δάχτυλο κυλάει η σελίδα· αφού μεγεθύνει, μετακινεί και τον χάρτη */
+  if(opts.town && touch){ var base=m.getZoom();
+    m.on('zoomend',function(){ if(m.getZoom()>base+.1) m.dragging.enable(); else m.dragging.disable(); }); }
   setTimeout(function(){ try{ m.invalidateSize(); }catch(e){} },60);
   return m;
 }
 
 /* ---------- χρώματα: ελεύθεροι κατά αναμονή (a1→a5), δικός σου μπλε, υπόλοιποι γκρι ---------- */
-function col(s){ if(s.mine) return 'var(--mine)'; if(s.state==='ready') return 'var(--a'+(s.band||1)+')'; return 'var(--idle)'; }
+function col(s){ if(s.mine) return 'var(--mine)'; if(s.state==='ready') return ageCol(s.rested); return 'var(--idle)'; }
+/* 0 = μόλις ελευθερώθηκε (≤6μ) … 1 = 12 μήνες και πάνω ή ποτέ */
+function ageT(m){ if(m===Infinity) return 1; return Math.max(0,Math.min(1,(m-6)/6)); }
+/* ομαλή μετάβαση: πράσινο → κίτρινο → κόκκινο (ενδιάμεσοι τόνοι για απαλό πέρασμα) */
+var AGE_RGB=[[64,170,126],[150,186,94],[232,193,76],[236,144,76],[222,86,66]];
+function ageMix(t){
+  var n=AGE_RGB.length-1, x=Math.max(0,Math.min(1,t))*n, i=Math.min(n-1,Math.floor(x)), f=x-i,
+      a=AGE_RGB[i], b=AGE_RGB[i+1];
+  return 'rgb('+[0,1,2].map(function(k){ return Math.round(a[k]+(b[k]-a[k])*f); }).join(',')+')';
+}
+function ageCol(m){ return ageMix(ageT(m)); }
+function ageGrad(){ var st=[]; for(var i=0;i<=12;i++) st.push(ageMix(i/12)+' '+(i/12*100).toFixed(1)+'%');
+  return 'linear-gradient(90deg,'+st.join(',')+')'; }
 function ageShort(m){ if(m===Infinity) return 'ποτέ'; if(m<1) return Math.round(m*30.44)+'η'; return Math.floor(m)+'μ'; }
-var AGE_LEG=['<6μ','6–8μ','8–10μ','10–12μ','12μ+'];
 
 var TOWN_ALIAS={'Διασταύρωση Παλαιοκάστρου':'Παλαιόκαστρο','Διασταύρωση':'Παλαιόκαστρο'};
 function townOf(t){ var n=String(t.town||'').trim(); return TOWN_ALIAS[n]||n; }
@@ -711,9 +718,14 @@ function towns(){
   var order=[], map={};
   all().slice().sort(function(a,b){ return String(a.id).localeCompare(String(b.id),'el',{numeric:true}); })
     .forEach(function(t){ if(!map[t.town]){ map[t.town]=[]; order.push(t.town); } map[t.town].push(t); });
-  return order.map(function(n){ return {name:n, list:map[n],
-    free:map[n].filter(function(t){ return t.s.state==='ready'; })
-      .sort(function(a,b){ return (b.s.rested===Infinity?1e9:b.s.rested)-(a.s.rested===Infinity?1e9:a.s.rested); })}; });
+  var w=function(t){ return t.s.rested===Infinity?1e9:t.s.rested; };
+  return order.map(function(n,i){
+    var free=map[n].filter(function(t){ return t.s.state==='ready'; })
+      .sort(function(a,b){ return w(b)-w(a); });
+    return {name:n, list:map[n], free:free, i:i, need:free.length?w(free[0]):-1,
+      old:free.filter(function(t){ return t.s.rested>=12; }).length}; })
+    /* πρώτα οι περιοχές με τους πιο παλιούς ελεύθερους τομείς */
+    .sort(function(a,b){ return (b.need-a.need)||(b.old-a.old)||(b.free.length-a.free.length)||(a.i-b.i); });
 }
 function viewFree(){
   var mine=all().filter(function(t){ return t.s.mine; });
@@ -730,43 +742,43 @@ function viewFree(){
     ' · <button class="lnk" onclick="go(\'mine\')">Προβολή</button></div>';
 
   if(!nFree) h+='<div class="empty"><b>Κανένας ελεύθερος τομέας</b></div>';
-  h+='<div class="age-legend" style="padding:0 2px 12px"><span>Αναμονή:</span>'+
-    AGE_LEG.map(function(l,i){ return '<i class="al-dot age-'+(i+1)+'"></i><span>'+l+'</span>'; }).join('')+
-    '<i class="al-dot busy"></i><span>σε χρήση</span></div>';
+  h+='<div class="age-legend"><div class="al-top"><b>Αναμονή</b></div>'+
+    '<div class="al-bar" style="background:'+ageGrad()+'"></div>'+
+    '<div class="al-ticks"><span>6μ</span><span>9μ</span><span>12μ+</span></div>'+
+    '<div class="al-more"><span><i class="al-dot busy"></i>σε χρήση</span>'+
+    (mine.length?'<span><i class="al-dot mine"></i>δικός σου</span>':'')+'</div></div>';
 
   tw.forEach(function(x,i){
     h+='<div class="town-sec">'+
       '<div class="town-hdr"><span class="town-nm">'+esc(x.name)+'</span>'+
       '<span class="town-ct"'+(x.free.length?'':' style="color:var(--faint);background:var(--raised)"')+'>'+
         x.free.length+' / '+x.list.length+' ελεύθεροι</span></div>'+
-      '<div class="town-map" data-town="'+i+'">'+miniSvg(x.list,520,210,null,true)+'</div>';
+      '<div class="town-map" id="tm'+i+'" data-town="'+i+'" style="height:'+townH(x)+'px">'+
+        miniSvg(x.list,520,townH(x),null,true)+'</div>';
     if(x.free.length){
       h+='<div class="free-chips">'+x.free.map(function(t){
-        return '<button class="fchip age-'+(t.s.band||1)+'" onclick="open_(\''+t.id+'\')" title="'+esc(shortName(t))+'">'+
+        return '<button class="fchip" style="background:'+ageCol(t.s.rested)+'" onclick="open_(\''+t.id+'\')" title="'+esc(shortName(t))+'">'+
           '<span class="fc-num">'+esc(numOf(t))+'</span><span class="fc-age">'+ageShort(t.s.rested)+'</span></button>';
       }).join('')+'</div>';
     } else h+='<div class="town-none">Κανένας ελεύθερος</div>';
-    h+='<div class="town-inp"><label for="tn'+i+'">Αρ. τομέα</label>'+
-      '<input id="tn'+i+'" type="number" inputmode="numeric" pattern="[0-9]*" '+
-        'onkeydown="if(event.key===\'Enter\')goNum(this)">'+
-      '<button class="go-btn" onclick="goNum(document.getElementById(\'tn'+i+'\'))">Άνοιγμα</button></div>'+
-      '</div>';
+    h+='</div>';
   });
   $('#main').innerHTML=h;
   lazyTownMaps(tw);
 }
-/* άνοιγμα τομέα από τον αριθμό του */
-function goNum(inp){
-  var n=parseInt(String(inp.value||'').replace(/\D/g,''),10);
-  if(!n){ inp.focus(); return; }
-  var t=all().filter(function(x){ return parseInt(String(x.id).replace(/\D/g,''),10)===n; })[0];
-  if(!t){ toast('Δεν υπάρχει τομέας '+n); inp.select(); return; }
-  inp.blur(); open_(t.id);
+/* ύψος χάρτη: περισσότεροι τομείς → μεγαλύτερος χάρτης */
+function townH(x){
+  var h=Math.min(400,200+x.list.length*12);
+  if(/πολ[υύ]γυρ/i.test(x.name)) h=Math.max(h,440);
+  return h;
 }
 function lazyTownMaps(tw){
   var els=document.querySelectorAll('.town-map[data-town]');
+  /* κανονικός χάρτης Leaflet: ζουμ με δύο δάχτυλα ή +/−, πάτημα σε τομέα → προβολή */
   var fill=function(el){ var x=tw[+el.getAttribute('data-town')]; if(!x) return;
-    el.innerHTML=miniTiles(x.list, el.clientWidth||520, el.clientHeight||210, null, true); };
+    if(!x.list.some(function(t){ var g=geoOf(t.id); return g&&g.polygons&&g.polygons.length; })) return;
+    el.innerHTML='';
+    drawLeaflet(el.id, x.list, {town:true, onPick:open_}); };
   if(!('IntersectionObserver' in window)){ els.forEach(fill); return; }
   var io=new IntersectionObserver(function(es){ es.forEach(function(e){
     if(!e.isIntersecting) return; fill(e.target); io.unobserve(e.target); }); },{rootMargin:'300px 0px'});
@@ -839,7 +851,7 @@ function viewDetail(){
       '<button class="big alt" onclick="makeCard(byId(\''+t.id+'\'),\'download\')">Κάρτα PDF</button>'+
       '<button class="big" onclick="declareDone(\''+t.id+'\')">Δήλωση ολοκλήρωσης</button>';
   } else if(free){
-    h+='<span class="tag free" style="background:var(--a'+(s.band||1)+');color:#10161B"><i style="background:#10161B"></i>'+
+    h+='<span class="tag free" style="background:'+ageCol(s.rested)+';color:#10161B"><i style="background:#10161B"></i>'+
         'Ελεύθερος · αναμονή '+monthsTxt(s.rested)+'</span>'+
       '<div style="margin-top:16px">'+
       '<div class="kv"><span>Τελευταία ολοκλήρωση</span><b>'+(s.lastReturned?fmt(s.lastReturned):'—')+'</b></div>'+
@@ -849,7 +861,7 @@ function viewDetail(){
       '<button class="big alt" onclick="openMaps(\''+t.id+'\')">Google Maps</button>';
   } else {
     var rest=s.state==='resting';
-    h+='<span class="tag busy"><i></i>'+(rest?'Σε ανάπαυση έως '+fmt(s.readyOn):'Σε χρήση')+'</span>'+
+    h+='<span class="tag busy"><i></i>'+(rest?'Μη διαθέσιμος έως '+fmt(s.readyOn):'Σε χρήση')+'</span>'+
       '<button class="big" style="margin-top:18px" onclick="askFor(\''+t.id+'\')">Αίτηση αναμονής</button>';
   }
   $('#main').innerHTML=h;

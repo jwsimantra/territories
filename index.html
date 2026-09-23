@@ -53,12 +53,10 @@ h1{margin:0;font-size:20px;font-weight:700;letter-spacing:-.02em;
 .hbtns svg{width:18px;height:18px;display:block}
 .hbtns .spin-on svg{animation:sp .8s linear infinite}
 .hbtns button{position:relative}
-/* Κουμπί αιτήσεων: φαρδύτερο με κείμενο αντί για εικονίδιο-μόνο */
-#bellBtn{width:auto;padding:0 8px;gap:5px;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap}
-#bellBtn svg{width:15px;height:15px;flex:0 0 auto}
-#bellDot{position:static;display:none;min-width:16px;height:16px;border-radius:99px;
-  background:var(--coral);color:#fff;font-size:9px;font-weight:700;line-height:16px;
-  text-align:center;padding:0 4px}
+/* Κουμπί αιτήσεων: μόνο εικονίδιο, με αριθμό νέων στη γωνία */
+#bellDot{position:absolute;top:1px;right:0;display:none;min-width:15px;height:15px;border-radius:99px;
+  background:var(--coral);color:#fff;font-size:9px;font-weight:700;line-height:15px;
+  text-align:center;padding:0 3px;pointer-events:none}
 #bellDot.on{display:inline-block}
 .req{background:var(--raised);border:1px solid var(--rule-soft);border-radius:12px;
   padding:12px 14px;margin-bottom:10px}
@@ -245,40 +243,44 @@ input[type="date"]{padding:9px 6px 9px 10px}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 #printArea{display:none}
 @media print{
-  @page{size:A4 portrait;margin:11mm 9mm}
-  html,body{background:#fff!important}
-  body *{visibility:hidden}
-  #printArea,#printArea *{visibility:visible}
-  #printArea{display:block;position:absolute;left:0;top:0;width:100%;color:#000;background:#fff;
-    font:10pt/1.3 "Helvetica Neue",Arial,sans-serif}
-  .rhead{text-align:center;margin:0 0 4mm}
-  .rhead h1{font-size:13pt;font-weight:700;letter-spacing:.08em;margin:0}
-  .ryear{font-size:9.5pt;font-weight:700;margin:0 0 3mm;display:flex;align-items:center;gap:2mm}
-  .ryear .box{border:.9pt solid #000;padding:.8mm 6mm;font-weight:400}
-  /* Το περίγραμμα μπαίνει στα ΚΕΛΙΑ μέσω κλάσεων bt/bb/bl/br που βάζει
-     το buildReport() απευθείας — έτσι λειτουργεί σωστά και με rowspan. */
+  @page{size:A4 portrait;margin:10mm 8mm}
+  html,body{background:#fff!important;height:auto!important;overflow:visible!important}
+  /* τυπώνεται ΜΟΝΟ το έντυπο — όχι absolute, ώστε να σπάει σωστά σε σελίδες */
+  body>*:not(#printArea){display:none!important}
+  #printArea{display:block!important;position:static;width:100%;color:#000;background:#fff;
+    font:10pt/1.3 "Helvetica Neue",Arial,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  /* κάθε σελίδα είναι ξεχωριστός πίνακας με σταθερό αριθμό τομέων:
+     κανένας τομέας δεν κόβεται στη μέση όταν αλλάζει η σελίδα */
+  .rpage{break-after:page;page-break-after:always}
+  .rpage:last-child{break-after:auto;page-break-after:auto}
+  .rhead{display:flex;justify-content:space-between;align-items:center;margin:0 0 3mm}
+  .rhead h1{font-size:12.5pt;font-weight:700;letter-spacing:.08em;margin:0}
+  .ryear{font-size:9pt;font-weight:700;display:flex;align-items:center;gap:2mm}
+  .ryear .box{border:.8pt solid #000;padding:.6mm 5mm;font-weight:400}
+  .rpg{font-size:8pt;color:#555}
   .rtab{width:100%;border-collapse:collapse;table-layout:fixed}
-  .rtab th,.rtab td{border:.5pt solid #9a9a9a;padding:1mm 1.2mm;vertical-align:middle}
-  .rtab thead th{background:#ededed;font-size:6.5pt;font-weight:700;line-height:1.15;
-    text-transform:uppercase;letter-spacing:.02em;white-space:normal;
-    border:.8pt solid #000}
-  .rtab tbody{page-break-inside:avoid;break-inside:avoid}
-  .rtab thead{display:table-header-group}
-  /* Δυνατά περιγράμματα: προστίθενται inline από το JS */
-  .rtab .bt{border-top:.8pt solid #000!important}
-  .rtab .bb{border-bottom:.8pt solid #000!important}
-  .rtab .bl{border-left:.8pt solid #000!important}
-  .rtab .br{border-right:.8pt solid #000!important}
-  .rtab .num{font-size:9pt;font-weight:700;text-align:center;line-height:1.05}
-  .rtab .num small{display:block;font-size:5.5pt;font-weight:700;letter-spacing:.04em;color:#333;
-    margin-top:.4mm}
-  .rtab .lastc{font-size:7.5pt;text-align:center;white-space:nowrap}
-  /* Τα ονόματα σπάνε σε γραμμές — χωρίς overflow:hidden που τα κόβει */
-  .rtab .who{font-size:7pt;text-align:center;background:#fbfbfb;line-height:1.2;
-    white-space:normal;word-break:break-word;overflow-wrap:anywhere;hyphens:auto;padding:.6mm 1mm;min-height:4mm}
+  .rtab tr{break-inside:avoid;page-break-inside:avoid}
+  .rtab tbody{break-inside:avoid;page-break-inside:avoid}
+  /* όλες οι στήλες με καθαρή μαύρη γραμμή */
+  .rtab th,.rtab td{border:.6pt solid #000;padding:.8mm .8mm;vertical-align:middle;overflow:visible}
+  .rtab thead th{background:#f6f6f6;font-size:6.8pt;font-weight:700;line-height:1.15;
+    text-align:center;white-space:normal;overflow-wrap:anywhere;hyphens:manual}
+  .rtab thead tr:first-child th{border-top:1pt solid #000}
+  /* διαχωριστικό ανάμεσα στους τομείς */
+  .rtab tbody tr:first-child td{border-top:1pt solid #000}
+  .rtab tbody tr:last-child td{border-bottom:1pt solid #000}
+  /* λεπτή γκρι γραμμή μόνο ανάμεσα στο όνομα και στις ημερομηνίες */
+  .rtab td.who{border-bottom:.4pt solid #9a9a9a}
+  .rtab td.dt{border-top:.4pt solid #9a9a9a}
+  /* χωρίσματα ανάμεσα στις 4 αναθέσεις */
+  .rtab .sl{border-left:1pt solid #000}
+  .rtab .num{font-size:9pt;font-weight:700;text-align:center;line-height:1.05;border-top:1pt solid #000;border-bottom:1pt solid #000}
+  .rtab .num small{display:block;font-size:5.5pt;font-weight:700;letter-spacing:.04em;color:#333;margin-top:.4mm}
+  .rtab .lastc{font-size:7.5pt;text-align:center;white-space:nowrap;border-top:1pt solid #000;border-bottom:1pt solid #000}
+  .rtab .who{font-size:7pt;text-align:center;line-height:1.15;
+    white-space:normal;word-break:break-word;overflow-wrap:anywhere;padding:.5mm .8mm}
   .rtab .dt{font-size:7pt;text-align:center;white-space:nowrap}
 }
-
 </style>
 </head>
 <body>
@@ -287,15 +289,15 @@ input[type="date"]{padding:9px 6px 9px 10px}
   <header>
     <div><h1 id="ttl">Τομείς</h1><div class="sub" id="sub">φόρτωση…</div></div>
     <div class="hbtns">
-      <button onclick="shareApp()" title="Μοιράσου τη σελίδα αδελφών">
+      <button onclick="shareApp()" title="Κοινοποίηση">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
           <line x1="8.6" y1="10.5" x2="15.4" y2="6.5"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/></svg>
       </button>
-      <button id="bellBtn" onclick="openRequests()" title="Αιτήσεις αδελφών">
+      <button id="bellBtn" onclick="openRequests()" title="Αιτήσεις">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
-        Αιτήσεις<span id="bellDot"></span>
+        <span id="bellDot"></span>
       </button>
       <button id="reloadBtn" onclick="manualRefresh()" title="Ανανέωση">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -726,25 +728,34 @@ function bell(){
 }
 function reqText(r){
   var t=byId(r.territory_id), nm=t?t.name:r.territory_id;
-  if(r.kind==='taken')    return '<b>'+esc(r.person)+'</b> πήρε τον '+esc(nm);
-  if(r.kind==='returned') return '<b>'+esc(r.person)+'</b> δήλωσε ότι τελείωσε τον '+esc(nm);
-  if(r.kind==='waiting')  return '<b>'+esc(r.person)+'</b> ζητάει τον '+esc(nm);
+  if(r.kind==='taken')    return '<b>'+esc(r.person)+'</b> · ανάθεση · '+esc(nm);
+  if(r.kind==='returned') return '<b>'+esc(r.person)+'</b> · ολοκλήρωση · '+esc(nm);
+  if(r.kind==='waiting')  return '<b>'+esc(r.person)+'</b> · αίτηση · '+esc(nm);
   return esc(r.person)+' — '+esc(nm);
 }
-/* Η διεύθυνση της σελίδας αδελφών βγαίνει από τη διεύθυνση αυτής εδώ:
+/* Η διεύθυνση της σελίδας αιτήσεων βγαίνει από τη διεύθυνση αυτής εδώ:
    .../index.html  ->  .../aitisi.html  (δουλεύει και σε υποφάκελο) */
 function pubUrl(){
   var u=location.href.split('#')[0].split('?')[0];
   if(/\/[^\/]*\.html?$/i.test(u)) return u.replace(/\/[^\/]*\.html?$/i,'/aitisi.html');
   return u.replace(/\/?$/,'/')+'aitisi.html';
 }
-function shareApp(){
-  var url=pubUrl();
-  var msg='Σελίδα τομέων για τους αδελφούς:\n'+url+
-    '\n\nΆνοιξέ τη, διάλεξε το όνομά σου μία φορά, και μετά βλέπεις ποιοι τομείς '+
-    'είναι ελεύθεροι και ποιον έχεις εσύ.';
-  var d=modal('<h2>Σελίδα αδελφών</h2>'+
-    '<div class="cs">Στείλ\' τους αυτόν τον σύνδεσμο — δεν χρειάζεται κωδικός</div>'+
+function appUrl(){ return location.href.split('#')[0].split('?')[0]; }
+var shareKind='pub';
+function shareApp(kind){
+  if(kind) shareKind=kind;
+  var pub=shareKind==='pub';
+  var url=pub?pubUrl():appUrl();
+  var msg=pub
+    ? 'Σελίδα αιτήσεων τομέων:\n'+url+'\n\nΕπιλογή ονόματος την πρώτη φορά· μετά εμφανίζονται οι ελεύθεροι τομείς και οι δικοί σας.'
+    : 'Εφαρμογή διαχείρισης τομέων:\n'+url;
+  var ttl=pub?'Σελίδα αιτήσεων':'Εφαρμογή διαχείρισης';
+  var d=modal('<h2>Κοινοποίηση</h2>'+
+    '<div class="seg" style="margin:6px 0 12px">'+
+      '<button class="'+(pub?'on':'')+'" id="kP">Σελίδα αιτήσεων</button>'+
+      '<button class="'+(pub?'':'on')+'" id="kA">Εφαρμογή διαχείρισης</button></div>'+
+    '<div class="cs">'+(pub?'Χωρίς κωδικό — μόνο προβολή και αιτήσεις'
+      :'<b style="color:var(--coral)">Πλήρης πρόσβαση</b> — μόνο σε όσους βοηθούν στη διαχείριση')+'</div>'+
     '<div style="background:var(--raised);border:1px solid var(--rule);border-radius:10px;'+
       'padding:12px 14px;font-size:13px;word-break:break-all;margin-bottom:14px">'+esc(url)+'</div>'+
     '<button class="opt" id="aS"><span class="ic">↗</span><div><b>Αποστολή</b>'+
@@ -752,17 +763,19 @@ function shareApp(){
     '<button class="opt" id="aC"><span class="ic">⧉</span><div><b>Αντιγραφή συνδέσμου</b>'+
       '<small>Για επικόλληση όπου θέλεις</small></div></button>'+
     '<button class="opt" id="aQ"><span class="ic">▦</span><div><b>QR κωδικός</b>'+
-      '<small>Να τον σκανάρουν από κοντά</small></div></button>'+
-    '<button class="opt" id="aO"><span class="ic">▤</span><div><b>Άνοιγμα</b>'+
-      '<small>Δες τη σελίδα όπως τη βλέπουν</small></div></button>');
+      '<small>Σάρωση με την κάμερα</small></div></button>'+
+    (pub?'<button class="opt" id="aO"><span class="ic">▤</span><div><b>Άνοιγμα</b>'+
+      '<small>Προβολή της σελίδας αιτήσεων</small></div></button>':''));
+  d.querySelector('#kP').onclick=function(){ if(!pub){ d.remove(); shareApp('pub'); } };
+  d.querySelector('#kA').onclick=function(){ if(pub){ d.remove(); shareApp('app'); } };
   d.querySelector('#aS').onclick=function(){ d.remove();
     if(navigator.share) navigator.share({title:'Τομείς',text:msg}).catch(function(){});
     else { copy(msg); toast('Αντιγράφηκε'); } };
   d.querySelector('#aC').onclick=function(){ d.remove(); copy(url); toast('Ο σύνδεσμος αντιγράφηκε'); };
-  d.querySelector('#aO').onclick=function(){ d.remove(); window.open(url,'_blank'); };
+  var o=d.querySelector('#aO'); if(o) o.onclick=function(){ d.remove(); window.open(url,'_blank'); };
   d.querySelector('#aQ').onclick=function(){ d.remove();
     var qr=qrcode(0,'M'); qr.addData(url); qr.make();
-    var m=modal('<h2>Σελίδα αδελφών</h2><div class="cs">Σκανάρετε με την κάμερα</div>'+
+    var m=modal('<h2>'+ttl+'</h2><div class="cs">Σάρωση με την κάμερα</div>'+
       '<div style="background:#fff;padding:16px;border-radius:14px;max-width:260px;margin:0 auto">'+
       qr.createSvgTag({cellSize:5,margin:0,scalable:true})+'</div>'+
       '<div class="btns" style="margin-top:18px"><button class="btn pri" id="qX">Έτοιμο</button></div>');
@@ -772,24 +785,24 @@ function shareApp(){
 function openRequests(){
   var rs=(D.requests||[]).slice().reverse();
   var waiting=rs.filter(function(r){ return r.kind==='waiting'; });
-  var h='<h2>Τι έκαναν οι αδελφοί</h2><div class="cs">Από τη σελίδα αιτήσεων</div>';
+  var h='<h2>Αιτήσεις</h2>';
   if(!rs.length) h+='<div class="empty" style="padding:24px 0">Τίποτα ακόμα.</div>';
   if(waiting.length){
-    h+='<h3>Περιμένουν</h3>';
+    h+='<h3>Σε αναμονή</h3>';
     waiting.forEach(function(r){
       var t=byId(r.territory_id), free=t&&t.s.state==='ready';
       h+='<div class="req'+(r.status!=='seen'?' new':'')+'">'+
         '<div class="w">'+reqText(r)+'</div>'+
         '<div class="m">'+fmt(r.date)+(r.note?' · '+esc(r.note):'')+'</div>'+
         (free?'<div class="btns" style="margin:10px 0 0"><button class="btn pri" onclick="grantReq(\''+
-          esc(r.row_id)+'\',\''+esc(r.territory_id)+'\',\''+esc(r.person)+'\')">Δώσ\' του τον τομέα</button></div>'
-             :'<div class="m">δεν είναι ελεύθερος ακόμα</div>')+
+          esc(r.row_id)+'\',\''+esc(r.territory_id)+'\',\''+esc(r.person)+'\')">Ανάθεση</button></div>'
+             :'<div class="m">Μη διαθέσιμος ακόμα</div>')+
         '</div>';
     });
   }
   var info=rs.filter(function(r){ return r.kind!=='waiting'; }).slice(0,25);
   if(info.length){
-    h+='<h3>Τι έγινε</h3>';
+    h+='<h3>Ιστορικό</h3>';
     info.forEach(function(r){
       h+='<div class="req'+(r.status!=='seen'?' new':'')+'"><div class="w">'+reqText(r)+'</div>'+
          '<div class="m">'+fmt(r.date)+'</div></div>';
@@ -1435,8 +1448,7 @@ function buildReport(y){
       var na=parseInt(String(a.id).replace(/\D/g,''),10), nb=parseInt(String(b.id).replace(/\D/g,''),10);
       return (na||0)-(nb||0); });
 
-  var body='';
-  list.forEach(function(t){
+  var rowsHtml=list.map(function(t){
     var rows=D.assignments.filter(function(a){ return a.territory_id===t.id; })
       .sort(function(a,b){ return String(a.date_out).localeCompare(String(b.date_out)); });
     /* μέσα στο υπηρεσιακό έτος: ό,τι δόθηκε ή επεστράφη μέσα στο διάστημα */
@@ -1451,32 +1463,37 @@ function buildReport(y){
 
     var who='', dts='';
     for(var k=0;k<SLOTS;k++){
-      var a=inY[k], last=(k===SLOTS-1);
-      /* bt: πρώτη γραμμή, br: τελευταία στήλη */
-      who+='<td class="who bt'+(last?' br':'')+'" colspan="2">'+(a?esc(a.person):'')+'</td>';
-      /* bb: τελευταία γραμμή, br: τελευταία στήλη (2η ημερομηνία) */
-      dts+='<td class="dt bb">'+(a?dsh(a.date_out):'')+'</td>'+
-           '<td class="dt bb'+(last?' br':'')+'">'+(a?dsh(a.date_in):'')+'</td>';
+      var a=inY[k];
+      who+='<td class="who sl" colspan="2">'+(a?esc(a.person):'')+'</td>';
+      dts+='<td class="dt sl">'+(a?dsh(a.date_out):'')+'</td><td class="dt">'+(a?dsh(a.date_in):'')+'</td>';
     }
     var num=String(t.id).replace(/^T0?/,''), code=townCode(townOf(t));
-    /* num και lastc: rowspan=2 → bl/bt/bb απευθείας ώστε να καλύπτουν και τις 2 γραμμές */
-    body+='<tbody>'+
-      '<tr><td class="num bt bb bl" rowspan="2">'+esc(num)+'<small>'+esc(code)+'</small></td>'+
-      '<td class="lastc bt bb" rowspan="2">'+dsh(lastc)+'</td>'+who+'</tr>'+
-      '<tr>'+dts+'</tr></tbody>';
+    return '<tbody><tr style="height:7.5mm"><td class="num" rowspan="2">'+esc(num)+'<small>'+esc(code)+'</small></td>'+
+      '<td class="lastc" rowspan="2">'+dsh(lastc)+'</td>'+who+'</tr>'+
+      '<tr style="height:5.5mm">'+dts+'</tr></tbody>';
   });
 
-  var head='<tr><th rowspan="2" style="width:9mm">Αρ.<br>Τομ.</th>'+
-    '<th rowspan="2" style="width:19mm">Τελευταία<br>ημερομηνία<br>ολοκλήρωσης</th>';
-  for(var j=0;j<SLOTS;j++) head+='<th colspan="2">Ανατέθηκε στον/στη(ν)</th>';
+  var cols='<colgroup><col style="width:10mm"><col style="width:19mm">';
+  for(var c=0;c<SLOTS*2;c++) cols+='<col>';
+  cols+='</colgroup>';
+  var head='<tr><th rowspan="2">Αρ.<br>Τομ.</th>'+
+    '<th rowspan="2">Τελευταία<br>ημερομηνία<br>ολοκλήρωσης</th>';
+  for(var j=0;j<SLOTS;j++) head+='<th colspan="2" class="sl">Ανατέθηκε στον/στη(ν)</th>';
   head+='</tr><tr>';
-  for(var j2=0;j2<SLOTS;j2++) head+='<th>Ημερομηνία<br>ανάθεσης</th><th>Ημερομηνία<br>ολοκλήρωσης</th>';
+  for(var j2=0;j2<SLOTS;j2++) head+='<th class="sl">Ημερομηνία<br>ανάθεσης</th><th>Ημερομηνία<br>ολοκλήρωσης</th>';
   head+='</tr>';
 
-  document.getElementById('printArea').innerHTML=
-    '<div class="rhead"><h1>ΕΝΤΥΠΟ ΔΙΟΡΙΣΜΟΥ ΤΟΜΕΑ</h1></div>'+
-    '<div class="ryear">Υπηρεσιακό Έτος:<span class="box">'+r.label+'</span></div>'+
-    '<table class="rtab"><thead>'+head+'</thead>'+body+'</table>';
+  /* ίσος αριθμός τομέων ανά σελίδα (έως 18) — έτσι δεν κόβεται ποτέ τομέας */
+  var PER=18, pages=Math.max(1,Math.ceil(rowsHtml.length/PER)), per=Math.ceil(rowsHtml.length/pages);
+  var out='';
+  for(var p=0;p<pages;p++){
+    out+='<div class="rpage"><div class="rhead"><h1>ΕΝΤΥΠΟ ΔΙΟΡΙΣΜΟΥ ΤΟΜΕΑ</h1>'+
+      '<div class="ryear">Υπηρεσιακό Έτος:<span class="box">'+r.label+'</span>'+
+      (pages>1?'<span class="rpg">'+(p+1)+'/'+pages+'</span>':'')+'</div></div>'+
+      '<table class="rtab">'+cols+'<thead>'+head+'</thead>'+
+      rowsHtml.slice(p*per,(p+1)*per).join('')+'</table></div>';
+  }
+  document.getElementById('printArea').innerHTML=out;
   setTimeout(function(){ window.print(); },80);
 }
 function openSettings(){
