@@ -48,6 +48,7 @@ h1{margin:0;font-size:20px;font-weight:700;letter-spacing:-.02em}
   color:var(--muted);border-radius:10px}
 .hbtns button:active{background:var(--raised)}
 .hbtns svg{width:19px;height:19px;display:block}
+.hbtns .spin-on svg{animation:sp .8s linear infinite}
 main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 16px 24px}
 nav{flex:0 0 auto;display:flex;border-top:1px solid var(--rule-soft);background:var(--sheet);padding-bottom:var(--safe-b)}
 nav button{flex:1;padding:12px 4px 14px;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
@@ -234,11 +235,11 @@ input[type="date"]{padding:9px 6px 9px 10px}
   #printArea,#printArea *{visibility:visible}
   #printArea{display:block;position:absolute;left:0;top:0;width:100%;color:#000;background:#fff;
     font:10pt/1.3 "Helvetica Neue",Arial,sans-serif}
-  .rhead{text-align:center;margin:0 0 5mm}
-  .rhead h1{font-size:13pt;font-weight:700;letter-spacing:.08em;margin:0 0 1.5mm}
-  .rhead .yr{font-size:10pt}
-  .rhead .yr b{font-weight:700}
-  .rtab{width:100%;border-collapse:collapse;table-layout:fixed}
+  .rhead{text-align:center;margin:0 0 4mm}
+  .rhead h1{font-size:13pt;font-weight:700;letter-spacing:.08em;margin:0}
+  .ryear{font-size:9.5pt;font-weight:700;margin:0 0 3mm;display:flex;align-items:center;gap:2mm}
+  .ryear .box{border:.9pt solid #000;padding:.8mm 6mm;font-weight:400}
+  .rtab{width:100%;border-collapse:collapse;table-layout:fixed;border:1.1pt solid #000}
   .rtab th,.rtab td{border:.5pt solid #666;padding:.9mm 1mm;overflow:hidden;white-space:nowrap}
   .rtab thead th{background:#e9e9e9;font-size:6.5pt;font-weight:600;line-height:1.15;
     text-transform:uppercase;letter-spacing:.02em;white-space:normal}
@@ -249,7 +250,6 @@ input[type="date"]{padding:9px 6px 9px 10px}
   .rtab .lastc{font-size:8pt;text-align:center;vertical-align:middle}
   .rtab .who{font-size:7.5pt;text-align:center;background:#fafafa}
   .rtab .dt{font-size:7.5pt;text-align:center;height:4.6mm}
-  .rfoot{margin-top:4mm;font-size:7pt;color:#444;display:flex;justify-content:space-between}
 }
 </style>
 </head>
@@ -259,6 +259,11 @@ input[type="date"]{padding:9px 6px 9px 10px}
   <header>
     <div><h1 id="ttl">Τομείς</h1><div class="sub" id="sub">φόρτωση…</div></div>
     <div class="hbtns">
+      <button id="reloadBtn" onclick="manualRefresh()" title="Ανανέωση">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12a9 9 0 1 1-2.64-6.36"/><polyline points="21 3 21 9 15 9"/>
+        </svg>
+      </button>
       <button onclick="openReport()" title="Αναφορά / Εκτύπωση">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/>
@@ -568,7 +573,6 @@ function toggleTheme(){ var c=document.documentElement.getAttribute('data-theme'
   localStorage.setItem('tomeis_theme',c==='light'?'dark':'light'); applyTheme(); render(); }
 function cacheGet(){ try{ return JSON.parse(localStorage.getItem('tomeis_data')||'null'); }catch(e){ return null; } }
 function cacheSet(o){ try{ localStorage.setItem('tomeis_data',JSON.stringify(o)); }catch(e){} }
-function pin(){ return localStorage.getItem('tomeis_pin')||''; }
 function apply(j){
   D.territories=j.territories||[]; D.assignments=j.assignments||[]; D.people=j.people||[];
   D.settings=j.settings||{};
@@ -595,6 +599,24 @@ function fetchGeo(then){
       }
     }).catch(function(){});
 }
+/* Ξαναδιαβάζει μόνο τα δεδομένα του φύλλου — τα όρια τα έχουμε ήδη.
+   Γι' αυτό μια παράδοση/επιστροφή ενημερώνεται σε ένα δευτερόλεπτο. */
+function refresh(then){
+  return fetch(API+'?geo=0',{redirect:'follow'}).then(function(r){ return r.json(); })
+    .then(function(j){
+      if(!j.ok) throw new Error(j.error||'σφάλμα');
+      var geo=D.geo; apply(j); D.geo=geo;
+      var k=cacheGet()||{}; j.boundaries=k.boundaries||geo||null; cacheSet(j);
+      render(); if(then) then(j);
+    })
+    .catch(function(){ toast('Δεν ανανεώθηκαν τα δεδομένα'); });
+}
+function manualRefresh(){
+  var b=$('#reloadBtn'); if(b) b.classList.add('spin-on');
+  var done=function(){ if(b) b.classList.remove('spin-on'); };
+  refresh(function(){ done(); toast('Ενημερώθηκε'); });
+  setTimeout(done,8000);
+}
 function load(){
   var c=cacheGet(); if(c){ apply(c); render(); }
   var haveGeo=!!(D.geo&&D.geo.maps&&Object.keys(D.geo.maps).length);
@@ -613,8 +635,6 @@ function load(){
     });
 }
 function post(body,done){
-  if(!pin()){ askPin(function(){ post(body,done); }); return; }
-  body.pin=pin();
   var st=0;
   fetch(API,{method:'POST',redirect:'follow',
     headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)})
@@ -628,9 +648,7 @@ function post(body,done){
               '\n\nΣυνήθως σημαίνει ότι το script χρειάζεται νέα ανάπτυξη (Deploy → New version).');
         return;
       }
-      if(!j.ok){ if(/PIN/i.test(j.error||'')){ localStorage.removeItem('tomeis_pin');
-        askPin(function(){ post(body,done); }); return; }
-        alert('Σφάλμα: '+j.error); return; }
+      if(!j.ok){ alert('Σφάλμα: '+j.error); return; }
       done(j);
     }).catch(function(e){ alert('Δεν στάλθηκε: '+e.message+'\n(έλεγξε τη σύνδεση)'); });
 }
@@ -1094,7 +1112,9 @@ function makeCard(t,mode){
   var num=(t.id||'').replace(/^T/,'');
   c.font='700 78px '+F; c.textAlign='right'; c.fillText(num,W-M,M+72);
   c.textAlign='left';
-  c.font='700 62px '+F; c.fillText(t.name,M,M+62);
+  var short=String(t.name||'').replace(/\s*[—–-]\s*$/,'');
+  if(t.town) short=short.replace(new RegExp('\\s*[—–-]\\s*'+t.town.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\s*$'),'');
+  c.font='700 62px '+F; c.fillText(short,M,M+62);
   c.font='400 30px '+F; c.fillStyle='#6D7780'; c.fillText(t.town,M,M+108);
   c.strokeStyle='#1A1F24'; c.lineWidth=4;
   c.beginPath(); c.moveTo(M,M+140); c.lineTo(W-M,M+140); c.stroke();
@@ -1135,10 +1155,12 @@ function makeCard(t,mode){
     var url=t.mymaps_id?('https://www.google.com/maps/d/viewer?mid='+t.mymaps_id):'';
     var linkY=H-96;
     if(url){
-      c.fillStyle='#5A6B7A'; c.font='400 21px '+F; c.textAlign='left';
-      c.fillText('Άνοιγμα χάρτη ▸ google.com/maps/d/viewer',M,linkY);
-      c.strokeStyle='#9FB0BD'; c.lineWidth=1.5;
-      c.beginPath(); c.moveTo(M,linkY+8); c.lineTo(M+430,linkY+8); c.stroke();
+      var lw=520, lh=54, ly=linkY-38;
+      c.fillStyle='#E8F0F4'; c.strokeStyle='#2E6E8E'; c.lineWidth=2;
+      c.beginPath(); c.rect(M,ly,lw,lh); c.fill(); c.stroke();
+      c.fillStyle='#1C5A78'; c.font='600 26px '+F; c.textAlign='left';
+      c.fillText('▸  Άνοιγμα χάρτη στο Google Maps',M+18,ly+35);
+      linkY=ly;
     }
     c.fillStyle='#98A0A7'; c.font='400 19px '+F; c.textAlign='center';
     c.fillText('Χάρτης: '+TILES[0].credit+' · '+fmt(new Date()),W/2,H-40); c.textAlign='left';
@@ -1151,7 +1173,7 @@ function makeCard(t,mode){
     pdf.addImage(data,'JPEG',0,0,105,148);
     var mm=105/W;                                   /* px κάρτας -> mm */
     if(url){
-      pdf.link(M*mm, (linkY-26)*mm, 430*mm, 40*mm, {url:url});      /* η γραμμή κειμένου */
+      pdf.link(M*mm, linkY*mm, 520*mm, 54*mm, {url:url});           /* το κουμπί συνδέσμου */
       pdf.link((W-M-240)*mm, (y-16)*mm, 250*mm, 250*mm, {url:url}); /* και το QR */
     }
     var fn=(t.id||'tomeas')+'.pdf';
@@ -1213,17 +1235,6 @@ function wrap(c,text,x,y,maxW,lh){
   if(line) c.fillText(line,x,yy);
 }
 
-function askPin(then){
-  var d=modal('<h2>PIN</h2><div class="cs">Χρειάζεται μόνο για αποθήκευση. Θα το θυμάται.</div>'+
-    '<input id="pI" type="tel" inputmode="numeric" placeholder="······" '+
-    'style="text-align:center;font-size:22px;letter-spacing:.4em">'+
-    '<div class="btns" style="margin-top:18px"><button class="btn" id="pX">Άκυρο</button>'+
-    '<button class="btn pri" id="pO">Εντάξει</button></div>');
-  setTimeout(function(){ d.querySelector('#pI').focus(); },80);
-  d.querySelector('#pX').onclick=function(){ d.remove(); };
-  d.querySelector('#pO').onclick=function(){ var v=d.querySelector('#pI').value.trim(); if(!v) return;
-    localStorage.setItem('tomeis_pin',v); d.remove(); then(); };
-}
 function svcYear(y){                      /* υπηρεσιακό έτος: Σεπ y → Αύγ y+1 */
   var ys=String(D.settings.year_starts||'09-01'), mm=(+ys.slice(0,2))||9, dd=(+ys.slice(3,5))||1;
   return {from:new Date(y,mm-1,dd), to:new Date(y+1,mm-1,dd-1), label:y+'–'+(y+1)};
@@ -1238,8 +1249,11 @@ function yearTitle(y){ var r=svcYear(y);
   return GRMONTH[r.from.getMonth()]+' '+r.from.getFullYear()+' – '+GRMONTH[r.to.getMonth()]+' '+r.to.getFullYear(); }
 function openReport(){
   var cur=curSvcYear(), opts='';
-  for(var y=cur+1;y>=cur-8;y--)
-    opts+='<option value="'+y+'"'+(y===cur?' selected':'')+'>'+y+'–'+(y+1)+'  ('+yearTitle(y)+')</option>';
+  var first=cur-1;
+  D.assignments.forEach(function(a){
+    var y=+String(a.date_out||'').slice(0,4); if(y && y<first) first=y; });
+  for(var y=cur+5;y>=first;y--)
+    opts+='<option value="'+y+'"'+(y===cur?' selected':'')+'>'+y+'–'+(y+1)+'</option>';
   var d=modal('<h2>Έντυπο διορισμού τομέα</h2>'+
     '<div class="cs">Ένα υπηρεσιακό έτος ανά εκτύπωση — Σεπτέμβριος έως Αύγουστος</div>'+
     '<label>Υπηρεσιακό έτος</label><select id="rY">'+opts+'</select>'+
@@ -1321,10 +1335,9 @@ function buildReport(y){
   head+='</tr>';
 
   document.getElementById('printArea').innerHTML=
-    '<div class="rhead"><h1>ΕΝΤΥΠΟ ΔΙΟΡΙΣΜΟΥ ΤΟΜΕΑ</h1>'+
-      '<div class="yr">Υπηρεσιακό έτος <b>'+r.label+'</b> · '+yearTitle(y)+'</div></div>'+
-    '<table class="rtab"><thead>'+head+'</thead>'+body+'</table>'+
-    '<div class="rfoot"><span>'+list.length+' τομείς</span><span>Εκτυπώθηκε '+fmt(new Date())+'</span></div>';
+    '<div class="rhead"><h1>ΕΝΤΥΠΟ ΔΙΟΡΙΣΜΟΥ ΤΟΜΕΑ</h1></div>'+
+    '<div class="ryear">Υπηρεσιακό Έτος:<span class="box">'+r.label+'</span></div>'+
+    '<table class="rtab"><thead>'+head+'</thead>'+body+'</table>';
   setTimeout(function(){ window.print(); },80);
 }
 function openSettings(){
