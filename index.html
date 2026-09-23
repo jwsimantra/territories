@@ -39,15 +39,18 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline
 
 #app{display:flex;flex-direction:column;height:100%;max-width:560px;margin:0 auto;
   box-shadow:0 0 0 1px var(--rule-soft)}
-header{flex:0 0 auto;padding:calc(13px + var(--safe-t)) 16px 10px;border-bottom:1px solid var(--rule-soft);
-  display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
-h1{margin:0;font-size:20px;font-weight:700;letter-spacing:-.02em}
-.sub{color:var(--faint);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;margin-top:3px}
-.hbtns{display:flex;gap:2px;flex:0 0 auto}
-.hbtns button{width:36px;height:36px;display:flex;align-items:center;justify-content:center;
-  color:var(--muted);border-radius:10px}
+header{flex:0 0 auto;padding:calc(13px + var(--safe-t)) 14px 10px;border-bottom:1px solid var(--rule-soft);
+  display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+header>div:first-child{min-width:0;flex:1}
+h1{margin:0;font-size:20px;font-weight:700;letter-spacing:-.02em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sub{color:var(--faint);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;margin-top:3px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hbtns{display:flex;gap:0;flex:0 0 auto}
+.hbtns button{width:33px;height:33px;display:flex;align-items:center;justify-content:center;
+  color:var(--muted);border-radius:9px}
 .hbtns button:active{background:var(--raised)}
-.hbtns svg{width:19px;height:19px;display:block}
+.hbtns svg{width:18px;height:18px;display:block}
 .hbtns .spin-on svg{animation:sp .8s linear infinite}
 .hbtns button{position:relative}
 #bellDot{position:absolute;top:4px;right:4px;min-width:17px;height:17px;border-radius:99px;
@@ -249,18 +252,30 @@ input[type="date"]{padding:9px 6px 9px 10px}
   .rhead h1{font-size:13pt;font-weight:700;letter-spacing:.08em;margin:0}
   .ryear{font-size:9.5pt;font-weight:700;margin:0 0 3mm;display:flex;align-items:center;gap:2mm}
   .ryear .box{border:.9pt solid #000;padding:.8mm 6mm;font-weight:400}
-  .rtab{width:100%;border-collapse:collapse;table-layout:fixed;border:1.1pt solid #000}
-  .rtab th,.rtab td{border:.5pt solid #666;padding:.9mm 1mm;overflow:hidden;white-space:nowrap}
-  .rtab thead th{background:#e9e9e9;font-size:6.5pt;font-weight:600;line-height:1.15;
-    text-transform:uppercase;letter-spacing:.02em;white-space:normal}
-  .rtab tbody{page-break-inside:avoid}
+  /* Το περίγραμμα μπαίνει στα ΚΕΛΙΑ, όχι στον πίνακα: έτσι κάθε σελίδα
+     κλείνει μόνη της και δεν φαίνεται σαν κομμένη στη μέση. */
+  .rtab{width:100%;border-collapse:collapse;table-layout:fixed}
+  .rtab th,.rtab td{border:.5pt solid #7a7a7a;padding:1mm 1.2mm;overflow:hidden;
+    vertical-align:middle}
+  .rtab thead th{background:#ededed;font-size:6.5pt;font-weight:700;line-height:1.15;
+    text-transform:uppercase;letter-spacing:.02em;white-space:normal;
+    border-color:#000;border-width:.8pt}
+  .rtab tbody{page-break-inside:avoid;break-inside:avoid}
   .rtab thead{display:table-header-group}
-  .rtab .num{font-size:9pt;font-weight:700;text-align:center;vertical-align:middle}
-  .rtab .num small{display:block;font-size:5.5pt;font-weight:600;letter-spacing:.06em;color:#444}
-  .rtab .lastc{font-size:8pt;text-align:center;vertical-align:middle}
-  .rtab .who{font-size:7.5pt;text-align:center;background:#fafafa}
-  .rtab .dt{font-size:7.5pt;text-align:center;height:4.6mm}
+  .rtab tbody tr:first-child td{border-top-width:.8pt;border-top-color:#000}
+  .rtab tbody tr:last-child td{border-bottom-width:.8pt;border-bottom-color:#000}
+  .rtab td:first-child,.rtab th:first-child{border-left-width:.8pt;border-left-color:#000}
+  .rtab td:last-child,.rtab th:last-child{border-right-width:.8pt;border-right-color:#000}
+  .rtab .num{font-size:9pt;font-weight:700;text-align:center;line-height:1.05}
+  .rtab .num small{display:block;font-size:5.5pt;font-weight:700;letter-spacing:.04em;color:#333;
+    margin-top:.4mm}
+  .rtab .lastc{font-size:7.5pt;text-align:center;white-space:nowrap}
+  /* τα ονόματα χωράνε πάντα: σπάνε σε δεύτερη γραμμή αντί να κόβονται */
+  .rtab .who{font-size:7pt;text-align:center;background:#fbfbfb;line-height:1.15;
+    white-space:normal;word-break:break-word;hyphens:auto;padding:.8mm 1mm}
+  .rtab .dt{font-size:7.5pt;text-align:center;height:4.8mm;white-space:nowrap}
 }
+
 </style>
 </head>
 <body>
@@ -269,6 +284,11 @@ input[type="date"]{padding:9px 6px 9px 10px}
   <header>
     <div><h1 id="ttl">Τομείς</h1><div class="sub" id="sub">φόρτωση…</div></div>
     <div class="hbtns">
+      <button onclick="shareApp()" title="Μοιράσου τη σελίδα αδελφών">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+          <line x1="8.6" y1="10.5" x2="15.4" y2="6.5"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/></svg>
+      </button>
       <button id="bellBtn" onclick="openRequests()" title="Τι έκαναν οι αδελφοί">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
@@ -708,6 +728,44 @@ function reqText(r){
   if(r.kind==='waiting')  return '<b>'+esc(r.person)+'</b> ζητάει τον '+esc(nm);
   return esc(r.person)+' — '+esc(nm);
 }
+/* Η διεύθυνση της σελίδας αδελφών βγαίνει από τη διεύθυνση αυτής εδώ:
+   .../index.html  ->  .../aitisi.html  (δουλεύει και σε υποφάκελο) */
+function pubUrl(){
+  var u=location.href.split('#')[0].split('?')[0];
+  if(/\/[^\/]*\.html?$/i.test(u)) return u.replace(/\/[^\/]*\.html?$/i,'/aitisi.html');
+  return u.replace(/\/?$/,'/')+'aitisi.html';
+}
+function shareApp(){
+  var url=pubUrl();
+  var msg='Σελίδα τομέων για τους αδελφούς:\n'+url+
+    '\n\nΆνοιξέ τη, διάλεξε το όνομά σου μία φορά, και μετά βλέπεις ποιοι τομείς '+
+    'είναι ελεύθεροι και ποιον έχεις εσύ.';
+  var d=modal('<h2>Σελίδα αδελφών</h2>'+
+    '<div class="cs">Στείλ\' τους αυτόν τον σύνδεσμο — δεν χρειάζεται κωδικός</div>'+
+    '<div style="background:var(--raised);border:1px solid var(--rule);border-radius:10px;'+
+      'padding:12px 14px;font-size:13px;word-break:break-all;margin-bottom:14px">'+esc(url)+'</div>'+
+    '<button class="opt" id="aS"><span class="ic">↗</span><div><b>Αποστολή</b>'+
+      '<small>WhatsApp, Viber, μήνυμα, email</small></div></button>'+
+    '<button class="opt" id="aC"><span class="ic">⧉</span><div><b>Αντιγραφή συνδέσμου</b>'+
+      '<small>Για επικόλληση όπου θέλεις</small></div></button>'+
+    '<button class="opt" id="aQ"><span class="ic">▦</span><div><b>QR κωδικός</b>'+
+      '<small>Να τον σκανάρουν από κοντά</small></div></button>'+
+    '<button class="opt" id="aO"><span class="ic">▤</span><div><b>Άνοιγμα</b>'+
+      '<small>Δες τη σελίδα όπως τη βλέπουν</small></div></button>');
+  d.querySelector('#aS').onclick=function(){ d.remove();
+    if(navigator.share) navigator.share({title:'Τομείς',text:msg}).catch(function(){});
+    else { copy(msg); toast('Αντιγράφηκε'); } };
+  d.querySelector('#aC').onclick=function(){ d.remove(); copy(url); toast('Ο σύνδεσμος αντιγράφηκε'); };
+  d.querySelector('#aO').onclick=function(){ d.remove(); window.open(url,'_blank'); };
+  d.querySelector('#aQ').onclick=function(){ d.remove();
+    var qr=qrcode(0,'M'); qr.addData(url); qr.make();
+    var m=modal('<h2>Σελίδα αδελφών</h2><div class="cs">Σκανάρετε με την κάμερα</div>'+
+      '<div style="background:#fff;padding:16px;border-radius:14px;max-width:260px;margin:0 auto">'+
+      qr.createSvgTag({cellSize:5,margin:0,scalable:true})+'</div>'+
+      '<div class="btns" style="margin-top:18px"><button class="btn pri" id="qX">Έτοιμο</button></div>');
+    m.querySelector('#qX').onclick=function(){ m.remove(); };
+  };
+}
 function openRequests(){
   var rs=(D.requests||[]).slice().reverse();
   var waiting=rs.filter(function(r){ return r.kind==='waiting'; });
@@ -995,6 +1053,8 @@ function viewDetail(){
   $('#ttl').textContent=t.name; $('#sub').textContent=t.id+' · '+t.town;
 
   var h='<button class="back" onclick="detail=null;render()">‹ Πίσω</button>'+
+    '<div style="font-size:19px;font-weight:700;letter-spacing:-.01em;margin:0 0 2px">'+esc(t.name)+'</div>'+
+    '<div style="font-size:13px;color:var(--faint);margin-bottom:12px">'+esc(t.id)+' · '+esc(t.town)+'</div>'+
     '<div class="mapbox big"><div class="lf" id="dMap"></div>'+
     '<button class="expand" onclick="fullTown(\''+esc(t.town)+'\',\''+t.id+'\')">Πλήρης οθόνη</button></div>'+
     '<p style="margin:-6px 0 12px;font-size:11.5px;color:var(--faint);text-align:center">'+
