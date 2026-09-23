@@ -30,13 +30,15 @@
   --tilefx:grayscale(1) brightness(1.16) contrast(.62);
 }
 
-/* Ελεύθεροι: συνεχής κλίμακα πράσινο→κίτρινο→κόκκινο (ageCol) · μπλε = δικός σου · γκρι = σε χρήση */
-:root{
+/* Ελεύθεροι κατά αναμονή: g1 πράσινο (<8 μήνες) · g2 κιτρινοπράσινο (8–12) · g3 κόκκινο (12+)
+   μπλε = δικός σου · γκρι = σε χρήση */
+:root{ --g1:#6CCB9C; --g2:#DAE36C; --g3:#F07464;
   --ok:#2FA37F; --ok-soft:rgba(47,163,127,.14); --mine:#4A82D6; --mine-soft:rgba(74,130,214,.14); }
-:root[data-theme="light"]{
+:root[data-theme="light"]{ --g1:#74C29A; --g2:#D2DE58; --g3:#E8604F;
   --ok:#127A5C; --ok-soft:rgba(18,122,92,.10); --mine:#25508F; --mine-soft:rgba(37,80,143,.10); }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 body{background:var(--ground);color:var(--text);
   font:17px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif;
   -webkit-font-smoothing:antialiased}
@@ -140,28 +142,41 @@ input,select{width:100%;background:var(--raised);border:1px solid var(--rule);bo
 .town-map{height:240px;background:var(--map-bg);position:relative;overflow:hidden}
 .town-map .mmw,.town-map>svg{width:100%!important;height:100%!important;display:block}
 /* Chips: αριθμοί ελεύθερων τομέων, χρωματισμένοι κατά αναμονή */
-.free-chips{display:flex;flex-wrap:wrap;gap:7px;padding:10px 12px 8px}
-.fchip{display:flex;flex-direction:column;align-items:center;gap:0;color:#10161B;
-  padding:5px 8px 4px;border-radius:9px;border:0;cursor:pointer;text-align:center;min-width:44px}
-.fchip:active{opacity:.7}
-.fc-num{font-size:16px;font-weight:800;line-height:1.1}
-.fc-age{font-size:10px;font-weight:600;opacity:.85;white-space:nowrap}
+/* ελεύθεροι τομείς κάτω από τον χάρτη — γραμμές όπως στην εφαρμογή διαχείρισης */
+.flist{padding:4px 10px 8px}
+.frow{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:9px 4px;cursor:pointer}
+.frow+.frow{border-top:1px solid var(--rule-soft)}
+.frow:active{opacity:.7}
+.fnum{flex:0 0 auto;min-width:44px;height:40px;padding:0 6px;border-radius:11px;display:grid;place-items:center;
+  color:#122019;font-size:18px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums;
+  box-shadow:inset 0 -2px 0 rgba(0,0,0,.08)}
+.finfo{flex:1;min-width:0;display:block}
+.finfo b{display:block;font-size:15px;font-weight:600;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.finfo small{display:block;font-size:12px;color:var(--faint);margin-top:2px}
+.fval{flex:0 0 auto;text-align:right;font-variant-numeric:tabular-nums}
+.fval b{display:block;font-size:19px;font-weight:700;line-height:1.1}
+.fval em{display:block;font-style:normal;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-top:1px}
 .town-none{padding:8px 14px 10px;font-size:13px;color:var(--faint)}
-.leaflet-tooltip.numlbl{background:transparent;border:0;box-shadow:none;padding:0;
-  font-weight:800;font-size:13px;color:var(--text);
-  text-shadow:0 0 3px var(--map-bg),0 0 3px var(--map-bg),0 0 2px var(--map-bg)}
+.leaflet-tooltip.numlbl{background:transparent;border:0;box-shadow:none;padding:0;margin:0}
 .leaflet-tooltip.numlbl::before{display:none}
+/* αριθμοί στον χάρτη: στρογγυλά σήματα */
+.nb{display:inline-block;min-width:24px;height:24px;line-height:24px;padding:0 6px;border-radius:12px;
+  font:800 12.5px/24px system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;text-align:center;
+  color:#122019;box-shadow:0 1px 4px rgba(0,0,0,.35),0 0 0 1.5px rgba(255,255,255,.85);font-variant-numeric:tabular-nums}
+.nb.mine{background:var(--mine);color:#fff}
+.nb.idle{min-width:20px;height:20px;line-height:20px;font-size:10.5px;font-weight:700;padding:0 5px;
+  background:var(--sheet);color:var(--faint);box-shadow:0 0 0 1px var(--rule)}
 /* Επεξήγηση χρωμάτων */
 .age-legend{background:var(--sheet);border:1px solid var(--rule-soft);border-radius:14px;
-  padding:12px 14px 10px;margin:0 0 14px}
-.al-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
-.al-top b{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-.al-bar{height:18px;border-radius:99px}
-.al-ticks{display:flex;justify-content:space-between;margin-top:5px;font-size:12.5px;font-weight:700;color:var(--muted)}
-.al-more{display:flex;gap:14px;margin-top:10px;font-size:12px;color:var(--faint)}
-.al-more span{display:flex;align-items:center;gap:6px}
-.al-dot{width:12px;height:12px;border-radius:4px;display:inline-block;flex:0 0 auto}
-.al-dot.busy{background:var(--idle);opacity:.5} .al-dot.mine{background:var(--mine)}
+  padding:12px 12px 10px;margin:0 0 14px}
+.al-top{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 2px 9px}
+.al-sw{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.al-sw span{border-radius:10px;padding:9px 4px;text-align:center;color:#122019;font-size:13.5px;font-weight:700;line-height:1.15}
+.al-sw span small{display:block;font-size:11px;font-weight:600;opacity:.75}
+.al-more{display:flex;gap:16px;margin:10px 2px 0;font-size:13px;color:var(--muted)}
+.al-more span{display:flex;align-items:center;gap:7px}
+.al-dot{width:14px;height:14px;border-radius:5px;display:inline-block;flex:0 0 auto}
+.al-dot.busy{background:var(--idle);opacity:.55} .al-dot.mine{background:var(--mine)}
 /* Σύνδεσμος */
 .lnk{color:var(--accent);font-weight:600;background:none;border:0;cursor:pointer;font:inherit;padding:0}
 </style>
@@ -286,7 +301,7 @@ function projOf(list,w,h,pad){
   return {z:z, ox:(w-(x1-x0))/2-x0, oy:(h-(y1-y0))/2-y0};
 }
 function numOf(t){ return String(t.id||'').replace(/^T0*/,''); }
-function fillOp(s){ if(s.mine) return .5; if(s.state==='ready') return .32+.3*ageT(s.rested); return .16; }
+function fillOp(s){ if(s.mine) return .5; if(s.state==='ready') return [0,.4,.5,.6][bandOf(s.rested)]; return .16; }
 /* σημείο ετικέτας: κέντρο βάρους του μεγαλύτερου πολυγώνου (σε pixel) */
 function labelPt(gg,p){
   var best=null, ba=-1;
@@ -560,7 +575,13 @@ function drawLeaflet(elId,list,opts){
     g.polygons.forEach(function(p,pi){
       var poly=L.polygon(p.coords,{color:c,weight:main?2.6:1.5,fillOpacity:main?(focus?.34:fillOp(t.s)):.14,
         fillColor:c,interactive:true}).addTo(m);
-      if(pi===0) poly.bindTooltip(numOf(t),{permanent:true,direction:'center',className:'numlbl',opacity:main?1:.6});
+      if(pi===0){
+        var free=t.s.state==='ready';
+        var badge=(main&&t.s.mine)?'<span class="nb mine">'+numOf(t)+'</span>'
+          :(main&&free)?'<span class="nb" style="background:'+ageCol(t.s.rested)+'">'+numOf(t)+'</span>'
+          :'<span class="nb idle">'+numOf(t)+'</span>';
+        poly.bindTooltip(badge,{permanent:true,direction:'center',className:'numlbl',opacity:1});
+      }
       poly.on('click',function(){
         if(opts.onPick && (!focus || t.id!==focus)) opts.onPick(t.id);
         else poly.bindTooltip(t.name,{className:'maplbl',direction:'top'}).openTooltip();
@@ -580,19 +601,10 @@ function drawLeaflet(elId,list,opts){
 
 /* ---------- χρώματα: ελεύθεροι κατά αναμονή (a1→a5), δικός σου μπλε, υπόλοιποι γκρι ---------- */
 function col(s){ if(s.mine) return 'var(--mine)'; if(s.state==='ready') return ageCol(s.rested); return 'var(--idle)'; }
-/* 0 = μόλις ελευθερώθηκε (≤6μ) … 1 = 12 μήνες και πάνω ή ποτέ */
-function ageT(m){ if(m===Infinity) return 1; return Math.max(0,Math.min(1,(m-6)/6)); }
-/* ομαλή μετάβαση: πράσινο → κίτρινο → κόκκινο (ενδιάμεσοι τόνοι για απαλό πέρασμα) */
-var AGE_RGB=[[64,170,126],[150,186,94],[232,193,76],[236,144,76],[222,86,66]];
-function ageMix(t){
-  var n=AGE_RGB.length-1, x=Math.max(0,Math.min(1,t))*n, i=Math.min(n-1,Math.floor(x)), f=x-i,
-      a=AGE_RGB[i], b=AGE_RGB[i+1];
-  return 'rgb('+[0,1,2].map(function(k){ return Math.round(a[k]+(b[k]-a[k])*f); }).join(',')+')';
-}
-function ageCol(m){ return ageMix(ageT(m)); }
-function ageGrad(){ var st=[]; for(var i=0;i<=12;i++) st.push(ageMix(i/12)+' '+(i/12*100).toFixed(1)+'%');
-  return 'linear-gradient(90deg,'+st.join(',')+')'; }
-function ageShort(m){ if(m===Infinity) return 'ποτέ'; if(m<1) return Math.round(m*30.44)+'η'; return Math.floor(m)+'μ'; }
+/* ζώνες αναμονής: 1 = κάτω από 8 μήνες · 2 = 8–12 μήνες · 3 = 12 μήνες και πάνω (ή ποτέ) */
+function bandOf(m){ return (m===Infinity||m>=12)?3:m>=8?2:1; }
+function ageCol(m){ return 'var(--g'+bandOf(m)+')'; }
+function monthsNum(m){ return m===Infinity?'—':String(Math.floor(m)); }
 
 var TOWN_ALIAS={'Διασταύρωση Παλαιοκάστρου':'Παλαιόκαστρο','Διασταύρωση':'Παλαιόκαστρο'};
 function townOf(t){ var n=String(t.town||'').trim(); return TOWN_ALIAS[n]||n; }
@@ -742,11 +754,12 @@ function viewFree(){
     ' · <button class="lnk" onclick="go(\'mine\')">Προβολή</button></div>';
 
   if(!nFree) h+='<div class="empty"><b>Κανένας ελεύθερος τομέας</b></div>';
-  h+='<div class="age-legend"><div class="al-top"><b>Αναμονή</b></div>'+
-    '<div class="al-bar" style="background:'+ageGrad()+'"></div>'+
-    '<div class="al-ticks"><span>6μ</span><span>9μ</span><span>12μ+</span></div>'+
-    '<div class="al-more"><span><i class="al-dot busy"></i>σε χρήση</span>'+
-    (mine.length?'<span><i class="al-dot mine"></i>δικός σου</span>':'')+'</div></div>';
+  h+='<div class="age-legend"><div class="al-top">Αναμονή σε μήνες</div><div class="al-sw">'+
+    '<span style="background:var(--g1)">έως 8<small>μήνες</small></span>'+
+    '<span style="background:var(--g2)">8 – 12<small>μήνες</small></span>'+
+    '<span style="background:var(--g3)">12+<small>μήνες</small></span></div>'+
+    '<div class="al-more"><span><i class="al-dot busy"></i>Σε χρήση</span>'+
+    (mine.length?'<span><i class="al-dot mine"></i>Δικός σου</span>':'')+'</div></div>';
 
   tw.forEach(function(x,i){
     h+='<div class="town-sec">'+
@@ -756,9 +769,13 @@ function viewFree(){
       '<div class="town-map" id="tm'+i+'" data-town="'+i+'" style="height:'+townH(x)+'px">'+
         miniSvg(x.list,520,townH(x),null,true)+'</div>';
     if(x.free.length){
-      h+='<div class="free-chips">'+x.free.map(function(t){
-        return '<button class="fchip" style="background:'+ageCol(t.s.rested)+'" onclick="open_(\''+t.id+'\')" title="'+esc(shortName(t))+'">'+
-          '<span class="fc-num">'+esc(numOf(t))+'</span><span class="fc-age">'+ageShort(t.s.rested)+'</span></button>';
+      h+='<div class="flist">'+x.free.map(function(t){
+        var s=t.s;
+        return '<button class="frow" onclick="open_(\''+t.id+'\')">'+
+          '<span class="fnum" style="background:'+ageCol(s.rested)+'">'+esc(numOf(t))+'</span>'+
+          '<span class="finfo"><b>'+esc(shortName(t))+'</b><small>'+
+            (s.never?'Χωρίς προηγούμενη ολοκλήρωση':'Ολοκλήρωση '+fmt(s.lastReturned))+'</small></span>'+
+          '<span class="fval"><b>'+monthsNum(s.rested)+'</b><em>'+(s.never?'ποτέ':'μήνες')+'</em></span></button>';
       }).join('')+'</div>';
     } else h+='<div class="town-none">Κανένας ελεύθερος</div>';
     h+='</div>';
