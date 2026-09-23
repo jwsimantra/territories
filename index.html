@@ -268,7 +268,7 @@ input[type="date"]{padding:9px 6px 9px 10px}
   .rtab tr,.rtab tbody{break-inside:avoid;page-break-inside:avoid}
   .rtab th,.rtab td{border:0;border-right:1px solid #000;border-bottom:1px solid #000;
     padding:.6mm .7mm;vertical-align:middle;overflow:hidden}
-  .rtab thead th{background:#f6f6f6;font-size:6.6pt;font-weight:700;line-height:1.12;
+  .rtab thead th{background:#f6f6f6;font-size:5.9pt;font-weight:700;line-height:1.12;padding:.5mm .4mm;
     text-align:center;white-space:normal;overflow-wrap:normal;word-break:normal;hyphens:none}
   .rtab thead tr:last-child th{border-bottom:1.4px solid #000}
   /* χωρίσματα ανάμεσα στις 4 αναθέσεις και δεξί άκρο */
@@ -276,12 +276,13 @@ input[type="date"]{padding:9px 6px 9px 10px}
   /* κάτω γραμμή κάθε τομέα πιο έντονη */
   .rtab td.dt,.rtab td.num,.rtab td.lastc{border-bottom:1.4px solid #000}
   /* ανάμεσα σε όνομα και ημερομηνίες: λεπτή γκρι */
-  .rtab td.who{border-bottom:1px solid #9a9a9a;height:6.3mm;font-size:7pt;text-align:center;line-height:1.12;
-    white-space:normal;word-break:break-word;overflow-wrap:anywhere;padding:.3mm .7mm}
-  .rtab td.dt{height:5mm;font-size:6.8pt;text-align:center;white-space:nowrap}
-  .rtab .num{font-size:9pt;font-weight:700;text-align:center;line-height:1.05}
+  /* ύψη χωρίς κάθετο padding: το Safari προσθέτει το padding στο ύψος, το Chrome όχι */
+  .rtab td.who{border-bottom:1px solid #9a9a9a;height:6mm;font-size:6.8pt;text-align:center;line-height:1.1;
+    white-space:normal;word-break:break-word;overflow-wrap:anywhere;padding:0 .6mm}
+  .rtab td.dt{height:4.8mm;font-size:6.6pt;text-align:center;white-space:nowrap;padding:0 .5mm}
+  .rtab .num{font-size:9pt;font-weight:700;text-align:center;line-height:1.05;padding:0 .3mm}
   .rtab .num small{display:block;font-size:5.5pt;font-weight:700;letter-spacing:.04em;color:#333;margin-top:.4mm}
-  .rtab .lastc{font-size:7.2pt;text-align:center;white-space:nowrap}
+  .rtab .lastc{font-size:6.8pt;text-align:center;white-space:nowrap;padding:0 .5mm}
 }
 </style>
 </head>
@@ -728,11 +729,13 @@ function bell(){
   var n=newReqs().length;
   d.textContent=n>9?'9+':String(n); d.classList.toggle('on',n>0);
 }
+/* ανανέωση = ζητάει τον τομέα που ήδη κρατάει */
+function isRenew(r){ var t=byId(r.territory_id); return !!(t && isOut(t.s) && t.s.holder===r.person); }
 function reqText(r){
   var t=byId(r.territory_id), nm=t?t.name:r.territory_id;
   if(r.kind==='taken')    return '<b>'+esc(r.person)+'</b> · ανάθεση · '+esc(nm);
   if(r.kind==='returned') return '<b>'+esc(r.person)+'</b> · ολοκλήρωση · '+esc(nm);
-  if(r.kind==='waiting')  return '<b>'+esc(r.person)+'</b> · αίτηση · '+esc(nm);
+  if(r.kind==='waiting')  return '<b>'+esc(r.person)+'</b> · '+(isRenew(r)?'ανανέωση':'αίτηση')+' · '+esc(nm);
   return esc(r.person)+' — '+esc(nm);
 }
 /* Η διεύθυνση της σελίδας αιτήσεων βγαίνει από τη διεύθυνση αυτής εδώ:
@@ -792,11 +795,14 @@ function openRequests(){
   if(waiting.length){
     h+='<h3>Σε αναμονή</h3>';
     waiting.forEach(function(r){
-      var t=byId(r.territory_id), free=t&&t.s.state==='ready';
+      var t=byId(r.territory_id), free=t&&t.s.state==='ready', renew=isRenew(r);
       h+='<div class="req'+(r.status!=='seen'?' new':'')+'">'+
         '<div class="w">'+reqText(r)+'</div>'+
         '<div class="m">'+fmt(r.date)+(r.note?' · '+esc(r.note):'')+'</div>'+
-        (free?'<div class="btns" style="margin:10px 0 0"><button class="btn pri" onclick="grantReq(\''+
+        (renew?'<div class="m">Επιστροφή έως '+fmt(t.s.dueOn)+' → νέα έως '+fmt(addM(new Date(),D.settings.hold_months))+'</div>'+
+          '<div class="btns" style="margin:10px 0 0"><button class="btn" onclick="dropReq(\''+esc(r.row_id)+'\')">Απόρριψη</button>'+
+          '<button class="btn pri" onclick="renewReq(\''+esc(r.row_id)+'\',\''+esc(r.territory_id)+'\',\''+esc(r.person)+'\')">Ανανέωση</button></div>'
+        :free?'<div class="btns" style="margin:10px 0 0"><button class="btn pri" onclick="grantReq(\''+
           esc(r.row_id)+'\',\''+esc(r.territory_id)+'\',\''+esc(r.person)+'\')">Ανάθεση</button></div>'
              :'<div class="m">Μη διαθέσιμος ακόμα</div>')+
         '</div>';
@@ -816,6 +822,19 @@ function openRequests(){
   var b=d.querySelector('#seenAll');
   if(b) b.onclick=function(){ d.remove(); post({action:'seenReq'},function(){
     refresh(function(){ toast('Σημειώθηκαν ως διαβασμένα'); }); }); };
+}
+/* ανανέωση: επιστροφή σήμερα και νέα ανάθεση σήμερα στο ίδιο άτομο */
+function renewReq(rowId,tid,person){
+  document.querySelectorAll('.scrim').forEach(function(e){ e.remove(); });
+  var d=today();
+  post({action:'takeBack',territory:tid,date:d},function(){
+    post({action:'giveOut',territory:tid,person:person,date:d},function(){
+      post({action:'seenReq',rowId:rowId},function(){
+        refresh(function(){ toast('Ανανεώθηκε: '+person+' → '+tid); }); }); }); });
+}
+function dropReq(rowId){
+  document.querySelectorAll('.scrim').forEach(function(e){ e.remove(); });
+  post({action:'cancelReq',rowId:rowId},function(){ refresh(function(){ toast('Η αίτηση απορρίφθηκε'); }); });
 }
 function grantReq(rowId,tid,person){
   document.querySelectorAll('.scrim').forEach(function(e){ e.remove(); });

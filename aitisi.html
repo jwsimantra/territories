@@ -32,77 +32,77 @@
 
 /* Ελεύθεροι κατά αναμονή: g1 πράσινο (<8 μήνες) · g2 κιτρινοπράσινο (8–12) · g3 κόκκινο (12+)
    μπλε = δικός σου · γκρι = σε χρήση */
-:root{ --g1:#6CCB9C; --g2:#DAE36C; --g3:#F07464;
+:root{ --g1:#6CCB9C; --g2:#DAE36C; --g3:#F07464; --g1t:#7BD6A9; --g2t:#DDE572; --g3t:#F58474; --late:#F07464;
   --ok:#2FA37F; --ok-soft:rgba(47,163,127,.14); --mine:#4A82D6; --mine-soft:rgba(74,130,214,.14); }
-:root[data-theme="light"]{ --g1:#74C29A; --g2:#D2DE58; --g3:#E8604F;
+:root[data-theme="light"]{ --g1:#5DB889; --g2:#BFCC3A; --g3:#E25A48; --g1t:#1F8656; --g2t:#7C8A0C; --g3t:#C8412F; --late:#C8412F;
   --ok:#127A5C; --ok-soft:rgba(18,122,92,.10); --mine:#25508F; --mine-soft:rgba(37,80,143,.10); }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%}
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 body{background:var(--ground);color:var(--text);
-  font:17px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif;
+  font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif;
   -webkit-font-smoothing:antialiased}
 button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
 #app{display:flex;flex-direction:column;height:100%;max-width:560px;margin:0 auto;
   box-shadow:0 0 0 1px var(--rule-soft)}
 header{flex:0 0 auto;padding:calc(14px + var(--safe-t)) 18px 12px;border-bottom:1px solid var(--rule-soft);
   display:flex;justify-content:space-between;align-items:flex-start;gap:12px;background:var(--sheet)}
-header h1{margin:0;font-size:21px;font-weight:700;letter-spacing:-.01em}
-header .who{margin-top:2px;font-size:14px;color:var(--muted)}
+header h1{margin:0;font-size:18px;font-weight:700;letter-spacing:-.01em}
+header .who{margin-top:2px;font-size:13px;color:var(--muted)}
 header .who b{color:var(--accent);font-weight:600}
 .hbtns{display:flex;gap:2px;flex:0 0 auto}
 .hbtns button{width:40px;height:40px;display:flex;align-items:center;justify-content:center;
   color:var(--muted);border-radius:10px}
 .hbtns button:active{background:var(--raised)}
-.hbtns svg{width:21px;height:21px;display:block}
+.hbtns svg{width:19px;height:19px;display:block}
 .hbtns .spin-on svg{animation:sp .8s linear infinite}
 main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:18px 16px 28px}
 nav{flex:0 0 auto;display:flex;border-top:1px solid var(--rule);background:var(--sheet);
   padding-bottom:var(--safe-b)}
-nav button{flex:1;padding:15px 4px 17px;font-size:15px;font-weight:600;color:var(--faint);
+nav button{flex:1;padding:13px 4px 15px;font-size:13.5px;font-weight:600;color:var(--faint);
   border-top:3px solid transparent;margin-top:-1px}
 nav button.on{color:var(--accent);border-top-color:var(--accent)}
 
-h2.sec{font-size:15px;font-weight:700;margin:4px 0 14px;letter-spacing:.01em}
-p.lead{margin:0 0 18px;font-size:16px;color:var(--muted);line-height:1.5}
+h2.sec{font-size:13.5px;font-weight:700;margin:4px 0 14px;letter-spacing:.01em}
+p.lead{margin:0 0 16px;font-size:14px;color:var(--muted);line-height:1.5}
 
 .card{background:var(--sheet);border:1px solid var(--rule-soft);border-radius:16px;
   overflow:hidden;margin-bottom:14px}
 .card .mini{height:132px;background:var(--map-bg)}
 .card .mini svg{display:block;width:100%;height:100%}
 .card .body{padding:14px 16px 16px}
-.card .nm{font-size:19px;font-weight:700;letter-spacing:-.01em}
-.card .sub{font-size:15px;color:var(--muted);margin-top:3px}
-.tag{display:inline-flex;align-items:center;gap:7px;font-size:14px;font-weight:600;
-  padding:6px 12px;border-radius:99px;margin-top:10px}
-.tag i{width:10px;height:10px;border-radius:50%;flex:0 0 auto}
+.card .nm{font-size:16px;font-weight:700;letter-spacing:-.01em}
+.card .sub{font-size:13px;color:var(--muted);margin-top:3px}
+.tag{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;
+  padding:5px 10px;border-radius:99px;margin-top:10px}
+.tag i{width:8px;height:8px;border-radius:50%;flex:0 0 auto}
 .tag.free{background:var(--ok-soft);color:var(--ok)} .tag.free i{background:var(--ok)}
 .tag.mine{background:var(--mine-soft);color:var(--mine)} .tag.mine i{background:var(--mine)}
 .tag.busy{background:var(--raised);color:var(--muted)} .tag.busy i{background:var(--idle)}
 
-.big{display:block;width:100%;text-align:center;padding:17px 14px;border-radius:13px;
-  font-size:17px;font-weight:700;margin-top:14px;background:var(--raised);
+.big{display:block;width:100%;text-align:center;padding:14px 12px;border-radius:12px;
+  font-size:15px;font-weight:700;margin-top:14px;background:var(--raised);
   border:1px solid var(--rule);color:var(--text)}
 .big.go{background:var(--ok);border-color:var(--ok);color:#fff}
 .big.alt{background:var(--sheet)}
 .big:active{opacity:.75}
 .big[disabled]{opacity:.45}
 
-.kv{display:flex;justify-content:space-between;gap:14px;padding:13px 0;
-  border-bottom:1px solid var(--rule-soft);font-size:16px}
+.kv{display:flex;justify-content:space-between;gap:14px;padding:11px 0;
+  border-bottom:1px solid var(--rule-soft);font-size:14px}
 .kv:last-child{border-bottom:0}
 .kv span{color:var(--muted)} .kv b{font-weight:700;text-align:right}
 
-.empty{text-align:center;color:var(--muted);padding:52px 22px;font-size:16px;line-height:1.6}
-.empty b{display:block;color:var(--text);font-size:18px;margin-bottom:8px}
+.empty{text-align:center;color:var(--muted);padding:44px 20px;font-size:14px;line-height:1.6}
+.empty b{display:block;color:var(--text);font-size:16px;margin-bottom:8px}
 .note{background:var(--raised);border:1px solid var(--rule-soft);border-radius:13px;
-  padding:14px 16px;font-size:15px;color:var(--muted);line-height:1.55;margin-bottom:16px}
+  padding:12px 14px;font-size:13.5px;color:var(--muted);line-height:1.5;margin-bottom:14px}
 .note b{color:var(--text)}
 
-.pick{width:100%;text-align:left;padding:16px;border-bottom:1px solid var(--rule-soft);font-size:17px}
+.pick{width:100%;text-align:left;padding:14px;border-bottom:1px solid var(--rule-soft);font-size:15px}
 .pick:active{background:var(--raised)}
 input,select{width:100%;background:var(--raised);border:1px solid var(--rule);border-radius:11px;
-  padding:14px;color:var(--text);font:inherit;font-size:16px;min-width:0}
+  padding:12px;color:var(--text);font:inherit;font-size:16px;min-width:0}
 
 .mapbox{position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--rule-soft);
   margin-bottom:16px;background:var(--map-bg)}
@@ -117,16 +117,16 @@ input,select{width:100%;background:var(--raised);border:1px solid var(--rule);bo
 .mmt img{position:absolute;width:256px;height:256px;max-width:none}
 .mmw svg{position:absolute;inset:0;width:100%;height:100%}
 
-.back{display:inline-flex;align-items:center;gap:4px;margin-bottom:14px;color:var(--accent);font-size:15px;font-weight:600}
+.back{display:inline-flex;align-items:center;gap:4px;margin-bottom:12px;color:var(--accent);font-size:14px;font-weight:600}
 .scrim{position:fixed;inset:0;background:rgba(8,11,14,.62);display:flex;align-items:flex-end;z-index:1100}
 .sheet{background:var(--sheet);border-radius:18px 18px 0 0;width:100%;max-width:560px;margin:0 auto;
   padding:12px 18px calc(22px + var(--safe-b));max-height:88vh;max-height:88svh;overflow-y:auto}
 .grab{display:block;width:40px;height:4px;border-radius:99px;background:var(--rule);margin:2px auto 16px;touch-action:none}
-.sheet h3{margin:0 0 4px;font-size:19px}
-.sheet .sh-sub{margin:0 0 14px;color:var(--muted);font-size:14px}
+.sheet h3{margin:0 0 4px;font-size:17px}
+.sheet .sh-sub{margin:0 0 12px;color:var(--muted);font-size:13px}
 #toast{position:fixed;left:16px;right:16px;bottom:calc(84px + var(--safe-b));background:var(--raised);
   border:1px solid var(--accent-dim);border-radius:13px;padding:13px 16px;display:none;z-index:1200;
-  font-size:15px;max-width:528px;margin:0 auto}
+  font-size:14px;max-width:528px;margin:0 auto}
 #toast.on{display:block}
 .spin{width:20px;height:20px;border:2px solid var(--rule);border-top-color:var(--accent);
   border-radius:50%;animation:sp .7s linear infinite;display:inline-block;vertical-align:-4px}
@@ -136,47 +136,53 @@ input,select{width:100%;background:var(--raised);border:1px solid var(--rule);bo
 /* ---- Τομείς ανά περιοχή ---- */
 .town-sec{margin-bottom:16px;border:1px solid var(--rule-soft);border-radius:16px;overflow:hidden;background:var(--sheet)}
 .town-hdr{display:flex;justify-content:space-between;align-items:center;padding:11px 14px 8px}
-.town-nm{font-size:14px;font-weight:700;letter-spacing:.02em;text-transform:uppercase;color:var(--muted)}
+.town-nm{font-size:13px;font-weight:700;letter-spacing:.02em;text-transform:uppercase;color:var(--muted)}
 .town-ct{font-size:12px;color:var(--ok);font-weight:700;background:var(--ok-soft);
   padding:3px 8px;border-radius:99px}
 .town-map{height:240px;background:var(--map-bg);position:relative;overflow:hidden}
 .town-map .mmw,.town-map>svg{width:100%!important;height:100%!important;display:block}
 /* Chips: αριθμοί ελεύθερων τομέων, χρωματισμένοι κατά αναμονή */
-/* ελεύθεροι τομείς κάτω από τον χάρτη — γραμμές όπως στην εφαρμογή διαχείρισης */
-.flist{padding:4px 10px 8px}
-.frow{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:9px 4px;cursor:pointer}
-.frow+.frow{border-top:1px solid var(--rule-soft)}
-.frow:active{opacity:.7}
-.fnum{flex:0 0 auto;min-width:44px;height:40px;padding:0 6px;border-radius:11px;display:grid;place-items:center;
-  color:#122019;font-size:18px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums;
-  box-shadow:inset 0 -2px 0 rgba(0,0,0,.08)}
-.finfo{flex:1;min-width:0;display:block}
-.finfo b{display:block;font-size:15px;font-weight:600;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.finfo small{display:block;font-size:12px;color:var(--faint);margin-top:2px}
-.fval{flex:0 0 auto;text-align:right;font-variant-numeric:tabular-nums}
-.fval b{display:block;font-size:19px;font-weight:700;line-height:1.1}
-.fval em{display:block;font-style:normal;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-top:1px}
+/* ελεύθεροι τομείς κάτω από τον χάρτη: κουτάκια δίπλα-δίπλα, χρώμα μόνο στο περίγραμμα και στον αριθμό */
+.fl-cap{padding:11px 14px 0;font-size:12.5px;color:var(--muted)}
+.fl-cap b{color:var(--text);font-weight:600}
+.fchips{display:flex;flex-wrap:wrap;gap:7px;padding:8px 12px 13px}
+.fchip{min-width:54px;padding:5px 7px 4px;border-radius:10px;border:2px solid;background:var(--sheet);
+  text-align:center;cursor:pointer;line-height:1.15}
+.fchip:active{opacity:.7}
+.fchip b{display:block;font-size:15px;font-weight:800;font-variant-numeric:tabular-nums}
+.fchip small{display:block;font-size:10px;font-weight:500;color:var(--muted);white-space:nowrap;margin-top:1px}
 .town-none{padding:8px 14px 10px;font-size:13px;color:var(--faint)}
 .leaflet-tooltip.numlbl{background:transparent;border:0;box-shadow:none;padding:0;margin:0}
 .leaflet-tooltip.numlbl::before{display:none}
 /* αριθμοί στον χάρτη: στρογγυλά σήματα */
-.nb{display:inline-block;min-width:24px;height:24px;line-height:24px;padding:0 6px;border-radius:12px;
-  font:800 12.5px/24px system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;text-align:center;
-  color:#122019;box-shadow:0 1px 4px rgba(0,0,0,.35),0 0 0 1.5px rgba(255,255,255,.85);font-variant-numeric:tabular-nums}
-.nb.mine{background:var(--mine);color:#fff}
-.nb.idle{min-width:20px;height:20px;line-height:20px;font-size:10.5px;font-weight:700;padding:0 5px;
-  background:var(--sheet);color:var(--faint);box-shadow:0 0 0 1px var(--rule)}
-/* Επεξήγηση χρωμάτων */
+.nb{display:inline-block;min-width:22px;height:22px;padding:0 5px;border-radius:11px;border:2px solid;
+  font:800 11.5px/18px system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;text-align:center;
+  background:var(--sheet);box-shadow:0 1px 3px rgba(0,0,0,.25);font-variant-numeric:tabular-nums}
+.nb.mine{border-color:var(--mine);color:var(--mine)}
+.nb.idle{min-width:18px;height:18px;line-height:16px;font-size:10px;font-weight:700;padding:0 4px;border-width:1px;
+  border-color:var(--rule);color:var(--faint);box-shadow:none}
 .age-legend{background:var(--sheet);border:1px solid var(--rule-soft);border-radius:14px;
-  padding:12px 12px 10px;margin:0 0 14px}
-.al-top{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 2px 9px}
+  padding:11px 12px 10px;margin:0 0 14px}
+.al-top{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 2px 8px}
 .al-sw{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
-.al-sw span{border-radius:10px;padding:9px 4px;text-align:center;color:#122019;font-size:13.5px;font-weight:700;line-height:1.15}
-.al-sw span small{display:block;font-size:11px;font-weight:600;opacity:.75}
-.al-more{display:flex;gap:16px;margin:10px 2px 0;font-size:13px;color:var(--muted)}
+.al-sw span{border-radius:10px;border:2px solid;padding:6px 4px;text-align:center;font-size:14px;font-weight:800;line-height:1.15;background:var(--sheet)}
+.al-sw span small{display:block;font-size:10.5px;font-weight:500;color:var(--muted)}
+.al-more{display:flex;flex-wrap:wrap;gap:6px 16px;margin:9px 2px 0;font-size:12.5px;color:var(--muted)}
 .al-more span{display:flex;align-items:center;gap:7px}
-.al-dot{width:14px;height:14px;border-radius:5px;display:inline-block;flex:0 0 auto}
-.al-dot.busy{background:var(--idle);opacity:.55} .al-dot.mine{background:var(--mine)}
+.al-dot{width:13px;height:13px;border-radius:4px;display:inline-block;flex:0 0 auto;border:2px solid}
+.al-dot.busy{border-color:var(--idle);background:var(--raised)} .al-dot.mine{border-color:var(--mine);background:var(--mine-soft)}
+/* καθυστέρηση */
+.note.late{background:rgba(240,116,100,.12);border-color:rgba(240,116,100,.45);color:var(--text)}
+.note.late b{color:var(--late)}
+.note.due{background:rgba(218,227,108,.14);border-color:rgba(190,200,60,.5);color:var(--text)}
+.tag.late{background:rgba(240,116,100,.14);color:var(--late)} .tag.late i{background:var(--late)}
+/* επεξεργασία αίτησης */
+.proc{text-align:center;padding:26px 0 18px}
+.proc .spin{width:34px;height:34px;border-width:3px;margin-bottom:14px}
+.okic{width:46px;height:46px;border-radius:50%;margin:4px auto 10px;display:grid;place-items:center;
+  background:var(--ok-soft);color:var(--ok);font-size:24px;font-weight:800}
+.card .mmap{height:220px;background:var(--map-bg)}
+.card .body{display:block;width:100%;text-align:left}
 /* Σύνδεσμος */
 .lnk{color:var(--accent);font-weight:600;background:none;border:0;cursor:pointer;font:inherit;padding:0}
 </style>
@@ -567,7 +573,7 @@ function drawLeaflet(elId,list,opts){
   if(opts.town){ mo.zoomSnap=.25; mo.zoomDelta=.75; mo.scrollWheelZoom=false; mo.dragging=!touch; }
   var m=L.map(el,mo);
   lmaps[elId]=m; osm(m);
-  var b=null, focus=opts.focus;
+  var b=null, fb=null, focus=opts.focus;
   list.forEach(function(t){
     var g=geoOf(t.id); if(!g||!g.polygons) return;
     var main = !focus || t.id===focus;
@@ -578,7 +584,7 @@ function drawLeaflet(elId,list,opts){
       if(pi===0){
         var free=t.s.state==='ready';
         var badge=(main&&t.s.mine)?'<span class="nb mine">'+numOf(t)+'</span>'
-          :(main&&free)?'<span class="nb" style="background:'+ageCol(t.s.rested)+'">'+numOf(t)+'</span>'
+          :(main&&free)?'<span class="nb" style="border-color:'+ageCol(t.s.rested)+';color:'+ageTxt(t.s.rested)+'">'+numOf(t)+'</span>'
           :'<span class="nb idle">'+numOf(t)+'</span>';
         poly.bindTooltip(badge,{permanent:true,direction:'center',className:'numlbl',opacity:1});
       }
@@ -586,12 +592,15 @@ function drawLeaflet(elId,list,opts){
         if(opts.onPick && (!focus || t.id!==focus)) opts.onPick(t.id);
         else poly.bindTooltip(t.name,{className:'maplbl',direction:'top'}).openTooltip();
       });
-      b=b?b.extend(poly.getBounds()):poly.getBounds();   // πάντα όλη η περιοχή
+      b=b?b.extend(poly.getBounds()):poly.getBounds();
+      if(focus && t.id===focus) fb=fb?fb.extend(poly.getBounds()):L.latLngBounds(poly.getBounds().getSouthWest(),poly.getBounds().getNorthEast());
     });
     if(main) (g.points||[]).forEach(function(pt){
       L.circleMarker(pt.at,{radius:5,color:'#fff',weight:2,fillColor:c,fillOpacity:1}).addTo(m); });
   });
-  if(b) m.fitBounds(b,{padding:opts.town?[6,6]:[10,10]}); else m.setView([40.27,23.27],11);
+  /* με εστίαση: ο τομέας γεμίζει τον χάρτη, οι γειτονικοί φαίνονται γύρω του */
+  if(fb) m.fitBounds(fb.pad(.5),{padding:[8,8]});
+  else if(b) m.fitBounds(b,{padding:opts.town?[6,6]:[10,10]}); else m.setView([40.27,23.27],11);
   /* στο κινητό: με ένα δάχτυλο κυλάει η σελίδα· αφού μεγεθύνει, μετακινεί και τον χάρτη */
   if(opts.town && touch){ var base=m.getZoom();
     m.on('zoomend',function(){ if(m.getZoom()>base+.1) m.dragging.enable(); else m.dragging.disable(); }); }
@@ -604,6 +613,7 @@ function col(s){ if(s.mine) return 'var(--mine)'; if(s.state==='ready') return a
 /* ζώνες αναμονής: 1 = κάτω από 8 μήνες · 2 = 8–12 μήνες · 3 = 12 μήνες και πάνω (ή ποτέ) */
 function bandOf(m){ return (m===Infinity||m>=12)?3:m>=8?2:1; }
 function ageCol(m){ return 'var(--g'+bandOf(m)+')'; }
+function ageTxt(m){ return 'var(--g'+bandOf(m)+'t)'; }
 function monthsNum(m){ return m===Infinity?'—':String(Math.floor(m)); }
 
 var TOWN_ALIAS={'Διασταύρωση Παλαιοκάστρου':'Παλαιόκαστρο','Διασταύρωση':'Παλαιόκαστρο'};
@@ -619,7 +629,10 @@ function shortName(t){
   return n;
 }
 function myPending(){ return (D.requests||[]).filter(function(r){
-  return r.person===me && r.kind==='waiting' && r.status!=='done'; }); }
+  if(!(r.person===me && r.kind==='waiting' && r.status!=='done')) return false;
+  /* αν στο μεταξύ ανατέθηκε ξανά (ανανέωση/έγκριση), δεν περιμένει πια */
+  var t=byId(r.territory_id), rd=r.date?pd(String(r.date).slice(0,10)):null;
+  return !(t && t.s.mine && t.s.dateOut && rd && t.s.dateOut>=rd); }); }
 
 /* ---------- δεδομένα ---------- */
 function cacheGet(){ try{ return JSON.parse(localStorage.getItem('tomeis_pub')||'null'); }catch(e){ return null; } }
@@ -675,15 +688,15 @@ function load(){
       else toast('Εκτός σύνδεσης — αποθηκευμένα δεδομένα');
     });
 }
-function post(body,done){
+function post(body,done,fail){
   fetch(API,{method:'POST',redirect:'follow',
     headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)})
     .then(function(r){ return r.text(); })
     .then(function(txt){ var j; try{ j=JSON.parse(txt); }catch(e){
-        alert('Σφάλμα διακομιστή. Δοκιμάστε ξανά.'); return; }
-      if(!j.ok){ alert('Σφάλμα: '+j.error); return; }
+        alert('Σφάλμα διακομιστή. Δοκιμάστε ξανά.'); if(fail) fail(); return; }
+      if(!j.ok){ alert('Σφάλμα: '+j.error); if(fail) fail(); return; }
       done(j); })
-    .catch(function(){ alert('Αποτυχία αποστολής — ελέγξτε τη σύνδεση.'); });
+    .catch(function(){ alert('Αποτυχία αποστολής — ελέγξτε τη σύνδεση.'); if(fail) fail(); });
 }
 var toastT;
 function toast(msg){ var e=$('#toast'); e.textContent=msg; e.classList.add('on');
@@ -739,14 +752,25 @@ function towns(){
     /* πρώτα οι περιοχές με τους πιο παλιούς ελεύθερους τομείς */
     .sort(function(a,b){ return (b.need-a.need)||(b.old-a.old)||(b.free.length-a.free.length)||(a.i-b.i); });
 }
+/* ειδοποίηση για δικούς μου τομείς που έληξαν ή λήγουν σύντομα */
+function lateNotes(mine){
+  return mine.map(function(t){ var s=t.s;
+    if(s.daysLeft<0) return '<div class="note late"><b>Εκπρόθεσμος: '+esc(numOf(t))+' · '+esc(shortName(t))+'</b><br>'+
+      'Η επιστροφή ήταν έως '+fmt(s.dueOn)+' — καθυστέρηση '+durTxt(s.daysLeft)+'. '+
+      '<button class="lnk" onclick="open_(\''+t.id+'\')">Δήλωση ολοκλήρωσης ή ανανέωση ›</button></div>';
+    if(s.state==='due') return '<div class="note due"><b>Λήγει σύντομα: '+esc(numOf(t))+' · '+esc(shortName(t))+'</b><br>'+
+      'Επιστροφή έως '+fmt(s.dueOn)+' — απομένουν '+durTxt(s.daysLeft)+'. '+
+      '<button class="lnk" onclick="open_(\''+t.id+'\')">Προβολή ›</button></div>';
+    return ''; }).join('');
+}
 function viewFree(){
   var mine=all().filter(function(t){ return t.s.mine; });
   var pend=myPending(), tw=towns();
   var nFree=tw.reduce(function(n,x){ return n+x.free.length; },0);
   $('#ttl').textContent='Ελεύθεροι τομείς';
 
-  var h='';
-  if(pend.length) h+='<div class="note"><b>Σε αναμονή:</b> '+
+  var h=lateNotes(mine);
+  if(pend.length) h+='<div class="note"><b>Αίτηση ανανέωσης σε αναμονή:</b> '+
     pend.map(function(r){ var t=byId(r.territory_id);
       return esc(t?numOf(t)+' '+shortName(t):r.territory_id); }).join(', ')+'</div>';
   if(mine.length) h+='<div class="note"><b>Έχεις '+mine.length+' '+(mine.length===1?'τομέα':'τομείς')+':</b> '+
@@ -754,12 +778,12 @@ function viewFree(){
     ' · <button class="lnk" onclick="go(\'mine\')">Προβολή</button></div>';
 
   if(!nFree) h+='<div class="empty"><b>Κανένας ελεύθερος τομέας</b></div>';
-  h+='<div class="age-legend"><div class="al-top">Αναμονή σε μήνες</div><div class="al-sw">'+
-    '<span style="background:var(--g1)">έως 8<small>μήνες</small></span>'+
-    '<span style="background:var(--g2)">8 – 12<small>μήνες</small></span>'+
-    '<span style="background:var(--g3)">12+<small>μήνες</small></span></div>'+
-    '<div class="al-more"><span><i class="al-dot busy"></i>Σε χρήση</span>'+
-    (mine.length?'<span><i class="al-dot mine"></i>Δικός σου</span>':'')+'</div></div>';
+  h+='<div class="age-legend"><div class="al-top">Ελεύθεροι · αναμονή σε μήνες</div><div class="al-sw">'+
+    '<span style="border-color:var(--g1);color:var(--g1t)">έως 8<small>μήνες</small></span>'+
+    '<span style="border-color:var(--g2);color:var(--g2t)">8 – 12<small>μήνες</small></span>'+
+    '<span style="border-color:var(--g3);color:var(--g3t)">12+<small>μήνες</small></span></div>'+
+    '<div class="al-more"><span><i class="al-dot busy"></i>Μη διαθέσιμος</span>'+
+    '<span><i class="al-dot mine"></i>Δικός σου τομέας</span></div></div>';
 
   tw.forEach(function(x,i){
     h+='<div class="town-sec">'+
@@ -769,15 +793,14 @@ function viewFree(){
       '<div class="town-map" id="tm'+i+'" data-town="'+i+'" style="height:'+townH(x)+'px">'+
         miniSvg(x.list,520,townH(x),null,true)+'</div>';
     if(x.free.length){
-      h+='<div class="flist">'+x.free.map(function(t){
-        var s=t.s;
-        return '<button class="frow" onclick="open_(\''+t.id+'\')">'+
-          '<span class="fnum" style="background:'+ageCol(s.rested)+'">'+esc(numOf(t))+'</span>'+
-          '<span class="finfo"><b>'+esc(shortName(t))+'</b><small>'+
-            (s.never?'Χωρίς προηγούμενη ολοκλήρωση':'Ολοκλήρωση '+fmt(s.lastReturned))+'</small></span>'+
-          '<span class="fval"><b>'+monthsNum(s.rested)+'</b><em>'+(s.never?'ποτέ':'μήνες')+'</em></span></button>';
+      h+='<div class="fl-cap"><b>Ελεύθεροι τομείς</b> στην περιοχή '+esc(x.name)+'</div>'+
+        '<div class="fchips">'+x.free.map(function(t){
+        var m=t.s.rested;
+        return '<button class="fchip" style="border-color:'+ageCol(m)+'" onclick="open_(\''+t.id+'\')" title="'+esc(shortName(t))+'">'+
+          '<b style="color:'+ageTxt(m)+'">'+esc(numOf(t))+'</b>'+
+          '<small>'+(m===Infinity?'ποτέ':Math.floor(m)+' μήνες')+'</small></button>';
       }).join('')+'</div>';
-    } else h+='<div class="town-none">Κανένας ελεύθερος</div>';
+    } else h+='<div class="town-none">Κανένας ελεύθερος τομέας στην περιοχή αυτή</div>';
     h+='</div>';
   });
   $('#main').innerHTML=h;
@@ -801,6 +824,16 @@ function lazyTownMaps(tw){
     if(!e.isIntersecting) return; fill(e.target); io.unobserve(e.target); }); },{rootMargin:'300px 0px'});
   els.forEach(function(el){ io.observe(el); });
 }
+function lazyMineMaps(){
+  var els=document.querySelectorAll('.mmap[data-id]');
+  var fill=function(el){ var t=byId(el.getAttribute('data-id')); if(!t) return;
+    var g=geoOf(t.id); if(!(g&&g.polygons&&g.polygons.length)){ el.innerHTML='<div class="empty" style="padding:80px 0">Φόρτωση χάρτη…</div>'; return; }
+    el.innerHTML=''; drawLeaflet(el.id, inTown(t.town), {focus:t.id, fit:'focus', town:true}); };
+  if(!('IntersectionObserver' in window)){ els.forEach(fill); return; }
+  var io=new IntersectionObserver(function(es){ es.forEach(function(e){
+    if(!e.isIntersecting) return; fill(e.target); io.unobserve(e.target); }); },{rootMargin:'300px 0px'});
+  els.forEach(function(el){ io.observe(el); });
+}
 function lazyTiles(list){
   var els=document.querySelectorAll('.mini[data-mm]');
   var fill=function(el){ var t=byId(el.getAttribute('data-id')); if(!t) return;
@@ -816,23 +849,22 @@ function viewMine(){
   var mine=all().filter(function(t){ return t.s.mine; });
   var pend=myPending();
   $('#ttl').textContent='Οι τομείς μου';
-  var h='';
+  var h=lateNotes(mine);
   if(!mine.length && !pend.length)
     h+='<div class="empty"><b>Κανένας τομέας</b>'+
        '<button class="lnk" onclick="go(\'free\')">Ελεύθεροι τομείς ›</button></div>';
-  if(pend.length) h+='<div class="note"><b>Σε αναμονή</b><br>'+
+  if(pend.length) h+='<div class="note"><b>Αιτήσεις ανανέωσης σε αναμονή</b><br>'+
     pend.map(function(r){ var t=byId(r.territory_id);
       return esc(t?numOf(t)+' '+shortName(t)+' — '+t.town:r.territory_id)+
       ' · <button class="lnk" onclick="cancelReq(\''+esc(r.row_id)+'\')">Ακύρωση</button>'; }).join('<br>')+'</div>';
 
   mine.forEach(function(t,i){
     var s=t.s, late=s.daysLeft<0;
-    h+='<div class="card"><button style="display:block;width:100%" onclick="open_(\''+t.id+'\')">'+
-      '<div class="mini" data-mm="'+i+'" data-id="'+t.id+'">'+miniSvg(inTown(t.town),320,132,t.id,true)+'</div>'+
-      '<div class="body" style="text-align:left"><div class="nm">'+esc(numOf(t))+' · '+esc(shortName(t))+'</div>'+
-      '<div class="sub">'+esc(t.town)+'</div>'+
-      '<span class="tag mine"><i></i>'+(late?('Εκπρόθεσμος · '+durTxt(s.daysLeft)):('Απομένουν '+durTxt(s.daysLeft)))+'</span>'+
-      '</div></button></div>';
+    h+='<div class="card"><div class="mmap" id="mm'+i+'" data-id="'+t.id+'"></div>'+
+      '<button class="body" onclick="open_(\''+t.id+'\')"><div class="nm">'+esc(numOf(t))+' · '+esc(shortName(t))+'</div>'+
+      '<div class="sub">'+esc(t.town)+' · επιστροφή έως '+fmt(s.dueOn)+'</div>'+
+      '<span class="tag '+(late?'late':'mine')+'"><i></i>'+(late?('Εκπρόθεσμος · καθυστέρηση '+durTxt(s.daysLeft)):('Απομένουν '+durTxt(s.daysLeft)))+'</span>'+
+      '</button></div>';
   });
 
   var past=D.assignments.filter(function(a){ return a.person===me && a.date_in; })
@@ -844,21 +876,23 @@ function viewMine(){
          '<b>'+fmt(a.date_in)+'</b></div>'; });
   }
   $('#main').innerHTML=h;
-  lazyTiles(mine);
+  lazyMineMaps();
 }
 
 /* ---------- ένας τομέας ---------- */
 function viewDetail(){
   var t=byId(detail); if(!t){ detail=null; return render(); }
-  var s=t.s, free=(s.state==='ready');
+  var s=t.s, free=(s.state==='ready'), late=s.mine&&s.daysLeft<0;
   $('#ttl').textContent=shortName(t);
   var h='<button class="back" onclick="detail=null;render()">‹ Πίσω</button>'+
     '<div class="mapbox"><div class="lf" id="dMap"></div></div>'+
-    '<div class="nm" style="font-size:20px;font-weight:700">'+esc(numOf(t))+' · '+esc(shortName(t))+'</div>'+
+    '<div class="nm" style="font-size:17px;font-weight:700">'+esc(numOf(t))+' · '+esc(shortName(t))+'</div>'+
     '<div class="sub" style="color:var(--muted);margin:2px 0 10px">'+esc(t.town)+'</div>';
 
   if(s.mine){
-    h+='<span class="tag mine"><i></i>Ανατεθειμένος σε εσένα</span>'+
+    var myPend=myPending().some(function(r){ return r.territory_id===t.id; });
+    h+=(late?'<span class="tag late"><i></i>Εκπρόθεσμος · καθυστέρηση '+durTxt(s.daysLeft)+'</span>'
+            :'<span class="tag mine"><i></i>Ανατεθειμένος σε εσένα</span>')+
       '<div style="margin-top:16px">'+
       '<div class="kv"><span>Ανάθεση</span><b>'+fmt(s.dateOut)+'</b></div>'+
       '<div class="kv"><span>Επιστροφή έως</span><b>'+fmt(s.dueOn)+'</b></div>'+
@@ -866,9 +900,11 @@ function viewDetail(){
       '</div>'+
       '<button class="big go" onclick="openMaps(\''+t.id+'\')">Google Maps</button>'+
       '<button class="big alt" onclick="makeCard(byId(\''+t.id+'\'),\'download\')">Κάρτα PDF</button>'+
-      '<button class="big" onclick="declareDone(\''+t.id+'\')">Δήλωση ολοκλήρωσης</button>';
+      '<button class="big" onclick="declareDone(\''+t.id+'\')">Δήλωση ολοκλήρωσης</button>'+
+      (myPend?'<div class="note" style="margin-top:14px">Η αίτηση ανανέωσης περιμένει έγκριση.</div>'
+             :'<button class="big alt" onclick="askRenew(\''+t.id+'\')">Αίτηση ανανέωσης</button>');
   } else if(free){
-    h+='<span class="tag free" style="background:'+ageCol(s.rested)+';color:#10161B"><i style="background:#10161B"></i>'+
+    h+='<span class="tag free" style="background:var(--sheet);border:2px solid '+ageCol(s.rested)+';color:'+ageTxt(s.rested)+'"><i style="background:'+ageCol(s.rested)+'"></i>'+
         'Ελεύθερος · αναμονή '+monthsTxt(s.rested)+'</span>'+
       '<div style="margin-top:16px">'+
       '<div class="kv"><span>Τελευταία ολοκλήρωση</span><b>'+(s.lastReturned?fmt(s.lastReturned):'—')+'</b></div>'+
@@ -878,12 +914,13 @@ function viewDetail(){
       '<button class="big alt" onclick="openMaps(\''+t.id+'\')">Google Maps</button>';
   } else {
     var rest=s.state==='resting';
-    h+='<span class="tag busy"><i></i>'+(rest?'Μη διαθέσιμος έως '+fmt(s.readyOn):'Σε χρήση')+'</span>'+
-      '<button class="big" style="margin-top:18px" onclick="askFor(\''+t.id+'\')">Αίτηση αναμονής</button>';
+    h+='<span class="tag busy"><i></i>Μη διαθέσιμος'+(rest?' έως '+fmt(s.readyOn):'')+'</span>'+
+      '<div class="note" style="margin-top:16px">'+(rest?'Διαθέσιμος για αίτηση από '+fmt(s.readyOn)+'.'
+        :'Ανατεθειμένος σε άλλον. Δεν δέχεται αιτήσεις αυτή τη στιγμή.')+'</div>';
   }
   $('#main').innerHTML=h;
   var g=geoOf(t.id);
-  if(g&&g.polygons&&g.polygons.length) drawLeaflet('dMap',inTown(t.town),{focus:t.id,quiet:true});
+  if(g&&g.polygons&&g.polygons.length) drawLeaflet('dMap',inTown(t.town),{focus:t.id,fit:'focus',quiet:true});
   else document.getElementById('dMap').innerHTML='<div class="empty">Φόρτωση χάρτη…</div>';
 }
 function openMaps(id){ var t=byId(id); if(t&&t.mymaps_id)
@@ -896,31 +933,69 @@ function sheet(html){
   d.onclick=function(e){ if(e.target===d) d.remove(); };
   document.body.appendChild(d); return d;
 }
+function sheetSet(d,html){ var sh=d.querySelector('.sheet'); if(sh) sh.innerHTML='<span class="grab"></span>'+html; }
+function procHtml(msg){ return '<div class="proc"><span class="spin"></span><h3>'+msg+'</h3>'+
+  '<div class="sh-sub">Παρακαλώ περιμένετε — μην κλείσετε τη σελίδα.</div></div>'; }
 function askFor(id){
-  var t=byId(id), free=(t.s.state==='ready');
-  var d=sheet('<h3>'+(free?'Αίτηση ανάθεσης':'Αίτηση αναμονής')+'</h3>'+
+  var t=byId(id);
+  if(!t||t.s.state!=='ready'){ toast('Ο τομέας δεν είναι διαθέσιμος'); return; }
+  var d=sheet('<h3>Αίτηση ανάθεσης</h3>'+
     '<div class="sh-sub">'+esc(numOf(t))+' · '+esc(shortName(t))+' — '+esc(t.town)+'</div>'+
-    (free?'<div class="kv"><span>Επιστροφή έως</span><b>'+fmt(addM(new Date(),D.settings.hold_months))+'</b></div>'
-         :'<div class="kv"><span>Κατάσταση</span><b>Λίστα αναμονής</b></div>')+
+    '<div class="kv"><span>Επιστροφή έως</span><b>'+fmt(addM(new Date(),D.settings.hold_months))+'</b></div>'+
     '<button class="big go" id="yes">Επιβεβαίωση</button>'+
     '<button class="big" id="no">Άκυρο</button>');
   d.querySelector('#no').onclick=function(){ d.remove(); };
   d.querySelector('#yes').onclick=function(){
-    d.remove(); toast('Αποστολή…');
+    d.onclick=null;                                   /* δεν κλείνει όσο γίνεται η επεξεργασία */
+    sheetSet(d,procHtml('Η αίτηση επεξεργάζεται…'));
     post({action:'request',person:me,territory:id},function(j){
       refresh(function(){
-        if(j.assigned){ tab='mine'; detail=id; render();
-          sheet('<h3>Ανατέθηκε</h3><div class="sh-sub">'+esc(numOf(t))+' · '+esc(shortName(t))+'</div>'+
+        detail=id; tab='mine'; render();
+        var t2=byId(id)||t;
+        if(j.assigned){
+          sheetSet(d,'<div class="okic">✓</div><h3 style="text-align:center">Ανατέθηκε σε εσένα</h3>'+
+            '<div class="sh-sub" style="text-align:center">'+esc(numOf(t2))+' · '+esc(shortName(t2))+' — '+esc(t2.town)+'</div>'+
+            '<div class="kv"><span>Ανάθεση</span><b>'+fmt(new Date())+'</b></div>'+
             '<div class="kv"><span>Επιστροφή έως</span><b>'+fmt(addM(new Date(),D.settings.hold_months))+'</b></div>'+
-            '<button class="big go" onclick="this.closest(\'.scrim\').remove()">OK</button>');
+            '<button class="big go" id="rPdf">Κάρτα PDF</button>'+
+            '<button class="big alt" id="rMaps">Google Maps</button>'+
+            '<button class="big" id="rX">Κλείσιμο</button>');
+          d.querySelector('#rPdf').onclick=function(){ makeCard(byId(id)||t2,'download'); };
+          d.querySelector('#rMaps').onclick=function(){ openMaps(id); };
+          d.querySelector('#rX').onclick=function(){ d.remove(); };
         } else {
-          render();
-          sheet('<h3>Σε αναμονή</h3><div class="sh-sub">'+esc(numOf(t))+' · '+esc(shortName(t))+
-            ' — δεν είναι πλέον ελεύθερος.</div>'+
-            '<button class="big go" onclick="this.closest(\'.scrim\').remove()">OK</button>');
+          sheetSet(d,'<h3>Δεν ανατέθηκε</h3><div class="sh-sub">'+esc(numOf(t2))+' · '+esc(shortName(t2))+
+            ' — ανατέθηκε σε άλλον λίγο πριν. Η αίτηση καταχωρήθηκε για τον υπεύθυνο.</div>'+
+            '<button class="big go" id="rX">OK</button>');
+          d.querySelector('#rX').onclick=function(){ d.remove(); detail=null; tab='free'; render(); };
         }
+        d.onclick=function(e){ if(e.target===d) d.remove(); };
       });
-    });
+    },function(){ d.remove(); });
+  };
+}
+/* ανανέωση: ο ίδιος ζητάει να κρατήσει τον τομέα του για άλλη μία περίοδο.
+   Καταγράφεται ως αίτηση· την εγκρίνει ο υπεύθυνος από την εφαρμογή του. */
+function askRenew(id){
+  var t=byId(id); if(!t||!t.s.mine) return;
+  var d=sheet('<h3>Αίτηση ανανέωσης</h3>'+
+    '<div class="sh-sub">'+esc(numOf(t))+' · '+esc(shortName(t))+' — '+esc(t.town)+'</div>'+
+    '<div class="kv"><span>Τρέχουσα επιστροφή έως</span><b>'+fmt(t.s.dueOn)+'</b></div>'+
+    '<div class="kv"><span>Νέα επιστροφή έως (αν εγκριθεί)</span><b>'+fmt(addM(new Date(),D.settings.hold_months))+'</b></div>'+
+    '<button class="big go" id="yes">Αποστολή αίτησης</button>'+
+    '<button class="big" id="no">Άκυρο</button>');
+  d.querySelector('#no').onclick=function(){ d.remove(); };
+  d.querySelector('#yes').onclick=function(){
+    d.onclick=null; sheetSet(d,procHtml('Η αίτηση αποστέλλεται…'));
+    post({action:'request',person:me,territory:id},function(){
+      refresh(function(){
+        sheetSet(d,'<div class="okic">✓</div><h3 style="text-align:center">Η αίτηση στάλθηκε</h3>'+
+          '<div class="sh-sub" style="text-align:center">Ο υπεύθυνος θα εγκρίνει την ανανέωση.</div>'+
+          '<button class="big go" id="rX">OK</button>');
+        d.querySelector('#rX').onclick=function(){ d.remove(); };
+        d.onclick=function(e){ if(e.target===d) d.remove(); };
+      });
+    },function(){ d.remove(); });
   };
 }
 function cancelReq(rowId){
