@@ -49,6 +49,16 @@ h1{margin:0;font-size:20px;font-weight:700;letter-spacing:-.02em}
 .hbtns button:active{background:var(--raised)}
 .hbtns svg{width:19px;height:19px;display:block}
 .hbtns .spin-on svg{animation:sp .8s linear infinite}
+.hbtns button{position:relative}
+#bellDot{position:absolute;top:4px;right:4px;min-width:17px;height:17px;border-radius:99px;
+  background:var(--coral);color:#fff;font-size:10px;font-weight:700;line-height:17px;
+  text-align:center;padding:0 4px;display:none}
+#bellDot.on{display:block}
+.req{background:var(--raised);border:1px solid var(--rule-soft);border-radius:12px;
+  padding:12px 14px;margin-bottom:10px}
+.req.new{border-color:var(--accent-dim)}
+.req .w{font-size:14.5px;font-weight:600}
+.req .m{font-size:12px;color:var(--faint);margin-top:3px}
 main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 16px 24px}
 nav{flex:0 0 auto;display:flex;border-top:1px solid var(--rule-soft);background:var(--sheet);padding-bottom:var(--safe-b)}
 nav button{flex:1;padding:12px 4px 14px;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
@@ -259,6 +269,11 @@ input[type="date"]{padding:9px 6px 9px 10px}
   <header>
     <div><h1 id="ttl">Τομείς</h1><div class="sub" id="sub">φόρτωση…</div></div>
     <div class="hbtns">
+      <button id="bellBtn" onclick="openRequests()" title="Τι έκαναν οι αδελφοί">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+        <span id="bellDot"></span>
+      </button>
       <button id="reloadBtn" onclick="manualRefresh()" title="Ανανέωση">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 12a9 9 0 1 1-2.64-6.36"/><polyline points="21 3 21 9 15 9"/>
@@ -325,7 +340,7 @@ function tileFail(img){
   img.setAttribute('data-src',i);
   img.src=tileUrl(i,img.getAttribute('data-z'),img.getAttribute('data-x'),img.getAttribute('data-y'));
 }
-var D={territories:[],assignments:[],people:[],settings:{},geo:null};
+var D={territories:[],assignments:[],people:[],settings:{},requests:[],geo:null};
 var tab='map', filter='ready', pfilter='all', place='all', mapMode='free', q='',
     detail=null, person=null, town=null, undoTimer=null, lmaps={};
 
@@ -575,6 +590,7 @@ function cacheGet(){ try{ return JSON.parse(localStorage.getItem('tomeis_data')|
 function cacheSet(o){ try{ localStorage.setItem('tomeis_data',JSON.stringify(o)); }catch(e){} }
 function apply(j){
   D.territories=j.territories||[]; D.assignments=j.assignments||[]; D.people=j.people||[];
+  D.requests=j.requests||[];
   D.settings=j.settings||{};
   D.settings.hold_months=+(D.settings.hold_months||4);
   D.settings.rest_months=+(D.settings.rest_months||4);
@@ -602,14 +618,17 @@ function fetchGeo(then){
 /* Ξαναδιαβάζει μόνο τα δεδομένα του φύλλου — τα όρια τα έχουμε ήδη.
    Γι' αυτό μια παράδοση/επιστροφή ενημερώνεται σε ένα δευτερόλεπτο. */
 function refresh(then){
+  /* Το .catch πιάνει ΜΟΝΟ το δίκτυο — αλλιώς ένα λάθος στην οθόνη θα
+     εμφανιζόταν σαν πρόβλημα σύνδεσης και θα κρυβόταν η επιβεβαίωση. */
   return fetch(API+'?geo=0',{redirect:'follow'}).then(function(r){ return r.json(); })
     .then(function(j){
       if(!j.ok) throw new Error(j.error||'σφάλμα');
       var geo=D.geo; apply(j); D.geo=geo;
       var k=cacheGet()||{}; j.boundaries=k.boundaries||geo||null; cacheSet(j);
-      render(); if(then) then(j);
+      render(); return j;
     })
-    .catch(function(){ toast('Δεν ανανεώθηκαν τα δεδομένα'); });
+    .catch(function(){ toast('Δεν ανανεώθηκαν τα δεδομένα'); return null; })
+    .then(function(j){ if(then) then(j||{}); });
 }
 function manualRefresh(){
   var b=$('#reloadBtn'); if(b) b.classList.add('spin-on');
@@ -676,7 +695,60 @@ function searchBox(ph){
 }
 function rerender(){ var e=document.getElementById('q'), p=e?e.selectionStart:0; render();
   var n=document.getElementById('q'); if(n){ n.focus(); try{ n.setSelectionRange(p,p); }catch(x){} } }
+function newReqs(){ return (D.requests||[]).filter(function(r){ return r.status!=='seen'; }); }
+function bell(){
+  var d=$('#bellDot'); if(!d) return;
+  var n=newReqs().length;
+  d.textContent=n>9?'9+':String(n); d.classList.toggle('on',n>0);
+}
+function reqText(r){
+  var t=byId(r.territory_id), nm=t?t.name:r.territory_id;
+  if(r.kind==='taken')    return '<b>'+esc(r.person)+'</b> πήρε τον '+esc(nm);
+  if(r.kind==='returned') return '<b>'+esc(r.person)+'</b> δήλωσε ότι τελείωσε τον '+esc(nm);
+  if(r.kind==='waiting')  return '<b>'+esc(r.person)+'</b> ζητάει τον '+esc(nm);
+  return esc(r.person)+' — '+esc(nm);
+}
+function openRequests(){
+  var rs=(D.requests||[]).slice().reverse();
+  var waiting=rs.filter(function(r){ return r.kind==='waiting'; });
+  var h='<h2>Τι έκαναν οι αδελφοί</h2><div class="cs">Από τη σελίδα αιτήσεων</div>';
+  if(!rs.length) h+='<div class="empty" style="padding:24px 0">Τίποτα ακόμα.</div>';
+  if(waiting.length){
+    h+='<h3>Περιμένουν</h3>';
+    waiting.forEach(function(r){
+      var t=byId(r.territory_id), free=t&&t.s.state==='ready';
+      h+='<div class="req'+(r.status!=='seen'?' new':'')+'">'+
+        '<div class="w">'+reqText(r)+'</div>'+
+        '<div class="m">'+fmt(r.date)+(r.note?' · '+esc(r.note):'')+'</div>'+
+        (free?'<div class="btns" style="margin:10px 0 0"><button class="btn pri" onclick="grantReq(\''+
+          esc(r.row_id)+'\',\''+esc(r.territory_id)+'\',\''+esc(r.person)+'\')">Δώσ\' του τον τομέα</button></div>'
+             :'<div class="m">δεν είναι ελεύθερος ακόμα</div>')+
+        '</div>';
+    });
+  }
+  var info=rs.filter(function(r){ return r.kind!=='waiting'; }).slice(0,25);
+  if(info.length){
+    h+='<h3>Τι έγινε</h3>';
+    info.forEach(function(r){
+      h+='<div class="req'+(r.status!=='seen'?' new':'')+'"><div class="w">'+reqText(r)+'</div>'+
+         '<div class="m">'+fmt(r.date)+'</div></div>';
+    });
+  }
+  if(newReqs().length) h+='<div class="btns" style="margin-top:14px">'+
+    '<button class="btn" id="seenAll">Τα είδα όλα</button></div>';
+  var d=modal(h);
+  var b=d.querySelector('#seenAll');
+  if(b) b.onclick=function(){ d.remove(); post({action:'seenReq'},function(){
+    refresh(function(){ toast('Σημειώθηκαν ως διαβασμένα'); }); }); };
+}
+function grantReq(rowId,tid,person){
+  document.querySelectorAll('.scrim').forEach(function(e){ e.remove(); });
+  post({action:'giveOut',territory:tid,person:person},function(){
+    post({action:'seenReq',rowId:rowId},function(){
+      refresh(function(){ toast(person+' → '+tid); }); }); });
+}
 function render(){
+  bell();
   Object.keys(lmaps).forEach(function(k){ if(k!=='fullMap'){ try{ lmaps[k].remove(); }catch(e){} delete lmaps[k]; } });
   if(detail) return viewDetail();
   if(person) return viewPerson();
