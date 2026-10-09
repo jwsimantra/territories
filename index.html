@@ -259,30 +259,50 @@ input[type="date"]{padding:9px 6px 9px 10px}
   .ryear{font-size:9pt;font-weight:700;display:flex;align-items:center;gap:2mm}
   .ryear .box{border:.8pt solid #000;padding:.6mm 5mm;font-weight:400}
   .rpg{font-size:8pt;color:#555}
+  /* ===== Υπολογιστής: όπως πριν ===== */
+  #printArea.pc .rtab{width:100%;border-collapse:collapse;table-layout:fixed}
+  #printArea.pc .rtab tr{break-inside:avoid;page-break-inside:avoid}
+  #printArea.pc .rtab tbody{break-inside:avoid;page-break-inside:avoid}
+  #printArea.pc .rtab th,#printArea.pc .rtab td{border:.6pt solid #000;padding:.8mm .8mm;vertical-align:middle;overflow:visible}
+  #printArea.pc .rtab thead th{background:#f6f6f6;font-size:6.8pt;font-weight:700;line-height:1.15;
+    text-align:center;white-space:normal;overflow-wrap:anywhere;hyphens:manual}
+  #printArea.pc .rtab thead tr:first-child th{border-top:1pt solid #000}
+  #printArea.pc .rtab tbody tr:first-child td{border-top:1pt solid #000}
+  #printArea.pc .rtab tbody tr:last-child td{border-bottom:1pt solid #000}
+  #printArea.pc .rtab td.who{border-bottom:.4pt solid #9a9a9a}
+  #printArea.pc .rtab td.dt{border-top:.4pt solid #9a9a9a}
+  #printArea.pc .rtab .sl{border-left:1pt solid #000}
+  #printArea.pc .rtab .num{font-size:9pt;font-weight:700;text-align:center;line-height:1.05;border-top:1pt solid #000;border-bottom:1pt solid #000}
+  #printArea.pc .rtab .num small{display:block;font-size:5.5pt;font-weight:700;letter-spacing:.04em;color:#333;margin-top:.4mm}
+  #printArea.pc .rtab .lastc{font-size:7.5pt;text-align:center;white-space:nowrap;border-top:1pt solid #000;border-bottom:1pt solid #000}
+  #printArea.pc .rtab .who{font-size:7pt;text-align:center;line-height:1.15;
+    white-space:normal;word-break:break-word;overflow-wrap:anywhere;padding:.5mm .8mm}
+  #printArea.pc .rtab .dt{font-size:7pt;text-align:center;white-space:nowrap}
+  /* ===== iPhone / iPad (Safari) ===== */
   /* iPhone: χωρίς αυτόματη μεγέθυνση μικρών γραμμάτων στην εκτύπωση */
   html,body,#printArea{-webkit-text-size-adjust:100%!important;text-size-adjust:100%!important}
   /* Περιγράμματα με border-collapse:separate — κάθε κελί ζωγραφίζει μόνο τη δεξιά και
      την κάτω γραμμή του. Έτσι το Safari (iPhone) δεν χάνει γραμμές στα rowspan/colspan. */
-  .rtab{width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;
+  #printArea.ios .rtab{width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;
     border-top:1.4px solid #000;border-left:1.4px solid #000}
-  .rtab tr,.rtab tbody{break-inside:avoid;page-break-inside:avoid}
-  .rtab th,.rtab td{border:0;border-right:1px solid #000;border-bottom:1px solid #000;
+  #printArea.ios .rtab tr,#printArea.ios .rtab tbody{break-inside:avoid;page-break-inside:avoid}
+  #printArea.ios .rtab th,#printArea.ios .rtab td{border:0;border-right:1px solid #000;border-bottom:1px solid #000;
     padding:.6mm .7mm;vertical-align:middle;overflow:hidden}
-  .rtab thead th{background:#f6f6f6;font-size:5.9pt;font-weight:700;line-height:1.12;padding:.5mm .4mm;
+  #printArea.ios .rtab thead th{background:#f6f6f6;font-size:5.9pt;font-weight:700;line-height:1.12;padding:.5mm .4mm;
     text-align:center;white-space:normal;overflow-wrap:normal;word-break:normal;hyphens:none}
-  .rtab thead tr:last-child th{border-bottom:1.4px solid #000}
+  #printArea.ios .rtab thead tr:last-child th{border-bottom:1.4px solid #000}
   /* χωρίσματα ανάμεσα στις 4 αναθέσεις και δεξί άκρο */
-  .rtab .se{border-right:1.4px solid #000}
+  #printArea.ios .rtab .se{border-right:1.4px solid #000}
   /* κάτω γραμμή κάθε τομέα πιο έντονη */
-  .rtab td.dt,.rtab td.num,.rtab td.lastc{border-bottom:1.4px solid #000}
+  #printArea.ios .rtab td.dt,#printArea.ios .rtab td.num,#printArea.ios .rtab td.lastc{border-bottom:1.4px solid #000}
   /* ανάμεσα σε όνομα και ημερομηνίες: λεπτή γκρι */
   /* ύψη χωρίς κάθετο padding: το Safari προσθέτει το padding στο ύψος, το Chrome όχι */
-  .rtab td.who{border-bottom:1px solid #9a9a9a;height:6mm;font-size:6.8pt;text-align:center;line-height:1.1;
+  #printArea.ios .rtab td.who{border-bottom:1px solid #9a9a9a;height:6mm;font-size:6.8pt;text-align:center;line-height:1.1;
     white-space:normal;word-break:break-word;overflow-wrap:anywhere;padding:0 .6mm}
-  .rtab td.dt{height:4.8mm;font-size:6.6pt;text-align:center;white-space:nowrap;padding:0 .5mm}
-  .rtab .num{font-size:9pt;font-weight:700;text-align:center;line-height:1.05;padding:0 .3mm}
-  .rtab .num small{display:block;font-size:5.5pt;font-weight:700;letter-spacing:.04em;color:#333;margin-top:.4mm}
-  .rtab .lastc{font-size:6.8pt;text-align:center;white-space:nowrap;padding:0 .5mm}
+  #printArea.ios .rtab td.dt{height:4.8mm;font-size:6.6pt;text-align:center;white-space:nowrap;padding:0 .5mm}
+  #printArea.ios .rtab .num{font-size:9pt;font-weight:700;text-align:center;line-height:1.05;padding:0 .3mm}
+  #printArea.ios .rtab .num small{display:block;font-size:5.5pt;font-weight:700;letter-spacing:.04em;color:#333;margin-top:.4mm}
+  #printArea.ios .rtab .lastc{font-size:6.8pt;text-align:center;white-space:nowrap;padding:0 .5mm}
 }
 </style>
 </head>
@@ -1521,6 +1541,8 @@ function buildReport(y){
       var na=parseInt(String(a.id).replace(/\D/g,''),10), nb=parseInt(String(b.id).replace(/\D/g,''),10);
       return (na||0)-(nb||0); });
 
+  /* iPhone/iPad τυπώνουν διαφορετικά από τον υπολογιστή — δύο εκδοχές του ίδιου εντύπου */
+  var ios=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
   var rowsHtml=list.map(function(t){
     var rows=D.assignments.filter(function(a){ return a.territory_id===t.id; })
       .sort(function(a,b){ return String(a.date_out).localeCompare(String(b.date_out)); });
@@ -1537,23 +1559,32 @@ function buildReport(y){
     var who='', dts='';
     for(var k=0;k<SLOTS;k++){
       var a=inY[k];
-      who+='<td class="who se" colspan="2">'+(a?esc(a.person):'')+'</td>';
-      dts+='<td class="dt">'+(a?dsh(a.date_out):'')+'</td><td class="dt se">'+(a?dsh(a.date_in):'')+'</td>';
+      if(ios){
+        who+='<td class="who se" colspan="2">'+(a?esc(a.person):'')+'</td>';
+        dts+='<td class="dt">'+(a?dsh(a.date_out):'')+'</td><td class="dt se">'+(a?dsh(a.date_in):'')+'</td>';
+      } else {
+        who+='<td class="who sl" colspan="2">'+(a?esc(a.person):'')+'</td>';
+        dts+='<td class="dt sl">'+(a?dsh(a.date_out):'')+'</td><td class="dt">'+(a?dsh(a.date_in):'')+'</td>';
+      }
     }
     var num=String(t.id).replace(/^T0?/,''), code=townCode(townOf(t));
+    if(!ios) return '<tbody><tr style="height:7.5mm"><td class="num" rowspan="2">'+esc(num)+'<small>'+esc(code)+'</small></td>'+
+      '<td class="lastc" rowspan="2">'+dsh(lastc)+'</td>'+who+'</tr>'+
+      '<tr style="height:5.5mm">'+dts+'</tr></tbody>';
     return '<tbody><tr><td class="num" rowspan="2">'+esc(num)+'<small>'+esc(code)+'</small></td>'+
       '<td class="lastc se" rowspan="2">'+dsh(lastc)+'</td>'+who+'</tr>'+
       '<tr>'+dts+'</tr></tbody>';
   });
 
-  var cols='<colgroup><col style="width:10mm"><col style="width:18mm">';
+  var cols='<colgroup><col style="width:10mm"><col style="width:'+(ios?18:19)+'mm">';
   for(var c=0;c<SLOTS*2;c++) cols+='<col>';
   cols+='</colgroup>';
+  var A=ios?'':' class="sl"', B=ios?' class="se"':'';
   var head='<tr><th rowspan="2">Αρ.<br>Τομ.</th>'+
-    '<th rowspan="2" class="se">Τελευταία<br>ημερομηνία<br>ολοκλήρωσης</th>';
-  for(var j=0;j<SLOTS;j++) head+='<th colspan="2" class="se">Ανατέθηκε στον/στη(ν)</th>';
+    '<th rowspan="2"'+B+'>Τελευταία<br>ημερομηνία<br>ολοκλήρωσης</th>';
+  for(var j=0;j<SLOTS;j++) head+='<th colspan="2" class="'+(ios?'se':'sl')+'">Ανατέθηκε στον/στη(ν)</th>';
   head+='</tr><tr>';
-  for(var j2=0;j2<SLOTS;j2++) head+='<th>Ημερομηνία<br>ανάθεσης</th><th class="se">Ημερομηνία<br>ολοκλήρωσης</th>';
+  for(var j2=0;j2<SLOTS;j2++) head+='<th'+A+'>Ημερομηνία<br>ανάθεσης</th><th'+B+'>Ημερομηνία<br>ολοκλήρωσης</th>';
   head+='</tr>';
 
   /* ίσος αριθμός τομέων ανά σελίδα (έως 18) — έτσι δεν κόβεται ποτέ τομέας */
@@ -1566,7 +1597,8 @@ function buildReport(y){
       '<table class="rtab">'+cols+'<thead>'+head+'</thead>'+
       rowsHtml.slice(p*per,(p+1)*per).join('')+'</table></div>';
   }
-  document.getElementById('printArea').innerHTML=out;
+  var pa=document.getElementById('printArea');
+  pa.className=ios?'ios':'pc'; pa.innerHTML=out;
   setTimeout(function(){ window.print(); },80);
 }
 function openSettings(){
