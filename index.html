@@ -399,7 +399,8 @@ function initials(n){ return String(n).split(/\s+/).filter(Boolean).slice(0,2)
 
 /* ---------- κατάσταση ---------- */
 function statusOf(t,now){
-  var rows=D.assignments.filter(function(a){ return a.territory_id===t.id; });
+  var rows=(D._byVer===dataVer&&D._by)?(D._by[t.id]||[]).slice()
+    :D.assignments.filter(function(a){ return a.territory_id===t.id; });
   rows.sort(function(a,b){ return String(a.date_out).localeCompare(String(b.date_out)); });
   var open=null; rows.forEach(function(r){ if(!r.date_in) open=r; });
   if(open){
@@ -445,10 +446,19 @@ function statusTxt(s){
 /* Περιοχές που μετρούν ως μία, όσο κοντά κι αν τις γράφει το φύλλο */
 var TOWN_ALIAS={'Διασταύρωση Παλαιοκάστρου':'Παλαιόκαστρο','Διασταύρωση':'Παλαιόκαστρο'};
 function townOf(t){ var n=String(t.town||'').trim(); return TOWN_ALIAS[n]||n; }
-function all(){ var now=new Date();
-  return D.territories.filter(function(t){ return String(t.active).toUpperCase()!=='FALSE'; })
-    .map(function(t){ t.town=townOf(t); t.s=statusOf(t,now); return t; }); }
-function byId(id){ return all().filter(function(t){ return t.id===id; })[0]; }
+/* Οι καταστάσεις υπολογίζονται ΜΙΑ φορά ανά έκδοση δεδομένων (και ανά ημέρα),
+   όχι σε κάθε κλήση — έτσι οι οθόνες ζωγραφίζονται αμέσως. */
+var dataVer=0, _allMemo=null, _allKey='', _byId={};
+function bump(){ dataVer++; }
+function all(){ var now=new Date(), k=dataVer+'|'+now.toDateString();
+  if(_allMemo&&_allKey===k) return _allMemo;
+  var by={}; D.assignments.forEach(function(a){ (by[a.territory_id]=by[a.territory_id]||[]).push(a); });
+  D._by=by; D._byVer=dataVer;
+  _allMemo=D.territories.filter(function(t){ return String(t.active).toUpperCase()!=='FALSE'; })
+    .map(function(t){ t.town=townOf(t); t.s=statusOf(t,now); return t; });
+  _byId={}; _allMemo.forEach(function(t){ _byId[t.id]=t; });
+  _allKey=k; return _allMemo; }
+function byId(id){ all(); return _byId[id]; }
 function inTown(n){ return all().filter(function(t){ return t.town===n; }); }
 function match(t){ if(!q) return true;
   return (t.name+' '+t.town+' '+t.id+' '+(t.s.holder||'')).toLowerCase().indexOf(q.toLowerCase())>=0; }
@@ -615,7 +625,11 @@ function applyTheme(){
 function toggleTheme(){ var c=document.documentElement.getAttribute('data-theme');
   localStorage.setItem('tomeis_theme',c==='light'?'dark':'light'); applyTheme(); render(); }
 function cacheGet(){ try{ return JSON.parse(localStorage.getItem('tomeis_data')||'null'); }catch(e){ return null; } }
-function cacheSet(o){ try{ localStorage.setItem('tomeis_data',JSON.stringify(o)); }catch(e){} }
+/* τα δεδομένα αποθηκεύονται ΧΩΡΙΣ τα όρια· τα όρια ξεχωριστά και μόνο όταν αλλάζουν */
+function cacheSet(o){ var c={}; for(var k in o) if(k!=='boundaries') c[k]=o[k];
+  try{ localStorage.setItem('tomeis_data',JSON.stringify(c)); }catch(e){} }
+function geoGet(){ try{ return JSON.parse(localStorage.getItem('tomeis_geo')||'null'); }catch(e){ return null; } }
+function geoSet(g){ try{ localStorage.setItem('tomeis_geo',JSON.stringify(g)); }catch(e){} }
 function apply(j){
   D.territories=j.territories||[]; D.assignments=j.assignments||[]; D.people=j.people||[];
   D.requests=j.requests||[];
@@ -624,6 +638,7 @@ function apply(j){
   D.settings.rest_months=+(D.settings.rest_months||4);
   D.settings.warn_days=+(D.settings.warn_days||14);
   if(j.boundaries) D.geo=j.boundaries;
+  bump();
 }
 /* Τα όρια αλλάζουν μόνο όταν σχεδιάσεις χάρτη — οπότε μένουν στο τηλέφωνο
    και τα ξαναζητάμε το πολύ μία φορά την ημέρα. Έτσι το άνοιγμα είναι
@@ -636,23 +651,27 @@ function fetchGeo(then){
     .then(function(txt){
       var g; try{ g=JSON.parse(txt); }catch(e){ return; }
       if(g.ok&&g.boundaries){
-        D.geo=g.boundaries;
+        D.geo=g.boundaries; geoSet(g.boundaries);
         try{ localStorage.setItem('tomeis_geo_at',String(Date.now()));
              localStorage.setItem('tomeis_geo_ms',String(Date.now()-t0)); }catch(e){}
-        cacheSet(g); render(); if(then) then(g);
+        var geo=D.geo; apply(g); D.geo=geo; cacheSet(g); render(); if(then) then(g);
       }
     }).catch(function(){});
 }
 /* Ξαναδιαβάζει μόνο τα δεδομένα του φύλλου — τα όρια τα έχουμε ήδη.
    Γι' αυτό μια παράδοση/επιστροφή ενημερώνεται σε ένα δευτερόλεπτο. */
+var lastFresh=0;
+/* φρέσκα δεδομένα που ήρθαν μαζί με την απάντηση μιας αποθήκευσης */
+function applyFresh(d){ var geo=D.geo; apply(d); D.geo=geo; cacheSet(d); lastFresh=Date.now(); render(); }
 function refresh(then){
+  /* μόλις ήρθαν φρέσκα δεδομένα από την αποθήκευση — δεν χρειάζεται δεύτερο αίτημα */
+  if(Date.now()-lastFresh<5000){ if(then) then({}); return Promise.resolve(); }
   /* Το .catch πιάνει ΜΟΝΟ το δίκτυο — αλλιώς ένα λάθος στην οθόνη θα
      εμφανιζόταν σαν πρόβλημα σύνδεσης και θα κρυβόταν η επιβεβαίωση. */
   return fetch(API+'?geo=0',{redirect:'follow'}).then(function(r){ return r.json(); })
     .then(function(j){
       if(!j.ok) throw new Error(j.error||'σφάλμα');
-      var geo=D.geo; apply(j); D.geo=geo;
-      var k=cacheGet()||{}; j.boundaries=k.boundaries||geo||null; cacheSet(j);
+      var geo=D.geo; apply(j); D.geo=geo; cacheSet(j); lastFresh=Date.now();
       render(); return j;
     })
     .catch(function(){ toast('Δεν ανανεώθηκαν τα δεδομένα'); return null; })
@@ -665,13 +684,14 @@ function manualRefresh(){
   setTimeout(done,8000);
 }
 function load(){
-  var c=cacheGet(); if(c){ apply(c); render(); }
+  var c=cacheGet(), g=geoGet();
+  if(c && c.boundaries && !g){ g=c.boundaries; geoSet(g); cacheSet(c); }   /* μεταφορά από την παλιά μορφή */
+  if(c){ apply(c); if(g) D.geo=g; render(); }
   var haveGeo=!!(D.geo&&D.geo.maps&&Object.keys(D.geo.maps).length);
   fetch(API+'?geo=0',{redirect:'follow'}).then(function(r){return r.json();})
     .then(function(j){
       if(!j.ok) throw new Error(j.error||'σφάλμα');
-      apply(j); render();
-      var k=cacheGet()||{}; j.boundaries=k.boundaries||D.geo||null; cacheSet(j);
+      var geo=D.geo; apply(j); D.geo=geo; render(); cacheSet(j); lastFresh=Date.now();
       var missing=D.territories.some(function(t){ return t.mymaps_id && !geoOf(t.id); });
       if(!haveGeo || missing || geoAge()>GEO_MAX_AGE) fetchGeo();
     })
@@ -681,8 +701,30 @@ function load(){
       else toast('Χωρίς σύνδεση — παλιά δεδομένα');
     });
 }
-function post(body,done){
-  var st=0;
+/* Η αλλαγή φαίνεται ΑΜΕΣΩΣ στην οθόνη· το φύλλο ενημερώνεται στο παρασκήνιο.
+   Αν η αποθήκευση αποτύχει, τα δεδομένα ξαναφορτώνονται από το φύλλο. */
+function optimistic(b){
+  var td=today();
+  switch(b.action){
+    case 'giveOut': D.assignments.push({row_id:'tmp-'+Date.now(),territory_id:b.territory,person:b.person,
+      date_out:b.date||td,date_in:''}); return true;
+    case 'takeBack': D.assignments.forEach(function(a){ if(a.territory_id===b.territory && !a.date_in) a.date_in=b.date||td; }); return true;
+    case 'editRow': D.assignments.forEach(function(a){ if(String(a.row_id)===String(b.rowId)){
+      a.person=b.person; a.date_out=b.dateOut; a.date_in=b.dateIn||''; } }); return true;
+    case 'undo': D.assignments=D.assignments.filter(function(a){ return String(a.row_id)!==String(b.rowId); }); return true;
+    case 'seenReq': (D.requests||[]).forEach(function(r){ if(!b.rowId||String(r.row_id)===String(b.rowId)) r.status='seen'; }); return true;
+    case 'cancelReq': D.requests=(D.requests||[]).filter(function(r){ return String(r.row_id)!==String(b.rowId); }); return true;
+    case 'savePerson': if(!D.people.some(function(p){ return p.name===b.name; })) D.people.push({name:b.name,active:'TRUE'}); return true;
+    case 'saveSetting': D.settings[b.key]=isNaN(+b.value)?b.value:+b.value; return true;
+    case 'batch': var any=false; (b.ops||[]).forEach(function(o){ if(optimistic(o)) any=true; }); return any;
+  }
+  return false;
+}
+function post(body,done,raw){
+  var st=0, changed=false;
+  body.withData=true;
+  if(!raw){ try{ changed=optimistic(body); }catch(e){} if(changed){ bump(); render(); } }
+  var undoLocal=function(){ if(changed){ lastFresh=0; refresh(); } };
   fetch(API,{method:'POST',redirect:'follow',
     headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)})
     .then(function(r){ st=r.status; return r.text(); })
@@ -693,12 +735,22 @@ function post(body,done){
         alert('Το Google απάντησε κάτι που δεν κατάλαβα (κωδικός '+st+').\n\n'+
               String(txt).replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').slice(0,180)+
               '\n\nΣυνήθως σημαίνει ότι το script χρειάζεται νέα ανάπτυξη (Deploy → New version).');
-        return;
+        undoLocal(); return;
       }
-      if(!j.ok){ alert('Σφάλμα: '+j.error); return; }
+      /* παλιό script χωρίς batch: στέλνουμε τις ενέργειες μία-μία */
+      if(!j.ok && body.action==='batch' && /batch/.test(String(j.error))){ runSeq(body.ops,done); return; }
+      if(!j.ok){ alert('Σφάλμα: '+j.error); undoLocal(); return; }
+      if(j.data) applyFresh(j.data);
       done(j);
-    }).catch(function(e){ alert('Δεν στάλθηκε: '+e.message+'\n(έλεγξε τη σύνδεση)'); });
+    }).catch(function(e){ alert('Δεν στάλθηκε: '+e.message+'\n(έλεγξε τη σύνδεση)'); undoLocal(); });
 }
+function runSeq(ops,done){
+  var res=[], i=0;
+  (function next(){ if(i>=ops.length){ lastFresh=0; done({ok:true,results:res}); return; }
+    post(ops[i++],function(j){ res.push(j); next(); },true); })();
+}
+/* πολλές ενέργειες σε ΕΝΑ αίτημα */
+function postMany(ops,done){ post({action:'batch',ops:ops},done); }
 function toast(msg,lab,act){
   $('#toastMsg').textContent=msg; var b=$('#toastAct');
   if(lab){ b.textContent=lab; b.style.display=''; b.onclick=function(){ hideToast(); act(); }; }
@@ -827,10 +879,9 @@ function openRequests(){
 function renewReq(rowId,tid,person){
   document.querySelectorAll('.scrim').forEach(function(e){ e.remove(); });
   var d=today();
-  post({action:'takeBack',territory:tid,date:d},function(){
-    post({action:'giveOut',territory:tid,person:person,date:d},function(){
-      post({action:'seenReq',rowId:rowId},function(){
-        refresh(function(){ toast('Ανανεώθηκε: '+person+' → '+tid); }); }); }); });
+  postMany([{action:'takeBack',territory:tid,date:d},{action:'giveOut',territory:tid,person:person,date:d},
+            {action:'seenReq',rowId:rowId}],function(){
+    refresh(function(){ toast('Ανανεώθηκε: '+person+' → '+tid); }); });
 }
 function dropReq(rowId){
   document.querySelectorAll('.scrim').forEach(function(e){ e.remove(); });
@@ -838,9 +889,8 @@ function dropReq(rowId){
 }
 function grantReq(rowId,tid,person){
   document.querySelectorAll('.scrim').forEach(function(e){ e.remove(); });
-  post({action:'giveOut',territory:tid,person:person},function(){
-    post({action:'seenReq',rowId:rowId},function(){
-      refresh(function(){ toast(person+' → '+tid); }); }); });
+  postMany([{action:'giveOut',territory:tid,person:person},{action:'seenReq',rowId:rowId}],function(){
+    refresh(function(){ toast(person+' → '+tid); }); });
 }
 function render(){
   bell();
@@ -1176,10 +1226,12 @@ function doGiveOut(id){
     if(!name){ alert('Διάλεξε ή γράψε όνομα'); return; }
     var save=!sel.value && typed && d.querySelector('#gSave').checked;
     var date=d.querySelector('#gD').value; d.remove();
-    var send=function(){ post({action:'giveOut',territory:id,person:name,date:date},function(j){
+    var give={action:'giveOut',territory:id,person:name,date:date};
+    var after=function(j){
+      var rid=j.rowId||(j.results&&j.results[j.results.length-1]&&j.results[j.results.length-1].rowId);
       refresh(); toast(t.name+' → '+name,'Αναίρεση',function(){
-        post({action:'undo',rowId:j.rowId},function(){ refresh(); toast('Αναιρέθηκε'); }); }); }); };
-    if(save) post({action:'savePerson',name:name},send); else send();
+        post({action:'undo',rowId:rid},function(){ refresh(); toast('Αναιρέθηκε'); }); }); };
+    if(save) postMany([{action:'savePerson',name:name},give],after); else post(give,after);
   };
 }
 function editRow(rowId){
@@ -1540,8 +1592,8 @@ function openSettings(){
   d.querySelector('#sS').onclick=function(){
     var v=[['hold_months',d.querySelector('#sH').value],['rest_months',d.querySelector('#sR').value],
            ['warn_days',d.querySelector('#sW').value]]; d.remove();
-    var i=0; (function next(){ if(i>=v.length){ refresh(); toast('Αποθηκεύτηκε'); return; }
-      var x=v[i++]; post({action:'saveSetting',key:x[0],value:x[1]},next); })(); };
+    postMany(v.map(function(x){ return {action:'saveSetting',key:x[0],value:x[1]}; }),function(){
+      refresh(); toast('Αποθηκεύτηκε'); }); };
   d.querySelector('#sM').onclick=function(){ d.remove();
     toast('Ανανέωση χαρτών… μπορεί να πάρει ένα λεπτό');
     post({action:'refreshMaps'},function(){

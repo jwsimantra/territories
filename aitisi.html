@@ -349,7 +349,8 @@ function monthsTxt(m){ if(m===Infinity) return 'ποτέ';
   if(m<2) return Math.round(m*30.44/7)+' εβδομάδες';
   return (m<10?m.toFixed(1):Math.round(m))+' μήνες'; }
 function statusOf(t,now){
-  var rows=D.assignments.filter(function(a){ return a.territory_id===t.id; });
+  var rows=(D._byVer===dataVer&&D._by)?(D._by[t.id]||[]).slice()
+    :D.assignments.filter(function(a){ return a.territory_id===t.id; });
   rows.sort(function(a,b){ return String(a.date_out).localeCompare(String(b.date_out)); });
   var open=null; rows.forEach(function(r){ if(!r.date_in) open=r; });
   if(open){
@@ -708,10 +709,19 @@ function monthsNum(m){ return m===Infinity?'—':String(Math.floor(m)); }
 
 var TOWN_ALIAS={'Διασταύρωση Παλαιοκάστρου':'Παλαιόκαστρο','Διασταύρωση':'Παλαιόκαστρο'};
 function townOf(t){ var n=String(t.town||'').trim(); return TOWN_ALIAS[n]||n; }
-function all(){ var now=new Date();
-  return D.territories.filter(function(t){ return String(t.active).toUpperCase()!=='FALSE'; })
-    .map(function(t){ t.town=townOf(t); t.s=statusOf(t,now); t.s.mine=(t.s.holder===me); return t; }); }
-function byId(id){ return all().filter(function(t){ return t.id===id; })[0]; }
+/* Οι καταστάσεις υπολογίζονται ΜΙΑ φορά ανά έκδοση δεδομένων (και ανά ημέρα),
+   όχι σε κάθε κλήση — έτσι οι οθόνες ζωγραφίζονται αμέσως. */
+var dataVer=0, _allMemo=null, _allKey='', _byId={};
+function bump(){ dataVer++; }
+function all(){ var now=new Date(), k=dataVer+'|'+now.toDateString();
+  if(_allMemo&&_allKey===k) return _allMemo;
+  var by={}; D.assignments.forEach(function(a){ (by[a.territory_id]=by[a.territory_id]||[]).push(a); });
+  D._by=by; D._byVer=dataVer;
+  _allMemo=D.territories.filter(function(t){ return String(t.active).toUpperCase()!=='FALSE'; })
+    .map(function(t){ t.town=townOf(t); t.s=statusOf(t,now); t.s.mine=(t.s.holder===me); return t; });
+  _byId={}; _allMemo.forEach(function(t){ _byId[t.id]=t; });
+  _allKey=k; return _allMemo; }
+function byId(id){ all(); return _byId[id]; }
 function inTown(n){ return all().filter(function(t){ return t.town===n; }); }
 function shortName(t){
   var n=String(t.name||'');
@@ -726,7 +736,10 @@ function myPending(){ return (D.requests||[]).filter(function(r){
 
 /* ---------- δεδομένα ---------- */
 function cacheGet(){ try{ return JSON.parse(localStorage.getItem('tomeis_pub')||'null'); }catch(e){ return null; } }
-function cacheSet(o){ try{ localStorage.setItem('tomeis_pub',JSON.stringify(o)); }catch(e){} }
+function cacheSet(o){ var c={}; for(var k in o) if(k!=='boundaries') c[k]=o[k];
+  try{ localStorage.setItem('tomeis_pub',JSON.stringify(c)); }catch(e){} }
+function geoGet(){ try{ return JSON.parse(localStorage.getItem('tomeis_pub_g')||'null'); }catch(e){ return null; } }
+function geoSet(g){ try{ localStorage.setItem('tomeis_pub_g',JSON.stringify(g)); }catch(e){} }
 function apply(j){
   D.territories=j.territories||[]; D.assignments=j.assignments||[]; D.people=j.people||[];
   D.requests=j.requests||[]; D.settings=j.settings||{};
@@ -734,6 +747,7 @@ function apply(j){
   D.settings.rest_months=+(D.settings.rest_months||4);
   D.settings.warn_days=+(D.settings.warn_days||14);
   if(j.boundaries) D.geo=j.boundaries;
+  bump();
 }
 var GEO_MAX_AGE=24*3600*1000;
 function geoAge(){ var t=+(localStorage.getItem('tomeis_pub_geo')||0); return t?Date.now()-t:Infinity; }
@@ -742,16 +756,18 @@ function fetchGeo(){
     .then(function(txt){ var g; try{ g=JSON.parse(txt); }catch(e){ return; }
       if(g.ok&&g.boundaries){ D.geo=g.boundaries;
         try{ localStorage.setItem('tomeis_pub_geo',String(Date.now())); }catch(e){}
-        cacheSet(g); render(); } }).catch(function(){});
+        geoSet(g.boundaries); var geo=D.geo; apply(g); D.geo=geo; cacheSet(g); render(); } }).catch(function(){});
 }
+var lastFresh=0;
+function applyFresh(d){ var geo=D.geo; apply(d); D.geo=geo; cacheSet(d); lastFresh=Date.now(); render(); }
 function refresh(then){
+  if(Date.now()-lastFresh<5000){ if(then) then({}); return Promise.resolve(); }
   /* Το .catch πιάνει ΜΟΝΟ το δίκτυο — αλλιώς ένα λάθος στην οθόνη θα
      εμφανιζόταν σαν πρόβλημα σύνδεσης και θα κρυβόταν η επιβεβαίωση. */
   return fetch(API+'?geo=0',{redirect:'follow'}).then(function(r){ return r.json(); })
     .then(function(j){
       if(!j.ok) throw new Error(j.error||'σφάλμα');
-      var geo=D.geo; apply(j); D.geo=geo;
-      var k=cacheGet()||{}; j.boundaries=k.boundaries||geo||null; cacheSet(j);
+      var geo=D.geo; apply(j); D.geo=geo; cacheSet(j); lastFresh=Date.now();
       render(); return j;
     })
     .catch(function(){ toast('Αποτυχία ενημέρωσης'); return null; })
@@ -763,12 +779,14 @@ function manualRefresh(){
   refresh(function(){ done(); toast('Ενημερώθηκε'); }); setTimeout(done,8000);
 }
 function load(){
-  var c=cacheGet(); if(c){ apply(c); render(); }
+  var c=cacheGet(), g=geoGet();
+  if(c && c.boundaries && !g){ g=c.boundaries; geoSet(g); cacheSet(c); }
+  if(c){ apply(c); if(g) D.geo=g; render(); }
   var haveGeo=!!(D.geo&&D.geo.maps&&Object.keys(D.geo.maps).length);
   fetch(API+'?geo=0',{redirect:'follow'}).then(function(r){ return r.json(); })
     .then(function(j){ if(!j.ok) throw new Error(j.error||'σφάλμα');
       var geo=D.geo; apply(j); D.geo=geo;
-      var k=cacheGet()||{}; j.boundaries=k.boundaries||geo||null; cacheSet(j); render();
+      cacheSet(j); lastFresh=Date.now(); render();
       var missing=D.territories.some(function(t){ return t.mymaps_id && !geoOf(t.id); });
       if(!haveGeo || missing || geoAge()>GEO_MAX_AGE) fetchGeo();
     })
@@ -779,12 +797,14 @@ function load(){
     });
 }
 function post(body,done,fail){
+  body.withData=true;
   fetch(API,{method:'POST',redirect:'follow',
     headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)})
     .then(function(r){ return r.text(); })
     .then(function(txt){ var j; try{ j=JSON.parse(txt); }catch(e){
         alert('Σφάλμα διακομιστή. Δοκιμάστε ξανά.'); if(fail) fail(); return; }
       if(!j.ok){ alert('Σφάλμα: '+j.error); if(fail) fail(); return; }
+      if(j.data) applyFresh(j.data);
       done(j); })
     .catch(function(){ alert('Αποτυχία αποστολής — ελέγξτε τη σύνδεση.'); if(fail) fail(); });
 }
@@ -853,12 +873,12 @@ function pickMe(n){
   d.querySelector('#no').onclick=function(){ d.remove(); };
   d.querySelector('#yes').onclick=function(){ d.remove(); setMe(n); toast('Καλώς ήρθες, '+n); };
 }
-function setMe(n){ me=n; try{ localStorage.setItem('tomeis_me',n); }catch(e){} tab='free'; render(); }
+function setMe(n){ me=n; bump(); try{ localStorage.setItem('tomeis_me',n); }catch(e){} tab='free'; render(); }
 function changeMe(){
   var d=sheet('<h3>Αλλαγή ονόματος</h3><div class="sh-sub">Τώρα: <b>'+esc(me)+'</b>. Θα επιλέξεις ξανά το όνομά σου από τη λίστα.</div>'+
     '<button class="big go" id="yes">Αλλαγή</button><button class="big" id="no">Άκυρο</button>');
   d.querySelector('#no').onclick=function(){ d.remove(); };
-  d.querySelector('#yes').onclick=function(){ d.remove(); me=''; try{ localStorage.removeItem('tomeis_me'); }catch(e){} detail=null; render(); };
+  d.querySelector('#yes').onclick=function(){ d.remove(); me=''; bump(); try{ localStorage.removeItem('tomeis_me'); }catch(e){} detail=null; render(); };
 }
 
 /* ---------- διαθέσιμοι τομείς: ανά περιοχή ---------- */
