@@ -839,26 +839,21 @@ function initials(n){ var p=String(n||'').replace(/[.]/g,' ').trim().split(/\s+/
   return ((p[0]||'')[0]||'')+((p[1]||'')[0]||''); }
 function fold(x){ return String(x||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase(); }
 function viewPickName(){
-  $('#ttl').textContent='Ποιος είσαι;';
+  $('#ttl').textContent='Τομείς';
   var names=D.people.filter(function(p){ return String(p.active).toUpperCase()!=='FALSE'; })
     .map(function(p){ return p.name; })
     .filter(function(n){ return n && !/^(Όμιλος|Ομαδική|Τηλεφωνικός)/.test(n); })
     .sort(function(a,b){ return a.localeCompare(b,'el'); });
   $('#main').innerHTML=
-    '<div class="steps">'+
-      '<div class="st"><i>1</i><span>Γράψε τα πρώτα γράμματα του <b>επωνύμου</b> σου στο πεδίο από κάτω.</span></div>'+
-      '<div class="st"><i>2</i><span>Πάτησε το <b>όνομά σου</b> στη λίστα.</span></div>'+
-      '<div class="st"><i>3</i><span>Πάτησε <b>«Ναι, είναι το όνομά μου»</b>. Το όνομα μένει αποθηκευμένο σε αυτό το κινητό — δεν θα σου ζητηθεί ξανά.</span></div>'+
-    '</div>'+
+    '<p class="lead">Επιλογή ονόματος από τη λίστα.</p>'+
     '<div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">'+
       '<circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>'+
       '<input id="nq" placeholder="Επώνυμο, π.χ. Παπαδόπουλος" autocomplete="off" oninput="filterNames()"></div>'+
     '<div class="nlist" id="nlist">'+
-    names.map(function(n){ return '<button class="pick" data-n="'+esc(n)+'" onclick="pickMe(this.getAttribute(\'data-n\'))">'+
+    names.map(function(n){ return '<button class="pick" data-n="'+esc(n)+'" onclick="setMe(this.getAttribute(\'data-n\'))">'+
       '<span class="av">'+esc(initials(n))+'</span>'+esc(n)+'</button>'; }).join('')+
     '</div>'+
-    '<div class="empty" id="nnone" style="display:none;padding:22px 10px">Δεν βρέθηκε όνομα.</div>'+
-    '<div class="hint">Δεν βρίσκεις το όνομά σου; Ενημέρωσε τον υπεύθυνο τομέων.</div>';
+    '<div class="empty" id="nnone" style="display:none;padding:22px 10px">Δεν βρέθηκε όνομα.</div>';
 }
 function filterNames(){
   var v=fold($('#nq').value), n=0;
@@ -933,10 +928,10 @@ function viewFree(){
   $('#ttl').textContent='Διαθέσιμοι τομείς';
 
   var h=myBox(mine,pend);
-  if(!allFree.length) h+='<div class="empty"><b>Κανένας διαθέσιμος τομέας</b>Δοκίμασε ξανά αργότερα.</div>';
+  if(!allFree.length) h+='<div class="empty"><b>Κανένας διαθέσιμος τομέας</b></div>';
   h+='<div class="age-legend"><div class="al-top">Διαθέσιμοι τομείς · προτεραιότητα</div>'+
-    '<p class="al-txt">Οι χρωματιστοί αριθμοί είναι οι τομείς που μπορείς να ζητήσεις. '+
-    'Το χρώμα δείχνει πόσοι μήνες πέρασαν από την τελευταία ολοκλήρωση.</p>'+
+    '<p class="al-txt">Οι χρωματιστοί αριθμοί είναι οι διαθέσιμοι τομείς. '+
+    'Το χρώμα δείχνει τους μήνες από την τελευταία ολοκλήρωση.</p>'+
     '<div class="al-sw">'+[3,2,1].map(function(b){
       return '<button class="lv'+(band===b?' on':'')+'" style="--c:var(--g'+b+');--ct:var(--g'+b+'t)" onclick="setBand('+b+')">'+
         '<b>'+PRIO[b][0]+'</b><span>'+PRIO[b][1]+'</span><em>'+cnt[b]+' '+(cnt[b]===1?'τομέας':'τομείς')+'</em></button>'; }).join('')+
@@ -954,7 +949,7 @@ function viewFree(){
       '<div class="town-map" id="tm'+i+'" data-town="'+i+'" style="height:'+townH(x)+'px">'+
         miniSvg(x.list,520,townH(x),null,true)+'</div>';
     if(fr.length){
-      h+='<div class="fl-cap"><b>Διαθέσιμοι τομείς'+(band?' · '+PRIO[band][0].toLowerCase()+' προτεραιότητα':'')+'</b> στην περιοχή '+esc(x.name)+' — πάτησε έναν αριθμό</div>'+
+      h+='<div class="fl-cap"><b>Διαθέσιμοι τομείς'+(band?' · '+PRIO[band][0].toLowerCase()+' προτεραιότητα':'')+'</b> στην περιοχή '+esc(x.name)+'</div>'+
         '<div class="fchips">'+fr.map(function(t){
         var m=t.s.rested;
         return '<button class="fchip" style="border-color:'+ageCol(m)+'" onclick="open_(\''+t.id+'\')" title="'+esc(shortName(t))+'">'+
