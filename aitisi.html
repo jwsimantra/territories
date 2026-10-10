@@ -150,6 +150,12 @@ p.lead{margin:0 0 14px;font-size:14px;color:var(--muted);line-height:1.5}
 .pick .av{width:32px;height:32px;border-radius:10px;flex:0 0 auto;display:grid;place-items:center;
   background:var(--raised);border:1px solid var(--rule);color:var(--muted);font-size:12px;font-weight:700}
 .pick:active{background:var(--raised)}
+.addp{display:flex;align-items:center;gap:11px;width:100%;text-align:left;margin-top:10px;padding:10px 12px;
+  background:var(--sheet);border:1px dashed var(--accent-dim);border-radius:12px}
+.addp .av{width:32px;height:32px;border-radius:10px;flex:0 0 auto;display:grid;place-items:center;
+  background:var(--accent-wash);border:1px solid var(--accent-dim);color:var(--accent);font-size:18px;font-weight:700}
+.addp b{display:block;font-size:14.5px;font-weight:600;color:var(--accent)}
+.addp small{display:block;font-size:11.5px;color:var(--faint)}
 .hint{font-size:12.5px;color:var(--faint);text-align:center;margin:14px 8px 0}
 input,select{width:100%;background:var(--raised);border:1px solid var(--rule);border-radius:10px;
   padding:12px;color:var(--text);font:inherit;font-size:16px;min-width:0}
@@ -187,6 +193,7 @@ input,select{width:100%;background:var(--raised);border:1px solid var(--rule);bo
   padding:10px 16px calc(18px + var(--safe-b));max-height:88vh;max-height:88svh;overflow-y:auto}
 .grab{display:block;width:36px;height:4px;border-radius:99px;background:var(--rule);margin:2px auto 14px;touch-action:none}
 .sheet h3{margin:0 0 4px;font-size:17px;font-weight:700}
+.sheet input{margin-bottom:4px}
 .sheet .sh-sub{margin:0 0 12px;color:var(--faint);font-size:12.5px}
 #toast{position:fixed;left:16px;right:16px;bottom:calc(72px + var(--safe-b));background:var(--raised);
   border:1px solid var(--accent-dim);border-radius:11px;padding:12px 14px;display:none;z-index:1200;
@@ -853,7 +860,9 @@ function viewPickName(){
     names.map(function(n){ return '<button class="pick" data-n="'+esc(n)+'" onclick="setMe(this.getAttribute(\'data-n\'))">'+
       '<span class="av">'+esc(initials(n))+'</span>'+esc(n)+'</button>'; }).join('')+
     '</div>'+
-    '<div class="empty" id="nnone" style="display:none;padding:22px 10px">Δεν βρέθηκε όνομα.</div>';
+    '<div class="empty" id="nnone" style="display:none;padding:18px 10px 6px">Δεν βρέθηκε όνομα.</div>'+
+    '<button class="addp" onclick="addPerson()">'+
+      '<span class="av">+</span><span><b>Νέο όνομα</b><small>Προσθήκη ατόμου που δεν υπάρχει στη λίστα</small></span></button>';
 }
 function filterNames(){
   var v=fold($('#nq').value), n=0;
@@ -861,12 +870,31 @@ function filterNames(){
     var ok=fold(b.getAttribute('data-n')).indexOf(v)>=0; b.style.display=ok?'':'none'; if(ok) n++; });
   $('#nnone').style.display=n?'none':''; $('#nlist').style.display=n?'':'none';
 }
-function pickMe(n){
-  var d=sheet('<h3>'+esc(n)+'</h3>'+
-    '<div class="sh-sub">Είναι αυτό το όνομά σου; Με αυτό θα βλέπεις τους τομείς σου και θα κάνεις αιτήσεις.</div>'+
-    '<button class="big go" id="yes">Ναι, είναι το όνομά μου</button><button class="big" id="no">Όχι, πίσω στη λίστα</button>');
+/* νέο άτομο: γράφεται στην καρτέλα People και επιλέγεται αμέσως */
+function tidyName(v){ return String(v||'').replace(/\s+/g,' ').trim().split(' ').map(function(w){
+  return w ? w.charAt(0).toLocaleUpperCase('el')+w.slice(1) : w; }).join(' '); }
+function addPerson(){
+  var typed=tidyName(($('#nq')||{}).value||'');
+  var d=sheet('<h3>Νέο όνομα</h3>'+
+    '<div class="sh-sub">Επώνυμο και όνομα, όπως στη λίστα.</div>'+
+    '<input id="npN" placeholder="π.χ. Παπαδόπουλος Γιώργος" autocomplete="off" value="'+esc(typed)+'">'+
+    '<button class="big go" id="yes">Προσθήκη</button><button class="big" id="no">Άκυρο</button>');
+  var inp=d.querySelector('#npN'); setTimeout(function(){ inp.focus(); },50);
   d.querySelector('#no').onclick=function(){ d.remove(); };
-  d.querySelector('#yes').onclick=function(){ d.remove(); setMe(n); toast('Καλώς ήρθες, '+n); };
+  var go=function(){
+    var n=tidyName(inp.value);
+    if(n.length<3 || n.indexOf(' ')<0){ toast('Γράψε επώνυμο και όνομα'); inp.focus(); return; }
+    /* αν υπάρχει ήδη (ίδιο όνομα, με ή χωρίς τόνους), απλώς επιλέγεται */
+    var same=D.people.filter(function(p){ return fold(p.name)===fold(n); })[0];
+    if(same){ d.remove(); setMe(same.name); return; }
+    d.onclick=null; sheetSet(d,procHtml('Προσθήκη ονόματος…'));
+    post({action:'savePerson',name:n},function(){
+      if(!D.people.some(function(p){ return p.name===n; })) D.people.push({name:n,active:'TRUE'});
+      d.remove(); setMe(n); toast('Προστέθηκε: '+n);
+    },function(){ d.remove(); });
+  };
+  d.querySelector('#yes').onclick=go;
+  inp.onkeydown=function(e){ if(e.key==='Enter') go(); };
 }
 function setMe(n){ me=n; bump(); try{ localStorage.setItem('tomeis_me',n); }catch(e){} tab='free'; render(); }
 function changeMe(){
