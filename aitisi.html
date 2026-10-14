@@ -340,7 +340,10 @@ nav button.on .ico .mp{fill:var(--sheet);stroke:none}
   nav button:not(.on):hover{background:var(--raised);color:var(--text)}
   main{grid-area:m;padding:22px 32px 48px}
   /* λίστες σε δύο στήλες */
-  main.cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:14px;align-content:start;align-items:start}
+  /* grid-auto-rows:max-content: κάθε σειρά παίρνει το πλήρες ύψος του περιεχομένου της —
+     αλλιώς, σε σελίδα με κύλιση, οι κάρτες με πολλούς τομείς συμπιέζονται και επικαλύπτονται */
+  main.cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:max-content;
+    column-gap:14px;align-content:start;align-items:start}
   main.cols>*{grid-column:1/-1}
   /* σελίδα ενός τομέα: κεντρική στήλη */
   main.narrow{padding-left:max(32px,calc((100% - 820px)/2));padding-right:max(32px,calc((100% - 820px)/2))}
