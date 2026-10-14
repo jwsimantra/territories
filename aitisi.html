@@ -3,7 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Τομείς — Αίτηση</title>
+<title>My Territories</title>
+<meta name="apple-mobile-web-app-title" content="My Territories">
+<meta name="application-name" content="My Territories">
+<meta name="theme-color" content="#151A20">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2214%22%20fill%3D%22%231D242C%22/%3E%3Cg%20stroke-width%3D%222.6%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M13%2015%20L30%2011%20L33%2029%20L16%2033%20Z%22%20fill%3D%22none%22%20stroke%3D%22%23E4EBF2%22/%3E%3Cpath%20d%3D%22M30%2011%20L51%2015%20L49%2031%20L33%2029%20Z%22%20fill%3D%22%236FD3C0%22%20stroke%3D%22%236FD3C0%22/%3E%3Cpath%20d%3D%22M16%2033%20L33%2029%20L37%2051%20L14%2051%20Z%22%20fill%3D%22none%22%20stroke%3D%22%23E4EBF2%22/%3E%3Cpath%20d%3D%22M33%2029%20L49%2031%20L51%2048%20L37%2051%20Z%22%20fill%3D%22%236FD3C0%22%20fill-opacity%3D%22.3%22%20stroke%3D%22%23E4EBF2%22/%3E%3Ccircle%20cx%3D%2247%22%20cy%3D%2247%22%20r%3D%2212%22%20fill%3D%22%236FD3C0%22%20stroke%3D%22%231D242C%22%20stroke-width%3D%223%22/%3E%3Ccircle%20cx%3D%2247%22%20cy%3D%2243.4%22%20r%3D%223.4%22%20fill%3D%22%231D242C%22/%3E%3Cpath%20d%3D%22M41.3%2054%20C41.3%2049.6%2043.8%2048%2047%2048%20C50.2%2048%2052.7%2049.6%2052.7%2054%20Z%22%20fill%3D%22%231D242C%22/%3E%3C/g%3E%3C/svg%3E">
+<link rel="icon" type="image/png" sizes="192x192" href="data:image/png;base64,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">
+<link rel="apple-touch-icon" sizes="180x180" href="data:image/png;base64,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">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <style>
 :root{
@@ -15,6 +24,7 @@
   --n1:#27544E; --n2:#336F66; --n3:#43907F; --n4:#5FBCA8; --n5:#9DECDA;
   --idle:#7E8D9B;
   --map-bg:#10151A;
+  --duo:#6FD3C0; --duo-op:.45; --logo-tile:#1D242C; --logo-acc:#6FD3C0; --logo-ink:#E4EBF2;
   --tilefx:grayscale(1) invert(1) brightness(.62) contrast(.62);
   --safe-b:env(safe-area-inset-bottom,0px); --safe-t:env(safe-area-inset-top,0px);
 }
@@ -27,20 +37,21 @@
   --n1:#D3E9E3; --n2:#A4D6C8; --n3:#69B8A3; --n4:#2F8B76; --n5:#0B5B4D;
   --idle:#9BA7AE;
   --map-bg:#F6F7F7;
+  --duo:#6FD3C0; --duo-op:.6; --logo-tile:#FFFFFF; --logo-acc:#127966; --logo-ink:#151C22;
   --tilefx:grayscale(1) brightness(1.16) contrast(.62);
 }
 
 /* Διαθέσιμοι κατά προτεραιότητα (μήνες από την τελευταία ολοκλήρωση):
    g1 πράσινο (<8) · g2 κιτρινοπράσινο (8–12) · g3 κόκκινο (12+) · μπλε = δικός σου · γκρι = μη διαθέσιμος */
 :root{ --g1:#6CCB9C; --g2:#DAE36C; --g3:#F07464; --g1t:#7BD6A9; --g2t:#DDE572; --g3t:#F58474; --late:#F07464;
-  --ok:#2FA37F; --ok-soft:rgba(47,163,127,.14); --mine:#4A82D6; --mine-soft:rgba(74,130,214,.14); }
+  --ok:#6FD3C0; --ok-soft:rgba(111,211,192,.12); --mine:#4A82D6; --mine-soft:rgba(74,130,214,.14); }
 :root[data-theme="light"]{ --g1:#5DB889; --g2:#BFCC3A; --g3:#E25A48; --g1t:#16774A; --g2t:#687500; --g3t:#B9351F; --late:#C8412F;
-  --ok:#127A5C; --ok-soft:rgba(18,122,92,.10); --mine:#25508F; --mine-soft:rgba(37,80,143,.10); }
+  --ok:#127966; --ok-soft:rgba(18,121,102,.09); --mine:#25508F; --mine-soft:rgba(37,80,143,.10); }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%}
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 body{background:var(--ground);color:var(--text);
-  font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif;
+  font:15px/1.5 'Geologica',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif;
   -webkit-font-smoothing:antialiased;overscroll-behavior-y:none}
 button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
 button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
@@ -48,15 +59,16 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline
   box-shadow:0 0 0 1px var(--rule-soft)}
 
 /* ---- Κεφαλίδα: τίτλος + ποιος είναι συνδεδεμένος ---- */
-header{flex:0 0 auto;padding:calc(12px + var(--safe-t)) 14px 10px;border-bottom:1px solid var(--rule-soft)}
+header{flex:0 0 auto;padding:calc(14px + var(--safe-t)) 10px 10px 14px;border-bottom:1px solid var(--rule-soft)}
+header .ico{--icobg:var(--ground)}
 .htop{display:flex;justify-content:space-between;align-items:center;gap:8px}
-h1{margin:0;font-size:20px;font-weight:700;letter-spacing:-.02em;min-width:0;
+.htop .sub{color:var(--faint);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;margin-top:1px;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hbtns{display:flex;gap:0;flex:0 0 auto}
-.hbtns button{width:36px;height:36px;display:flex;align-items:center;justify-content:center;
-  color:var(--muted);border-radius:9px}
+.hbtns button{width:34px;height:34px;display:flex;align-items:center;justify-content:center;
+  color:var(--text);border-radius:9px}
 .hbtns button:active{background:var(--raised)}
-.hbtns svg{width:19px;height:19px;display:block}
+.hbtns .ico{width:19px;height:19px}
 .hbtns .spin-on svg{animation:sp .8s linear infinite}
 .whob{display:flex;align-items:center;gap:11px;width:100%;margin-top:9px;padding:8px 10px;text-align:left;
   background:var(--sheet);border:1px solid var(--rule-soft);border-radius:12px}
@@ -73,11 +85,11 @@ h1{margin:0;font-size:20px;font-weight:700;letter-spacing:-.02em;min-width:0;
 main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px 26px}
 nav{flex:0 0 auto;display:flex;border-top:1px solid var(--rule-soft);background:var(--sheet);
   padding-bottom:var(--safe-b)}
-nav button{flex:1;padding:14px 4px 15px;font-size:11.5px;font-weight:700;letter-spacing:.07em;
+nav button{flex:1;padding:9px 4px 12px;font-size:10px;font-weight:700;letter-spacing:.07em;
   text-transform:uppercase;color:var(--faint)}
 nav button.on{color:var(--accent);box-shadow:inset 0 2px 0 var(--accent)}
-nav button i{font-style:normal;display:inline-block;min-width:18px;padding:0 5px;margin-left:5px;border-radius:99px;
-  background:var(--mine);color:#fff;font-size:10.5px;line-height:18px;letter-spacing:0}
+nav button i{font-style:normal;display:inline-block;min-width:16px;padding:0 5px;margin-left:5px;border-radius:99px;
+  background:var(--mine);color:#fff;font-size:9.5px;line-height:16px;letter-spacing:0;vertical-align:1px}
 
 /* τίτλοι ενοτήτων όπως στην εφαρμογή διαχείρισης */
 h2.sec,.lbl{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);
@@ -105,17 +117,23 @@ p.lead{margin:0 0 14px;font-size:14px;color:var(--muted);line-height:1.5}
 .tag.late{background:rgba(240,116,100,.14);color:var(--late);border-color:rgba(240,116,100,.45)} .tag.late i{background:var(--late)}
 
 /* κουμπιά */
-.big{display:block;width:100%;text-align:center;padding:14px 12px;border-radius:10px;
+.big{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;text-align:center;padding:14px 12px;border-radius:10px;
   font-size:15px;font-weight:600;margin-top:10px;background:var(--raised);
   border:1px solid var(--rule);color:var(--text)}
-.big.go{background:var(--ok);border-color:var(--ok);color:#fff;font-weight:700}
+.big.go{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:700}
 .big.alt{background:var(--sheet)}
 .big:active,.btn:active{opacity:.75}
 .big[disabled]{opacity:.45}
 .btn{display:flex;align-items:center;justify-content:center;gap:7px;text-align:center;padding:11px 8px;white-space:nowrap;
   border-radius:10px;font-size:13.5px;font-weight:600;background:var(--raised);border:1px solid var(--rule)}
-.btn svg{width:16px;height:16px;flex:0 0 auto}
-.btn.pri{background:var(--ok);border-color:var(--ok);color:#fff}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:700}
+.big .ico{width:20px;height:20px}
+.btn .ico{width:18px;height:18px}
+.big.go .ico .d,.big.go .ico .d1,.btn.pri .ico .d,.btn.pri .ico .d1{fill:currentColor;fill-opacity:.18}
+.big.go .ico .bg,.btn.pri .ico .bg{fill:var(--accent)}
+.big.alt .ico,.card .ico{--icobg:var(--sheet)}
+.big:not(.alt):not(.go) .ico{--icobg:var(--raised)}
+.btn:not(.pri) .ico{--icobg:var(--raised)}
 
 .kv{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:10px 0;
   border-bottom:1px solid var(--rule-soft);font-size:14px}
@@ -140,7 +158,7 @@ p.lead{margin:0 0 14px;font-size:14px;color:var(--muted);line-height:1.5}
   background:var(--accent-wash);border:1px solid var(--accent-dim);color:var(--accent);font-size:12.5px;font-weight:700}
 .search{display:flex;align-items:center;gap:9px;background:var(--sheet);border:2px solid var(--accent-dim);
   border-radius:11px;padding:0 12px}
-.search svg{width:18px;height:18px;color:var(--faint);flex:0 0 auto}
+.search .ico{width:18px;height:18px;color:var(--text)}
 .search input{flex:1;background:none;border:0;padding:13px 0;color:var(--text);font:inherit;font-size:16px;min-width:0;outline:0}
 .search input::placeholder{color:var(--faint)}
 .nlist{margin-top:10px;background:var(--sheet);border:1px solid var(--rule-soft);border-radius:12px;overflow:hidden}
@@ -153,7 +171,8 @@ p.lead{margin:0 0 14px;font-size:14px;color:var(--muted);line-height:1.5}
 .addp{display:flex;align-items:center;gap:11px;width:100%;text-align:left;margin-top:10px;padding:10px 12px;
   background:var(--sheet);border:1px dashed var(--accent-dim);border-radius:12px}
 .addp .av{width:32px;height:32px;border-radius:10px;flex:0 0 auto;display:grid;place-items:center;
-  background:var(--accent-wash);border:1px solid var(--accent-dim);color:var(--accent);font-size:18px;font-weight:700}
+  background:var(--sheet);border:1px solid var(--rule);color:var(--text)}
+.addp .av .ico{width:20px;height:20px}
 .addp b{display:block;font-size:14.5px;font-weight:600;color:var(--accent)}
 .addp small{display:block;font-size:11.5px;color:var(--faint)}
 .hint{font-size:12.5px;color:var(--faint);text-align:center;margin:14px 8px 0}
@@ -181,11 +200,6 @@ input,select{width:100%;background:var(--raised);border:1px solid var(--rule);bo
 .mmw svg{position:absolute;inset:0;width:100%;height:100%}
 
 /* κουμπί επιστροφής: καθαρό, με τη θέση όπου γυρίζει */
-.back{display:inline-flex;align-items:center;gap:8px;margin:0 0 12px;padding:8px 14px 8px 10px;
-  background:var(--sheet);border:1px solid var(--rule);border-radius:99px;
-  color:var(--text);font-size:13.5px;font-weight:600}
-.back svg{width:18px;height:18px;color:var(--accent)}
-.back:active{background:var(--raised)}
 
 /* φύλλο ενεργειών */
 .scrim{position:fixed;inset:0;background:rgba(8,11,14,.62);display:flex;align-items:flex-end;z-index:1100}
@@ -272,7 +286,7 @@ input,select{width:100%;background:var(--raised);border:1px solid var(--rule);bo
 .leaflet-tooltip.numlbl{background:transparent;border:0;box-shadow:none;padding:0;margin:0}
 .leaflet-tooltip.numlbl::before{display:none}
 .nb{display:inline-block;min-width:26px;height:26px;padding:0 6px;border-radius:13px;border:2.5px solid;
-  font:800 13px/21px system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;text-align:center;
+  font:800 13px/21px 'Geologica',system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;text-align:center;
   background:var(--sheet);box-shadow:0 1px 4px rgba(0,0,0,.35);font-variant-numeric:tabular-nums}
 .nb.mine{border-color:var(--mine);color:var(--mine)}
 .nb.idle{min-width:20px;height:20px;line-height:18px;font-size:10.5px;font-weight:700;padding:0 5px;border-width:1px;
@@ -280,26 +294,55 @@ input,select{width:100%;background:var(--raised);border:1px solid var(--rule);bo
 
 /* Σύνδεσμος */
 .lnk{color:var(--accent);font-weight:600;background:none;border:0;cursor:pointer;font:inherit;padding:0}
+/* ---- εικονίδια δύο χρωμάτων ---- */
+.ico{width:20px;height:20px;display:block;flex:0 0 auto;--icobg:var(--sheet)}
+.ico .d{fill:var(--duo);fill-opacity:var(--duo-op)}
+.ico .d1{fill:var(--duo)}
+.ico .bg{fill:var(--icobg)}
+.ico .ns{stroke:none}
+.ico .mb{fill:var(--icobg)}
+.ico .mp{fill:none}
+/* ---- λογότυπο ---- */
+.logo{width:30px;height:30px;border-radius:7px;box-shadow:0 0 0 1px var(--rule-soft);flex:0 0 auto;display:block}
+.logo .lt{fill:var(--logo-tile)}
+.logo .li{fill:none;stroke:var(--logo-ink)}
+.logo .la{fill:var(--logo-acc);stroke:var(--logo-acc)}
+.logo .lq{fill:var(--logo-acc);fill-opacity:.3;stroke:var(--logo-ink)}
+.logo .lb{fill:var(--logo-acc);stroke:var(--logo-tile)}
+.logo .lh{fill:var(--logo-tile)}
+.brand{display:flex;align-items:center;gap:9px;min-width:0;flex:1}
+.brand .bt{min-width:0}
+.brand .app{font-size:15.5px;font-weight:700;letter-spacing:-.02em;line-height:1.15;white-space:nowrap}
+/* ---- κάτω καρτέλες με εικονίδια ---- */
+nav button{display:flex;flex-direction:column;align-items:center;gap:4px}
+nav .ico{width:22px;height:22px;--icobg:var(--sheet)}
+nav button:not(.on) .ico .d,nav button:not(.on) .ico .d1{fill:none}
+nav button.on .ico{color:var(--text)}
+nav button.on .ico .mb{fill:var(--duo);stroke:var(--sheet);stroke-width:1.6}
+nav button.on .ico .mp{fill:var(--sheet);stroke:none}
+/* ---- κουμπί «πίσω» ---- */
+.back{display:inline-flex;align-items:center;gap:7px;padding:6px 13px 6px 7px;margin:0 0 12px;
+  background:var(--sheet);border:1px solid var(--rule);border-radius:99px;color:var(--text);
+  font-size:13px;font-weight:600;line-height:1.2}
+.back .ico{width:22px;height:22px}
+.back:active{background:var(--raised)}
 </style>
 </head>
 <body>
 
 <div id="app">
   <header>
-    <div class="htop"><h1 id="ttl">Τομείς</h1>
+    <div class="htop"><div class="brand"><svg class="logo" viewBox="0 0 64 64" role="img" aria-label="My Territories"><rect class="lt" width="64" height="64" rx="14"/><g stroke-width="2.6" stroke-linejoin="round"><path class="li" d="M13 15 L30 11 L33 29 L16 33 Z"/><path class="la" d="M30 11 L51 15 L49 31 L33 29 Z"/><path class="li" d="M16 33 L33 29 L37 51 L14 51 Z"/><path class="lq" d="M33 29 L49 31 L51 48 L37 51 Z"/><circle class="lb" cx="47" cy="47" r="12" stroke-width="3"/><circle class="lh" cx="47" cy="43.4" r="3.4"/><path class="lh" d="M41.3 54 C41.3 49.6 43.8 48 47 48 C50.2 48 52.7 49.6 52.7 54 Z"/></g></svg><div class="bt"><div class="app">My Territories</div><div class="sub" id="ttl">Τομείς</div></div></div>
     <div class="hbtns">
-      <button id="reloadBtn" onclick="manualRefresh()" title="Ανανέωση">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 12a9 9 0 1 1-2.64-6.36"/><polyline points="21 3 21 9 15 9"/></svg>
-      </button>
-      <button id="themeBtn" onclick="toggleTheme()" title="Φωτεινό / σκοτεινό"></button>
+      <button id="reloadBtn" onclick="manualRefresh()" title="Ανανέωση" aria-label="Ανανέωση"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle class="d ns" cx="12" cy="12" r="6"/><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg></button>
+      <button id="themeBtn" onclick="toggleTheme()" title="Φωτεινό / σκοτεινό" aria-label="Φωτεινό / σκοτεινό"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path class="d1" d="M12 3.5a8.5 8.5 0 0 1 0 17z"/></svg></button>
     </div></div>
     <button class="whob" id="who" hidden></button>
   </header>
   <main id="main"><div class="empty"><span class="spin"></span><br><br>Φόρτωση…</div></main>
   <nav id="nav">
-    <button data-tab="free" class="on" onclick="go('free')">Διαθέσιμοι τομείς</button>
-    <button data-tab="mine" onclick="go('mine')">Οι τομείς μου</button>
+    <button data-tab="free" class="on" onclick="go('free')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="d ns" d="M9 4l6 2.5V20l-6-2.5z"/><path d="M3 6.5 9 4l6 2.5L21 4v13.5L15 20l-6-2.5L3 20z"/><path d="M9 4v13.5"/><path d="M15 6.5V20"/></svg><span>Διαθέσιμοι τομείς</span></button>
+    <button data-tab="mine" onclick="go('mine')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.3 L11.2 3.6 L12.4 11.2 L5.3 12.8 Z"/><path class="d1" d="M11.2 3.6 L20 5.3 L19.1 12 L12.4 11.2 Z"/><path d="M5.3 12.8 L12.4 11.2 L14.1 20.4 L4.4 20.4 Z"/><circle class="mb" cx="18.2" cy="18.2" r="5.3"/><circle class="mp" cx="18.2" cy="16.8" r="1.5"/><path class="mp" d="M15.7 21.2c0-1.5 1.1-2.3 2.5-2.3s2.5.8 2.5 2.3"/></svg><span>Οι τομείς μου</span></button>
   </nav>
 </div>
 <div id="toast"></div>
@@ -509,15 +552,13 @@ function osm(m){
   };
   add();
 }
-var SUN_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+
-  '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
-var MOON_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+
-  '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+/* Εικονίδια δύο χρωμάτων: γραμμή + γέμισμα (κλάσεις d / d1 / bg) */
+var IC={"map": "<path class=\"d ns\" d=\"M9 4l6 2.5V20l-6-2.5z\"/><path d=\"M3 6.5 9 4l6 2.5L21 4v13.5L15 20l-6-2.5L3 20z\"/><path d=\"M9 4v13.5\"/><path d=\"M15 6.5V20\"/>", "mosaic": "<path d=\"M4 5.3 L11.2 3.6 L12.4 11.2 L5.3 12.8 Z\"/><path class=\"d1\" d=\"M11.2 3.6 L20 5.3 L19.1 12 L12.4 11.2 Z\"/><path d=\"M5.3 12.8 L12.4 11.2 L14.1 20.4 L4.4 20.4 Z\"/><path class=\"d\" d=\"M12.4 11.2 L19.1 12 L20 19.1 L14.1 20.4 Z\"/>", "mine": "<path d=\"M4 5.3 L11.2 3.6 L12.4 11.2 L5.3 12.8 Z\"/><path class=\"d1\" d=\"M11.2 3.6 L20 5.3 L19.1 12 L12.4 11.2 Z\"/><path d=\"M5.3 12.8 L12.4 11.2 L14.1 20.4 L4.4 20.4 Z\"/><circle class=\"mb\" cx=\"18.2\" cy=\"18.2\" r=\"5.3\"/><circle class=\"mp\" cx=\"18.2\" cy=\"16.8\" r=\"1.5\"/><path class=\"mp\" d=\"M15.7 21.2c0-1.5 1.1-2.3 2.5-2.3s2.5.8 2.5 2.3\"/>", "people": "<circle class=\"d\" cx=\"9\" cy=\"8\" r=\"3.5\"/><path d=\"M2.5 20c0-3.6 2.9-6.5 6.5-6.5s6.5 2.9 6.5 6.5\"/><circle cx=\"17\" cy=\"8.5\" r=\"2.8\"/><path d=\"M17.5 13.6c2.4.4 4 2.6 4 5.4\"/>", "share": "<path d=\"M8.6 10.5 15.4 6.5\"/><path d=\"M8.6 13.5 15.4 17.5\"/><circle class=\"d1\" cx=\"18\" cy=\"5\" r=\"3\"/><circle class=\"bg\" cx=\"6\" cy=\"12\" r=\"3\"/><circle class=\"d1\" cx=\"18\" cy=\"19\" r=\"3\"/>", "bell": "<path class=\"d\" d=\"M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9\"/><path d=\"M13.7 21a2 2 0 0 1-3.4 0\"/>", "refresh": "<circle class=\"d ns\" cx=\"12\" cy=\"12\" r=\"6\"/><path d=\"M21 12a9 9 0 1 1-2.64-6.36\"/><path d=\"M21 3v6h-6\"/>", "print": "<path class=\"d\" d=\"M7 18H5a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2\"/><path d=\"M7 9V3h10v6\"/><path class=\"bg\" d=\"M7 14h10v7H7z\"/>", "theme": "<circle cx=\"12\" cy=\"12\" r=\"8.5\"/><path class=\"d1\" d=\"M12 3.5a8.5 8.5 0 0 1 0 17z\"/>", "settings": "<path d=\"M4 7h9\"/><path d=\"M19 7h1\"/><path d=\"M4 17h3\"/><path d=\"M13 17h7\"/><circle class=\"d1\" cx=\"16\" cy=\"7\" r=\"2.5\"/><circle class=\"d1\" cx=\"10\" cy=\"17\" r=\"2.5\"/>", "back": "<circle class=\"d ns\" cx=\"12\" cy=\"12\" r=\"9.5\"/><path d=\"M14 7l-5 5 5 5\" stroke-width=\"2\"/>", "give": "<circle cx=\"9\" cy=\"8\" r=\"3.5\"/><path d=\"M2.5 20c0-3.6 2.9-6.5 6.5-6.5 1.6 0 3 .6 4.2 1.5\"/><path d=\"M15 15.5h7\"/><path d=\"M19 12.5l3 3-3 3\"/>", "ret": "<path class=\"d\" d=\"M3.5 13.5h4.5l1.5 3h5l1.5-3h4.5V19a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 19z\"/><path d=\"M12 3v9\"/><path d=\"M8.5 8.5 12 12l3.5-3.5\"/>", "pdf": "<path class=\"d\" d=\"M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z\"/><path d=\"M14 3v5h5\"/><path d=\"M12 11v6\"/><path d=\"M9.5 14.5 12 17l2.5-2.5\"/>", "pin": "<path class=\"d\" d=\"M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z\"/><circle class=\"bg\" cx=\"12\" cy=\"9.5\" r=\"2.5\"/>", "qr": "<rect class=\"d1\" x=\"3.5\" y=\"3.5\" width=\"6.5\" height=\"6.5\" rx=\"1\"/><rect class=\"d1\" x=\"14\" y=\"3.5\" width=\"6.5\" height=\"6.5\" rx=\"1\"/><rect class=\"d1\" x=\"3.5\" y=\"14\" width=\"6.5\" height=\"6.5\" rx=\"1\"/><path d=\"M14 14h2.5v2.5H14z\"/><path d=\"M18 18h2.5v2.5H18z\"/><path d=\"M18 14h2.5\"/><path d=\"M14 20.5h1.5\"/>", "check": "<circle class=\"d\" cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M8 12.5l2.7 2.7L16 9.5\"/>", "cancel": "<circle class=\"d\" cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M9.2 9.2l5.6 5.6M14.8 9.2l-5.6 5.6\"/>", "renew": "<circle class=\"d ns\" cx=\"12\" cy=\"12\" r=\"5\"/><path d=\"M20 11a8 8 0 0 0-14.3-4.9L4 8\"/><path d=\"M4 3v5h5\"/><path d=\"M4 13a8 8 0 0 0 14.3 4.9L20 16\"/><path d=\"M20 21v-5h-5\"/>", "edit": "<path class=\"d\" d=\"M4 20h4L19 9l-4-4L4 16z\"/><path d=\"M13.5 6.5l4 4\"/>", "swap": "<circle class=\"d1\" cx=\"9\" cy=\"8\" r=\"3.5\"/><path d=\"M2.5 20c0-3.6 2.9-6.5 6.5-6.5 1.4 0 2.6.4 3.7 1.1\"/><path d=\"M15 14.5h6l-2-2\"/><path d=\"M21 19h-6l2 2\"/>", "search": "<circle class=\"d\" cx=\"11\" cy=\"11\" r=\"7\"/><path d=\"M16.5 16.5 21 21\"/>", "link": "<path d=\"M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1\"/><path d=\"M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1\"/>", "send": "<path class=\"d\" d=\"M21 3 10 14\"/><path class=\"d\" d=\"M21 3l-7 18-4-7-7-4z\"/>", "open": "<path d=\"M14 4h6v6\"/><path d=\"M20 4l-9 9\"/><path class=\"d\" d=\"M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5\"/>", "download": "<path class=\"d\" d=\"M3.5 13.5h4.5l1.5 3h5l1.5-3h4.5V19a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 19z\"/><path d=\"M12 3v9\"/><path d=\"M8.5 8.5 12 12l3.5-3.5\"/>", "addperson": "<circle class=\"d\" cx=\"9\" cy=\"8\" r=\"3.5\"/><path d=\"M2.5 20c0-3.6 2.9-6.5 6.5-6.5 1.6 0 3 .5 4.1 1.3\"/><path d=\"M18 13v7\"/><path d=\"M14.5 16.5h7\"/>", "late": "<circle class=\"d\" cx=\"12\" cy=\"13\" r=\"8\"/><path d=\"M12 9v4.5l2.5 1.5\"/><path d=\"M9.5 2.5h5\"/>"};
+function ic(n,cls){ return '<svg class="ico'+(cls?' '+cls:'')+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(IC[n]||'')+'</svg>'; }
 function applyTheme(){
   var t=localStorage.getItem('tomeis_theme');
   if(!t) t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';
   document.documentElement.setAttribute('data-theme',t);
-  var b=$('#themeBtn'); if(b) b.innerHTML=t==='light'?MOON_SVG:SUN_SVG;
 }
 function toggleTheme(){ var c=document.documentElement.getAttribute('data-theme');
   localStorage.setItem('tomeis_theme',c==='light'?'dark':'light'); applyTheme(); render(); }
@@ -535,81 +576,141 @@ function wrap(c,text,x,y,maxW,lh){
   if(line) c.fillText(line,x,yy);
 }
 
+var CARD_BRAND={kind:'P2',name:'My Territories'};
+var CARD_K={text:'#151C22',muted:'#57646F',faint:'#84919D',rule:'#D2D9D7',soft:'#E5EAE9',
+  acc:'#127966',duo:'#6FD3C0',wash:'#EEF6F4',idle:'#7E8D9B'};
+/* υπόβαθρο κάρτας: πλακίδια υψηλής ανάλυσης (@2x) με ονόματα δρόμων· αν αποτύχουν, Esri */
+var CARD_TILES=[
+  {u:'https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png',credit:'CARTO · OpenStreetMap'},
+  {u:'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',credit:'Esri'}];
+function cardTile(i,z,x,y){ return CARD_TILES[i].u.replace('{z}',z).replace('{x}',x).replace('{y}',y); }
+function cardRR(c,x,y,w,h,r){ c.beginPath(); c.moveTo(x+r,y); c.arcTo(x+w,y,x+w,y+h,r); c.arcTo(x+w,y+h,x,y+h,r);
+  c.arcTo(x,y+h,x,y,r); c.arcTo(x,y,x+w,y,r); c.closePath(); }
+function cardIcon(c,x,y,sz,parts,stroke){
+  c.save(); c.translate(x,y); c.scale(sz/24,sz/24); c.lineCap='round'; c.lineJoin='round';
+  parts.forEach(function(p){ var P=new Path2D(p.d);
+    if(p.fill){ c.globalAlpha=p.op||1; c.fillStyle=p.fill; c.fill(P); c.globalAlpha=1; }
+    c.strokeStyle=stroke; c.lineWidth=1.8; c.stroke(P); });
+  c.restore(); }
+var CARD_PIN='M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z', CARD_PINH='M14.5 9.5a2.5 2.5 0 1 1-5 0a2.5 2.5 0 1 1 5 0z';
+/* λογότυπο της εφαρμογής (μωσαϊκό· με άτομο για τη σελίδα αιτήσεων) */
+function cardLogo(c,x,y,sz,kind){
+  var K=CARD_K; c.save(); c.translate(x,y); c.scale(sz/64,sz/64); c.lineJoin='round';
+  cardRR(c,0,0,64,64,14); c.fillStyle='#fff'; c.fill(); c.strokeStyle=K.rule; c.lineWidth=2; c.stroke();
+  c.lineWidth=2.6;
+  var a=new Path2D('M13 15 L30 11 L33 29 L16 33 Z'), b=new Path2D('M30 11 L51 15 L49 31 L33 29 Z'),
+      d=new Path2D('M16 33 L33 29 L37 51 L14 51 Z'), e=new Path2D('M33 29 L49 31 L51 48 L37 51 Z');
+  c.strokeStyle=K.text; c.stroke(a); c.stroke(d);
+  c.fillStyle=K.acc; c.fill(b); c.strokeStyle=K.acc; c.stroke(b);
+  c.globalAlpha=.3; c.fill(e); c.globalAlpha=1; c.strokeStyle=K.text; c.stroke(e);
+  if(kind==='P2'){
+    c.beginPath(); c.arc(47,47,12,0,7); c.fillStyle=K.acc; c.fill(); c.strokeStyle='#fff'; c.lineWidth=3; c.stroke();
+    c.fillStyle='#fff'; c.beginPath(); c.arc(47,43.4,3.4,0,7); c.fill();
+    c.fill(new Path2D('M41.3 54 C41.3 49.6 43.8 48 47 48 C50.2 48 52.7 49.6 52.7 54 Z'));
+  }
+  c.restore(); }
+/* σημείο για τον αριθμό: κέντρο βάρους του μεγαλύτερου πολυγώνου */
+function cardCenter(pts){
+  var A=0,X=0,Y=0;
+  for(var i=0,n=pts.length;i<n;i++){ var p=pts[i],q=pts[(i+1)%n],f=p[0]*q[1]-q[0]*p[1]; A+=f; X+=(p[0]+q[0])*f; Y+=(p[1]+q[1])*f; }
+  if(Math.abs(A)<1e-6){ var sx=0,sy=0; pts.forEach(function(p){ sx+=p[0]; sy+=p[1]; }); return [sx/pts.length,sy/pts.length,0]; }
+  return [X/(3*A),Y/(3*A),Math.abs(A/2)];
+}
+function cardFonts(){
+  if(!document.fonts||!document.fonts.load) return Promise.resolve();
+  var ws=['400','600','700','800'];
+  return Promise.race([
+    Promise.all(ws.map(function(w){ return document.fonts.load(w+' 30px Geologica','Αα12'); })).catch(function(){}),
+    new Promise(function(r){ setTimeout(r,2500); })]);
+}
 function makeCard(t,mode){
   toast('Δημιουργία κάρτας…');
-  var s=t.s, W=1240, H=1748, M=64;               // A6 στα 300dpi
+  cardFonts().then(function(){ drawCard(t,mode); });
+}
+function drawCard(t,mode){
+  var K=CARD_K, s=t.s, W=1240, H=1748, M=64;               // A6 στα 300dpi
+  var F='Geologica,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif';
   var cv=document.createElement('canvas'); cv.width=W; cv.height=H;
   var c=cv.getContext('2d');
-  var F='-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif';
-  c.fillStyle='#FBFAF7'; c.fillRect(0,0,W,H);
-  c.fillStyle='#1A1F24';
+  c.fillStyle='#FFFFFF'; c.fillRect(0,0,W,H);
 
-  var num=(t.id||'').replace(/^T/,'');
-  c.font='700 78px '+F; c.textAlign='right'; c.fillText(num,W-M,M+72);
-  c.textAlign='left';
+  /* ---- κεφαλίδα: αριθμός σε σήμα, όνομα, περιοχή ---- */
+  var num=String(t.id||'').replace(/^T0*/,'')||String(t.id||'');
   var short=String(t.name||'').replace(/\s*[—–-]\s*$/,'');
   if(t.town) short=short.replace(new RegExp('\\s*[—–-]\\s*'+t.town.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\s*$'),'');
-  c.font='700 62px '+F; c.fillText(short,M,M+62);
-  c.font='400 30px '+F; c.fillStyle='#6D7780'; c.fillText(t.town,M,M+108);
-  c.strokeStyle='#1A1F24'; c.lineWidth=4;
-  c.beginPath(); c.moveTo(M,M+140); c.lineTo(W-M,M+140); c.stroke();
+  c.font='800 64px '+F; var nw=Math.max(150,c.measureText(num).width+70);
+  cardRR(c,M,M,nw,112,56); c.fillStyle='#fff'; c.fill(); c.strokeStyle=K.acc; c.lineWidth=7; c.stroke();
+  c.fillStyle=K.acc; c.textAlign='center'; c.fillText(num,M+nw/2,M+79); c.textAlign='left';
+  var tx=M+nw+34, maxT=W-M-tx, fs=58;
+  c.font='700 '+fs+'px '+F; while(c.measureText(short).width>maxT && fs>34){ fs-=2; c.font='700 '+fs+'px '+F; }
+  c.fillStyle=K.text; c.fillText(short,tx,M+56);
+  c.fillStyle=K.muted; c.font='400 30px '+F; c.fillText(t.town||'',tx,M+102);
 
-  var mapY=M+180, mapH=880, mapW=W-M*2;
-  var g=geoOf(t.id), b=g?bboxOf([t]):null;
+  /* ---- χάρτης ---- */
+  var mapX=M, mapY=M+150, mapW=W-M*2, mapH=940, R=30;
+  var url=t.mymaps_id?('https://www.google.com/maps/d/viewer?mid='+t.mymaps_id):'';
+  var credit=CARD_TILES[0].credit;
+  var b=geoOf(t.id)?bboxOf([t]):null;
 
   function finish(){
-    var y=mapY+mapH+56;
-    var notes=(D.settings.card_notes||'').trim();
-    if(notes){
-      c.fillStyle='#EDEFEA'; c.fillRect(M,y,mapW,150);
-      c.fillStyle='#1A1F24'; c.fillRect(M,y,7,150);
-      c.font='400 27px '+F; c.fillStyle='#31383E';
-      wrap(c,notes,M+26,y+46,mapW-52,38); y+=190;
-    }
-    c.strokeStyle='#C9CFD3'; c.lineWidth=2;
-    c.beginPath(); c.moveTo(M,y); c.lineTo(W-M,y); c.stroke(); y+=52;
-    c.fillStyle='#6D7780'; c.font='400 24px '+F;
-    c.fillText('ΔΟΘΗΚΕ',M,y); c.fillText('ΕΠΙΣΤΡΟΦΗ ΕΩΣ',M+340,y);
-    c.fillStyle='#1A1F24'; c.font='600 34px '+F;
-    c.fillText(s.dateOut?fmt(s.dateOut):'________',M,y+46);
-    c.fillText(s.dueOn?fmt(s.dueOn):'________',M+340,y+46);
-    if(s.holder){ c.fillStyle='#6D7780'; c.font='400 24px '+F; c.fillText('ΣΕ',M,y+110);
-      c.fillStyle='#1A1F24'; c.font='600 34px '+F; c.fillText(s.holder,M,y+156); }
-
-    if(t.mymaps_id){
-      var qr=qrcode(0,'M'); qr.addData('https://www.google.com/maps/d/viewer?mid='+t.mymaps_id); qr.make();
-      var n=qr.getModuleCount(), size=230, cell=size/n, qx=W-M-size, qy=y-6;
-      c.fillStyle='#FFF'; c.fillRect(qx-10,qy-10,size+20,size+20);
-      c.fillStyle='#1A1F24';
+    cardRR(c,mapX,mapY,mapW,mapH,R); c.strokeStyle=K.rule; c.lineWidth=3; c.stroke();
+    var y=mapY+mapH+34;
+    /* ---- στοιχεία, όπως οι γραμμές πληροφοριών της εφαρμογής, και QR ---- */
+    var qrBox=286, infoW=mapW-qrBox-24, rowH=92, boxH=rowH*3;
+    cardRR(c,M,y,infoW,boxH,24); c.strokeStyle=K.rule; c.lineWidth=3; c.stroke();
+    [['ΣΕ',s.holder||''],['ΑΝΑΘΕΣΗ',s.dateOut?fmt(s.dateOut):''],['ΕΠΙΣΤΡΟΦΗ ΕΩΣ',s.dueOn?fmt(s.dueOn):'']].forEach(function(r,i){
+      var ry=y+i*rowH;
+      if(i){ c.strokeStyle=K.soft; c.lineWidth=2; c.beginPath(); c.moveTo(M+28,ry); c.lineTo(M+infoW-28,ry); c.stroke(); }
+      c.fillStyle=K.faint; c.font='600 21px '+F;
+      try{ c.letterSpacing='2px'; }catch(e){}
+      c.fillText(r[0],M+30,ry+rowH/2+8);
+      try{ c.letterSpacing='0px'; }catch(e){}
+      var v=r[1], vf=34; c.font=(i===2?'700 ':'600 ')+vf+'px '+F;
+      var room=infoW-60-c.measureText(r[0]).width-40;
+      while(v && c.measureText(v).width>room && vf>22){ vf-=2; c.font=(i===2?'700 ':'600 ')+vf+'px '+F; }
+      c.fillStyle=v?K.text:K.rule; c.textAlign='right';
+      c.fillText(v||'______________',M+infoW-30,ry+rowH/2+12); c.textAlign='left';
+    });
+    var qx=W-M-qrBox;
+    cardRR(c,qx,y,qrBox,boxH,24); c.strokeStyle=K.rule; c.lineWidth=3; c.stroke();
+    if(url && window.qrcode){
+      var qr=qrcode(0,'M'); qr.addData(url); qr.make();
+      var n=qr.getModuleCount(), size=boxH-92, cell=size/n, q0=qx+(qrBox-size)/2, q1=y+22;
+      c.fillStyle=K.text;
       for(var r2=0;r2<n;r2++) for(var k=0;k<n;k++) if(qr.isDark(r2,k))
-        c.fillRect(qx+k*cell,qy+r2*cell,cell+.5,cell+.5);
-      c.fillStyle='#6D7780'; c.font='400 20px '+F; c.textAlign='center';
-      c.fillText('Google Maps',qx+size/2,qy+size+34); c.textAlign='left';
+        c.fillRect(q0+k*cell,q1+r2*cell,cell+.5,cell+.5);
+      c.font='600 21px '+F; var lab='Google Maps', lw=c.measureText(lab).width, lx=qx+qrBox/2-(lw+34)/2;
+      cardIcon(c,lx,y+boxH-52,28,[{d:CARD_PIN,fill:K.duo,op:.6},{d:CARD_PINH,fill:'#fff'}],K.text);
+      c.fillStyle=K.muted; c.fillText(lab,lx+34,y+boxH-29);
     }
-    /* διακριτικός σύνδεσμος — πατιέται στο κινητό, αδιάφορος στην εκτύπωση */
-    var url=t.mymaps_id?('https://www.google.com/maps/d/viewer?mid='+t.mymaps_id):'';
-    var linkY=H-96;
+    var qrY=y;
+    y+=boxH+28;
+    /* ---- κουμπί συνδέσμου (πατιέται στο κινητό) ---- */
+    var bh=86, by=y;
     if(url){
-      var lw=520, lh=54, ly=linkY-38;
-      c.fillStyle='#E8F0F4'; c.strokeStyle='#2E6E8E'; c.lineWidth=2;
-      c.beginPath(); c.rect(M,ly,lw,lh); c.fill(); c.stroke();
-      c.fillStyle='#1C5A78'; c.font='600 26px '+F; c.textAlign='left';
-      c.fillText('▸  Άνοιγμα χάρτη στο Google Maps',M+18,ly+35);
-      linkY=ly;
+      cardRR(c,M,y,mapW,bh,43); c.fillStyle=K.wash; c.fill(); c.strokeStyle=K.acc; c.lineWidth=3; c.stroke();
+      c.font='600 30px '+F; var bt='Άνοιγμα στο Google Maps', btw=c.measureText(bt).width, bx=W/2-(btw+52)/2;
+      cardIcon(c,bx,y+bh/2-20,40,[{d:CARD_PIN,fill:K.duo,op:.6},{d:CARD_PINH,fill:K.wash}],K.acc);
+      c.fillStyle=K.acc; c.fillText(bt,bx+52,y+bh/2+11);
     }
-    c.fillStyle='#98A0A7'; c.font='400 19px '+F; c.textAlign='center';
-    c.fillText('Χάρτης: '+TILES[0].credit+' · '+fmt(new Date()),W/2,H-40); c.textAlign='left';
+    /* ---- υποσέλιδο: λογότυπο και όνομα της εφαρμογής ---- */
+    var fy=H-M-8;
+    c.strokeStyle=K.soft; c.lineWidth=2; c.beginPath(); c.moveTo(M,fy-44); c.lineTo(W-M,fy-44); c.stroke();
+    cardLogo(c,M,fy-30,40,CARD_BRAND.kind);
+    c.fillStyle=K.text; c.font='700 23px '+F; c.fillText(CARD_BRAND.name,M+54,fy-2);
+    c.fillStyle=K.faint; c.font='400 20px '+F; c.textAlign='right';
+    c.fillText('Χάρτης: '+credit+' · '+fmt(new Date()),W-M,fy-2); c.textAlign='left';
 
     var jsPDF=window.jspdf.jsPDF;
     var pdf=new jsPDF({unit:'mm',format:[105,148],orientation:'portrait'});
     var data;
-    try{ data=cv.toDataURL('image/jpeg',0.92); }
+    try{ data=cv.toDataURL('image/jpeg',0.93); }
     catch(e){ toast('Η κάρτα βγήκε χωρίς φόντο χάρτη'); return; }
     pdf.addImage(data,'JPEG',0,0,105,148);
     var mm=105/W;                                   /* px κάρτας -> mm */
     if(url){
-      pdf.link(M*mm, linkY*mm, 520*mm, 54*mm, {url:url});           /* το κουμπί συνδέσμου */
-      pdf.link((W-M-240)*mm, (y-16)*mm, 250*mm, 250*mm, {url:url}); /* και το QR */
+      pdf.link(M*mm, by*mm, mapW*mm, bh*mm, {url:url});            /* το κουμπί συνδέσμου */
+      pdf.link(qx*mm, qrY*mm, qrBox*mm, boxH*mm, {url:url});       /* και το QR */
     }
     var fn=(t.id||'tomeas')+'.pdf';
     var blob=pdf.output('blob');
@@ -623,43 +724,61 @@ function makeCard(t,mode){
     toast('Η κάρτα είναι έτοιμη');
   }
 
-  if(!b){ c.fillStyle='#EDEFEA'; c.fillRect(M,mapY,mapW,mapH); finish(); return; }
+  c.save(); cardRR(c,mapX,mapY,mapW,mapH,R); c.clip();
+  c.fillStyle='#F1F3F2'; c.fillRect(mapX,mapY,mapW,mapH);
+  if(!b){ c.restore(); finish(); return; }
 
-  var pad=0.10, z=1;
-  for(var zz=18;zz>=1;zz--){
+  /* Ζουμ: το μεγαλύτερο όπου ο τομέας χωράει με κλίμακα 2 (ευανάγνωστα ονόματα δρόμων),
+     μετά μεγέθυνση ώστε ο τομέας να γεμίζει το πλαίσιο */
+  var pad=0.14, fw=mapW*(1-2*pad), fh=mapH*(1-2*pad), z=1;
+  for(var zz=19;zz>=1;zz--){
     var pw=Math.abs(wx(b[3],zz)-wx(b[1],zz)), ph=Math.abs(wy(b[0],zz)-wy(b[2],zz));
-    if(pw<=mapW*(1-2*pad)/2.2 && ph<=mapH*(1-2*pad)/2.2){ z=zz; break; }
+    if(pw*2<=fw && ph*2<=fh){ z=zz; break; }
   }
-  var scale=2.2;
+  var pw0=Math.max(1e-6,Math.abs(wx(b[3],z)-wx(b[1],z))), ph0=Math.max(1e-6,Math.abs(wy(b[0],z)-wy(b[2],z)));
+  var scale=Math.max(2,Math.min(3,fw/pw0,fh/ph0));
   var x0=wx(b[1],z), x1=wx(b[3],z), y0=wy(b[2],z), y1=wy(b[0],z);
   var ox=(mapW/scale-(x1-x0))/2-x0, oy=(mapH/scale-(y1-y0))/2-y0;
+  function P(lat,lng){ return [mapX+(wx(lng,z)+ox)*scale, mapY+(wy(lat,z)+oy)*scale]; }
   var tx0=Math.floor((0-ox)/256), tx1=Math.floor((mapW/scale-ox)/256);
   var ty0=Math.floor((0-oy)/256), ty1=Math.floor((mapH/scale-oy)/256);
-  var jobs=[];
-  for(var tx=tx0;tx<=tx1;tx++) for(var ty=ty0;ty<=ty1;ty++){
-    var nn=Math.pow(2,z); if(ty<0||ty>=nn) continue;
-    jobs.push({u:tileUrl(0,z,((tx%nn)+nn)%nn,ty),x:tx,y:ty});
-  }
-  c.save(); c.beginPath(); c.rect(M,mapY,mapW,mapH); c.clip();
-  c.fillStyle='#EDEFEA'; c.fillRect(M,mapY,mapW,mapH);
-  Promise.all(jobs.slice(0,9).map(function(j){ return loadImg(j.u).then(function(img){ return {img:img,j:j}; }); }))
-   .then(function(res){
-      res.forEach(function(r){ if(!r.img) return;
-        c.drawImage(r.img, M+(r.j.x*256+ox)*scale, mapY+(r.j.y*256+oy)*scale, 256*scale, 256*scale); });
-      var gg=geoOf(t.id);
-      if(gg&&gg.polygons) gg.polygons.forEach(function(p){
-        c.beginPath();
-        p.coords.forEach(function(cc,i){
-          var X=M+(wx(cc[1],z)+ox)*scale, Y=mapY+(wy(cc[0],z)+oy)*scale;
-          if(i) c.lineTo(X,Y); else c.moveTo(X,Y); });
-        c.closePath();
-        c.fillStyle='rgba(20,90,78,.22)'; c.fill();
-        c.strokeStyle='#0E5E50'; c.lineWidth=7; c.stroke();
-      });
-      c.restore();
-      c.strokeStyle='#C9CFD3'; c.lineWidth=2; c.strokeRect(M,mapY,mapW,mapH);
-      finish();
-   });
+  var jobs=[], nn=Math.pow(2,z);
+  for(var X=tx0;X<=tx1;X++) for(var Y=ty0;Y<=ty1;Y++){ if(Y<0||Y>=nn) continue;
+    jobs.push({x:X,y:Y,tx:((X%nn)+nn)%nn}); }
+  jobs=jobs.slice(0,30);
+  function load(i){ return Promise.all(jobs.map(function(j){
+    return loadImg(cardTile(i,z,j.tx,j.y)).then(function(img){ return {img:img,j:j}; }); })); }
+  load(0).then(function(res){
+    var ok=res.filter(function(r){ return r.img; }).length;
+    if(ok>=res.length/2) return res;
+    credit=CARD_TILES[1].credit; return load(1);            /* εφεδρικό υπόβαθρο */
+  }).then(function(res){
+    res.forEach(function(r){ if(!r.img) return;
+      c.drawImage(r.img, mapX+(r.j.x*256+ox)*scale, mapY+(r.j.y*256+oy)*scale, 256*scale+1, 256*scale+1); });
+    /* σχεδόν χωρίς χρώμα: τυπώνεται καθαρά και ξεχωρίζει ο τομέας */
+    c.globalCompositeOperation='saturation'; c.globalAlpha=.8; c.fillStyle='#808080'; c.fillRect(mapX,mapY,mapW,mapH);
+    c.globalCompositeOperation='source-over'; c.globalAlpha=1;
+    c.fillStyle='rgba(255,255,255,.12)'; c.fillRect(mapX,mapY,mapW,mapH);
+
+    /* ο τομέας */
+    var gg=geoOf(t.id), main=null;
+    (gg.polygons||[]).forEach(function(p){
+      var pts=p.coords.map(function(cc){ return P(cc[0],cc[1]); });
+      c.beginPath(); pts.forEach(function(q,i){ i?c.lineTo(q[0],q[1]):c.moveTo(q[0],q[1]); }); c.closePath();
+      c.fillStyle='rgba(111,211,192,.13)'; c.fill();
+      c.lineJoin='round'; c.strokeStyle='#fff'; c.lineWidth=15; c.stroke();
+      c.strokeStyle=K.acc; c.lineWidth=8; c.stroke();
+      var ce=cardCenter(pts); if(!main||ce[2]>main[2]) main=ce;
+    });
+    if(main){
+      c.font='800 40px '+F; var bw=Math.max(84,c.measureText(num).width+44);
+      cardRR(c,main[0]-bw/2,main[1]-30,bw,60,30); c.fillStyle='#fff'; c.fill();
+      c.strokeStyle=K.acc; c.lineWidth=5; c.stroke();
+      c.fillStyle=K.acc; c.textAlign='center'; c.fillText(num,main[0],main[1]+14); c.textAlign='left';
+    }
+    c.restore();
+    finish();
+  });
 }
 function drawLeaflet(elId,list,opts){
   opts=opts||{};
@@ -832,7 +951,7 @@ function render(){
       '<span class="wn"><small>Συνδεδεμένος ως</small><b>'+esc(me)+'</b></span><span class="wc">Αλλαγή</span>';
     var nm=all().filter(function(t){ return t.s.mine; }).length;
     var mb=document.querySelector('#nav button[data-tab="mine"]');
-    if(mb) mb.innerHTML='Οι τομείς μου'+(nm?'<i>'+nm+'</i>':'');
+    if(mb) mb.innerHTML=ic('mine')+'<span>Οι τομείς μου'+(nm?'<i>'+nm+'</i>':'')+'</span>';
   } else w.hidden=true;
   $('#nav').style.display=me?'':'none';
   if(!me) return viewPickName();
@@ -853,8 +972,7 @@ function viewPickName(){
     .sort(function(a,b){ return a.localeCompare(b,'el'); });
   $('#main').innerHTML=
     '<p class="lead">Επιλογή ονόματος από τη λίστα.</p>'+
-    '<div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">'+
-      '<circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>'+
+    '<div class="search">'+ic('search')+
       '<input id="nq" placeholder="Επώνυμο, π.χ. Παπαδόπουλος" autocomplete="off" oninput="filterNames()"></div>'+
     '<div class="nlist" id="nlist">'+
     names.map(function(n){ return '<button class="pick" data-n="'+esc(n)+'" onclick="setMe(this.getAttribute(\'data-n\'))">'+
@@ -862,7 +980,7 @@ function viewPickName(){
     '</div>'+
     '<div class="empty" id="nnone" style="display:none;padding:18px 10px 6px">Δεν βρέθηκε όνομα.</div>'+
     '<button class="addp" onclick="addPerson()">'+
-      '<span class="av">+</span><span><b>Νέο όνομα</b><small>Προσθήκη ατόμου που δεν υπάρχει στη λίστα</small></span></button>';
+      '<span class="av">'+ic('addperson')+'</span><span><b>Νέο όνομα</b><small>Προσθήκη ατόμου που δεν υπάρχει στη λίστα</small></span></button>';
 }
 function filterNames(){
   var v=fold($('#nq').value), n=0;
@@ -1029,12 +1147,7 @@ function lazyTiles(list){
 }
 
 /* ---------- ο τομέας μου ---------- */
-var ICON_DL='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+
-  '<path d="M12 3v12"/><polyline points="7 10 12 15 17 10"/><path d="M5 21h14"/></svg>';
-var ICON_MAP='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+
-  '<path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>';
-var ICON_BACK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">'+
-  '<polyline points="15 5 8 12 15 19"/></svg>';
+var ICON_DL=ic('pdf'), ICON_MAP=ic('pin'), ICON_BACK=ic('back');
 function viewMine(){
   var mine=all().filter(function(t){ return t.s.mine; });
   var pend=myPending();
@@ -1093,11 +1206,11 @@ function viewDetail(){
       '<div class="kv"><span>Επιστροφή έως</span><b>'+fmt(s.dueOn)+'</b></div>'+
       '<div class="kv"><span>'+(s.daysLeft<0?'Καθυστέρηση':'Απομένουν')+'</span><b>'+durTxt(s.daysLeft)+'</b></div>'+
       '</div>'+
-      '<button class="big go" onclick="openMaps(\''+t.id+'\')">Google Maps</button>'+
-      '<button class="big alt" onclick="makeCard(byId(\''+t.id+'\'),\'download\')">Κάρτα PDF</button>'+
-      '<button class="big" onclick="declareDone(\''+t.id+'\')">Δήλωση ολοκλήρωσης</button>'+
+      '<button class="big go" onclick="openMaps(\''+t.id+'\')">'+ICON_MAP+'Google Maps</button>'+
+      '<button class="big alt" onclick="makeCard(byId(\''+t.id+'\'),\'download\')">'+ICON_DL+'Κάρτα PDF</button>'+
+      '<button class="big" onclick="declareDone(\''+t.id+'\')">'+ic('check')+'Δήλωση ολοκλήρωσης</button>'+
       (myPend?'<div class="note" style="margin-top:14px">Η αίτηση ανανέωσης περιμένει έγκριση.</div>'
-             :'<button class="big alt" onclick="askRenew(\''+t.id+'\')">Αίτηση ανανέωσης</button>');
+             :'<button class="big alt" onclick="askRenew(\''+t.id+'\')">'+ic('renew')+'Αίτηση ανανέωσης</button>');
   } else if(free){
     h+='<span class="tag free" style="background:var(--sheet);border:2px solid '+ageCol(s.rested)+';color:'+ageTxt(s.rested)+'"><i style="background:'+ageCol(s.rested)+'"></i>'+
         'Διαθέσιμος · '+prioName(s.rested)+'</span>'+
@@ -1105,8 +1218,8 @@ function viewDetail(){
       '<div class="kv"><span>Τελευταία ολοκλήρωση</span><b>'+(s.lastReturned?fmt(s.lastReturned):'—')+'</b></div>'+
       '<div class="kv"><span>Μήνες από την ολοκλήρωση</span><b>'+monthsAgo(s.rested)+'</b></div>'+
       '</div>'+
-      '<button class="big go" onclick="askFor(\''+t.id+'\')">Αίτηση ανάθεσης</button>'+
-      '<button class="big alt" onclick="openMaps(\''+t.id+'\')">Google Maps</button>';
+      '<button class="big go" onclick="askFor(\''+t.id+'\')">'+ic('give')+'Αίτηση ανάθεσης</button>'+
+      '<button class="big alt" onclick="openMaps(\''+t.id+'\')">'+ICON_MAP+'Google Maps</button>';
   } else {
     var rest=s.state==='resting';
     h+='<span class="tag busy"><i></i>Μη διαθέσιμος'+(rest?' έως '+fmt(s.readyOn):'')+'</span>'+
@@ -1152,8 +1265,8 @@ function askFor(id){
             '<div class="sh-sub" style="text-align:center">'+esc(numOf(t2))+' · '+esc(shortName(t2))+' — '+esc(t2.town)+'</div>'+
             '<div class="kv"><span>Ανάθεση</span><b>'+fmt(new Date())+'</b></div>'+
             '<div class="kv"><span>Επιστροφή έως</span><b>'+fmt(addM(new Date(),D.settings.hold_months))+'</b></div>'+
-            '<button class="big go" id="rPdf">Κάρτα PDF</button>'+
-            '<button class="big alt" id="rMaps">Google Maps</button>'+
+            '<button class="big go" id="rPdf">'+ICON_DL+'Κάρτα PDF</button>'+
+            '<button class="big alt" id="rMaps">'+ICON_MAP+'Google Maps</button>'+
             '<button class="big" id="rX">Κλείσιμο</button>');
           d.querySelector('#rPdf').onclick=function(){ makeCard(byId(id)||t2,'download'); };
           d.querySelector('#rMaps').onclick=function(){ openMaps(id); };
