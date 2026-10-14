@@ -425,8 +425,8 @@ var API = 'https://script.google.com/macros/s/AKfycbwRUO7Zf1Ngkx3HSNbu1DjIjPaAo2
 var TILES=[
   {u:'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
    credit:'Esri', max:19},
-  {u:'https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png',
-   credit:'CARTO · OpenStreetMap', max:20}
+  {u:'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+   credit:'OpenStreetMap', max:19}
 ];
 function tileUrl(i,z,x,y){
   return TILES[i].u.replace('{z}',z).replace('{x}',x).replace('{y}',y);
@@ -1385,10 +1385,10 @@ function loadImg(url){
 var CARD_BRAND={kind:'A',name:'Territory Hub'};
 var CARD_K={text:'#151C22',muted:'#57646F',faint:'#84919D',rule:'#D2D9D7',soft:'#E5EAE9',
   acc:'#127966',duo:'#6FD3C0',wash:'#EEF6F4',idle:'#7E8D9B'};
-/* υπόβαθρο κάρτας: πλακίδια υψηλής ανάλυσης (@2x) με ονόματα δρόμων· αν αποτύχουν, Esri */
+/* υπόβαθρο κάρτας: Esri (χωρίς κλειδί)· αν αποτύχει, OpenStreetMap */
 var CARD_TILES=[
-  {u:'https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png',credit:'CARTO · OpenStreetMap'},
-  {u:'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',credit:'Esri'}];
+  {u:'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',credit:'Esri'},
+  {u:'https://tile.openstreetmap.org/{z}/{x}/{y}.png',credit:'OpenStreetMap'}];
 function cardTile(i,z,x,y){ return CARD_TILES[i].u.replace('{z}',z).replace('{x}',x).replace('{y}',y); }
 function cardRR(c,x,y,w,h,r){ c.beginPath(); c.moveTo(x+r,y); c.arcTo(x+w,y,x+w,y+h,r); c.arcTo(x+w,y+h,x,y+h,r);
   c.arcTo(x,y+h,x,y,r); c.arcTo(x,y,x+w,y,r); c.closePath(); }
