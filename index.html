@@ -224,9 +224,9 @@ nav button.on{color:var(--accent);box-shadow:inset 0 2px 0 var(--accent)}
 .rbtns .btn{padding:10px 6px;font-size:13.5px;background:var(--sheet)}
 .req.ri{display:flex;align-items:center;gap:10px}
 .req.ri>div{flex:1;min-width:0}
-.mini{display:inline-flex;align-items:center;gap:5px;padding:7px 10px;border-radius:9px;border:1px solid var(--rule);
+.seenb{display:inline-flex;align-items:center;gap:5px;padding:7px 10px;border-radius:9px;border:1px solid var(--rule);
   background:var(--sheet);font-size:12px;font-weight:600;flex:0 0 auto}
-.mini .ico{width:16px;height:16px}
+.seenb .ico{width:16px;height:16px}
 .seen{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--faint)}
 .seen .ico{width:15px;height:15px}
 .btn.pri{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
@@ -312,6 +312,38 @@ nav button.on .ico .mp{fill:var(--sheet);stroke:none}
   font-size:13px;font-weight:600;line-height:1.2}
 .back .ico{width:22px;height:22px}
 .back:active{background:var(--raised)}
+/* ===== Υπολογιστής / tablet: πλαϊνή πλοήγηση, περισσότερος χώρος ===== */
+@media (min-width:900px){
+  #app{max-width:1280px;display:grid;grid-template-columns:220px minmax(0,1fr);
+    grid-template-rows:auto minmax(0,1fr);grid-template-areas:"h h" "n m";box-shadow:none}
+  #app.nonav{grid-template-columns:minmax(0,1fr);grid-template-areas:"h" "m"}
+  header{grid-area:h;padding:16px 24px 12px}
+  nav{grid-area:n;flex-direction:column;justify-content:flex-start;gap:4px;padding:16px 12px;
+    border-top:0;border-right:1px solid var(--rule-soft);background:transparent}
+  nav button{flex:0 0 auto;flex-direction:row;justify-content:flex-start;align-items:center;gap:12px;
+    padding:11px 14px;border-radius:10px;font-size:11.5px;text-align:left}
+  nav button.on{box-shadow:none;background:var(--accent-wash)}
+  nav button:not(.on):hover{background:var(--raised);color:var(--text)}
+  main{grid-area:m;padding:22px 32px 48px}
+  /* λίστες σε δύο στήλες */
+  main.cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:14px;align-content:start;align-items:start}
+  main.cols>*{grid-column:1/-1}
+  /* σελίδα ενός τομέα: κεντρική στήλη */
+  main.narrow{padding-left:max(32px,calc((100% - 820px)/2));padding-right:max(32px,calc((100% - 820px)/2))}
+  .mapbox .lf{height:360px}
+  .scrim{align-items:center;justify-content:center;padding:24px}
+  .grab{display:none}
+  #toast{left:50%;right:auto;width:440px;margin-left:-220px;bottom:28px}
+  button:not(:disabled):hover{filter:brightness(1.06)}
+}
+@media (min-width:900px){
+  main.cols>.row,main.cols>.pgroup{grid-column:auto}
+  .tiles{grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+  .tile .mini{height:150px}
+  .mapbox.big .lf{height:400px}
+  .card{max-width:540px;border:1px solid var(--rule);border-radius:16px;max-height:86vh}
+  .sums{max-width:640px}
+}
 #printArea{display:none}
 @media print{
   @page{size:A4 portrait;margin:10mm 8mm}
@@ -584,16 +616,6 @@ function miniSvg(list,w,h,highlight){
   if(!p) return '<svg viewBox="0 0 '+w+' '+h+'"><rect width="'+w+'" height="'+h+'" fill="var(--map-bg)"/></svg>';
   return '<svg viewBox="0 0 '+w+' '+h+'" aria-hidden="true">'+
     '<rect width="'+w+'" height="'+h+'" fill="var(--map-bg)"/>'+polyPaths(list,p,highlight)+'</svg>';
-}
-/**
- * Μικρός χάρτης ΜΕ πλακίδια: κανονικές <img> μέσα σε div, όπως ακριβώς κάνει
- * και το Leaflet στους μεγάλους χάρτες — το CSS filter δουλεύει έτσι παντού,
- * ενώ σε <image> μέσα σε SVG το Safari/iOS το αγνοεί.
- */
-function projAt(list,w,h,z){
-  var b=bboxOf(list); if(!b) return null;
-  var x0=wx(b[1],z), x1=wx(b[3],z), y0=wy(b[2],z), y1=wy(b[0],z);
-  return {z:z, ox:(w-(x1-x0))/2-x0, oy:(h-(y1-y0))/2-y0};
 }
 function tileSpan(p,w,h){
   return {x0:Math.floor((0-p.ox)/256), x1:Math.floor((w-p.ox)/256),
@@ -932,7 +954,7 @@ function openRequests(){
     info.forEach(function(r){
       h+='<div class="req ri'+(r.status!=='seen'?' new':'')+'"><div><div class="w">'+reqText(r)+'</div>'+
          '<div class="m">'+fmt(r.date)+'</div></div>'+
-         (r.status!=='seen'?'<button class="mini" onclick="seenReq(\''+esc(r.row_id)+'\')">'+ic('check')+'Το είδα</button>':'')+
+         (r.status!=='seen'?'<button class="seenb" onclick="seenReq(\''+esc(r.row_id)+'\')">'+ic('check')+'Το είδα</button>':'')+
          '</div>';
     });
   }
@@ -954,6 +976,8 @@ function seenReq(rowId){
 }
 function render(){
   bell();
+  /* υπολογιστής: λίστες σε δύο στήλες, ένας τομέας σε κεντρική στήλη */
+  $('#main').className=detail?'narrow':(person||tab!=='map')?'cols':'';
   Object.keys(lmaps).forEach(function(k){ if(k!=='fullMap'){ try{ lmaps[k].remove(); }catch(e){} delete lmaps[k]; } });
   if(detail) return viewDetail();
   if(person) return viewPerson();
@@ -1585,14 +1609,6 @@ function drawCard(t,mode){
     c.restore();
     finish();
   });
-}
-function wrap(c,text,x,y,maxW,lh){
-  var words=String(text).split(/\s+/), line='', yy=y;
-  words.forEach(function(w){
-    var test=line?line+' '+w:w;
-    if(c.measureText(test).width>maxW && line){ c.fillText(line,x,yy); yy+=lh; line=w; }
-    else line=test; });
-  if(line) c.fillText(line,x,yy);
 }
 
 function svcYear(y){                      /* υπηρεσιακό έτος: Σεπ y → Αύγ y+1 */
