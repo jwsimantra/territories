@@ -312,6 +312,64 @@ nav button.on .ico .mp{fill:var(--sheet);stroke:none}
   font-size:13px;font-weight:600;line-height:1.2}
 .back .ico{width:22px;height:22px}
 .back:active{background:var(--raised)}
+/* ---- νέος τομέας / αλλαγή τομέα ---- */
+.srow{display:flex;gap:8px;align-items:stretch}
+.srow .search{flex:1}
+.addsq{flex:0 0 auto;width:44px;margin-bottom:9px;border-radius:10px;border:1px solid var(--rule-soft);background:var(--sheet);
+  color:var(--faint);display:grid;place-items:center}
+.addsq .ico{width:20px;height:20px}
+.trow{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.trow .addsq{height:38px;width:40px}
+.stepper{display:flex;gap:6px;margin:4px 0 6px}
+.stepper span{flex:1;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--faint);
+  padding-top:7px;border-top:3px solid var(--rule)}
+.stepper span.on{color:var(--accent);border-top-color:var(--accent)}
+.stepper span.done{color:var(--muted);border-top-color:var(--accent-dim)}
+.hint{font-size:11.5px;color:var(--faint);margin-top:5px;line-height:1.4}
+.two{display:grid;grid-template-columns:110px minmax(0,1fr);gap:10px}
+.fake{width:100%;background:var(--raised);border:1px solid var(--rule);border-radius:9px;padding:11px 12px;font-size:16px;color:var(--muted)}
+.mstep{display:flex;gap:11px;padding:11px 0;border-bottom:1px solid var(--rule-soft)}
+.mstep .k{flex:0 0 auto;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:800;
+  background:var(--accent-wash);border:1px solid var(--accent-dim);color:var(--accent)}
+.mstep b{display:block;font-size:14px;font-weight:600}
+.mstep small{display:block;font-size:12px;color:var(--faint);margin-top:2px;line-height:1.4}
+.mstep+input{margin-top:2px}
+.mini-btn{display:inline-flex;align-items:center;gap:7px;margin-top:8px;padding:8px 12px;border-radius:9px;
+  border:1px solid var(--rule);background:var(--raised);font-size:13px;font-weight:600}
+.mini-btn .ico{width:17px;height:17px}
+.preview{border:1px solid var(--accent-dim);border-radius:12px;overflow:hidden;margin-top:12px;background:var(--sheet)}
+.preview svg.pv{display:block;width:100%;height:150px;background:var(--map-bg)}
+.preview .pf{display:flex;align-items:center;gap:9px;padding:10px 12px;font-size:13px}
+.preview .pf .ico{width:20px;height:20px;color:var(--accent)}
+.preview .pf small{display:block;color:var(--faint);font-size:11.5px}
+.shape{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:9px 10px;border:1px solid var(--rule-soft);
+  border-radius:11px;background:var(--raised);margin-bottom:8px}
+.shape.on{border-color:var(--accent)}
+.shape svg{width:46px;height:40px;border-radius:7px;background:var(--map-bg);flex:0 0 auto}
+.shape .nm{flex:1;min-width:0}
+.shape .nm b{display:block;font-size:13.5px;font-weight:600}
+.shape .nm small{display:block;font-size:11px;color:var(--faint)}
+.shape .shnum{width:72px;text-align:center;font-weight:700;padding:8px 6px}
+.cb{width:20px;height:20px;border-radius:6px;background:var(--accent);display:grid;place-items:center;color:var(--accent-ink);
+  font-size:13px;font-weight:800;flex:0 0 auto}
+.tfmsg{display:flex;gap:9px;align-items:flex-start;margin-top:10px;font-size:13px;color:var(--muted);line-height:1.45}
+.tfmsg.bad{color:var(--coral)}
+.tfmsg .ico{width:19px;height:19px;flex:0 0 auto}
+.btn.warn .ico{color:var(--coral)}
+/* σημειώσεις ετών στο παράθυρο εκτύπωσης */
+.ystats{border:1px solid var(--rule-soft);border-radius:11px;overflow:hidden;margin:4px 0 4px}
+.ystats button{display:flex;justify-content:space-between;align-items:baseline;gap:10px;width:100%;text-align:left;
+  padding:9px 12px;border-bottom:1px solid var(--rule-soft);font-size:13px}
+.ystats button:last-child{border-bottom:0}
+.ystats button.on{background:var(--accent-wash)}
+.ystats b{font-weight:700;white-space:nowrap}
+.ystats span{color:var(--muted);text-align:right}
+.ystats em{font-style:normal;color:var(--coral);font-weight:600}
+.ystats i{font-style:normal;color:var(--faint);font-size:11px;margin-left:4px}
+/* ειδοποιήσεις */
+.code{font-family:ui-monospace,Menlo,monospace;font-size:14px;letter-spacing:.02em;color:var(--text)}
+.nlist{margin:6px 0 10px;padding-left:20px;font-size:12.5px;color:var(--muted);line-height:1.55}
+.nlist a{color:var(--accent)}
 /* ===== Υπολογιστής / tablet: πλαϊνή πλοήγηση, περισσότερος χώρος ===== */
 @media (min-width:900px){
   #app{max-width:1280px;display:grid;grid-template-columns:220px minmax(0,1fr);
@@ -724,6 +782,7 @@ function cacheSet(o){ var c={}; for(var k in o) if(k!=='boundaries') c[k]=o[k];
 function geoGet(){ try{ return JSON.parse(localStorage.getItem('tomeis_geo')||'null'); }catch(e){ return null; } }
 function geoSet(g){ try{ localStorage.setItem('tomeis_geo',JSON.stringify(g)); }catch(e){} }
 function apply(j){
+  _codes=null;
   D.territories=j.territories||[]; D.assignments=j.assignments||[]; D.people=j.people||[];
   D.requests=j.requests||[];
   D.settings=j.settings||{};
@@ -808,7 +867,15 @@ function optimistic(b){
     case 'seenReq': (D.requests||[]).forEach(function(r){ if(!b.rowId||String(r.row_id)===String(b.rowId)) r.status='seen'; }); return true;
     case 'cancelReq': D.requests=(D.requests||[]).filter(function(r){ return String(r.row_id)!==String(b.rowId); }); return true;
     case 'savePerson': if(!D.people.some(function(p){ return p.name===b.name; })) D.people.push({name:b.name,active:'TRUE'}); return true;
-    case 'saveSetting': D.settings[b.key]=isNaN(+b.value)?b.value:+b.value; return true;
+    case 'saveSetting': D.settings[b.key]=isNaN(+b.value)||b.value===''?b.value:+b.value; return true;
+    case 'saveTerritory':
+      _codes=null;
+      if(b.create){ D.territories.push({id:b.id,town:b.town,name:b.name,mymaps_id:b.mymaps_id||'',shape:b.shape||'',
+        last_completed:b.last_completed||'',active:'TRUE',added:today()}); return true; }
+      D.territories.forEach(function(t){ if(t.id!==b.id) return;
+        ['town','name','mymaps_id','shape'].forEach(function(k){ if(b[k]!==undefined) t[k]=b[k]; });
+        if(b.active!==undefined) t.active=b.active?'TRUE':'FALSE'; });
+      return true;
     case 'batch': var any=false; (b.ops||[]).forEach(function(o){ if(optimistic(o)) any=true; }); return any;
   }
   return false;
@@ -1078,7 +1145,7 @@ function groupSections(list){
 function viewTown(){
   var list=inTown(town);
   $('#ttl').textContent=town; $('#sub').textContent=list.length+' τομείς · όλα';
-  var h='<button class="back" onclick="town=null;render()">'+ic('back')+'Όλες οι περιοχές</button>'+
+  var h='<div class="trow"><button class="back" onclick="town=null;render()">'+ic('back')+'Όλες οι περιοχές</button>'+addBtn(town)+'</div>'+
     '<div class="mapbox big"><div class="lf" id="townMap"></div>'+
     '<button class="expand" onclick="fullTown(\''+esc(town)+'\')">Πλήρης οθόνη</button></div>'+
     groupSections(list);
@@ -1121,7 +1188,7 @@ function viewList(){
     ? (filter==='out'?'πρώτα οι εκπρόθεσμοι':'πρώτα όσοι περιμένουν πιο πολύ')
     : place+' · όλα';
 
-  var h=searchBox('Αναζήτηση τομέα, περιοχής, ατόμου');
+  var h='<div class="srow">'+searchBox('Αναζήτηση τομέα, περιοχής, ατόμου')+addBtn(place==='all'?'':place)+'</div>';
   if(place==='all')
     h+='<div class="seg">'+
       '<button class="'+(filter==='ready'?'on':'')+'" onclick="filter=\'ready\';render()">Διαθέσιμοι '+ready.length+'</button>'+
@@ -1262,6 +1329,8 @@ function viewDetail(){
     h+='<div class="kv"><span>Τελευταία επιστροφή</span><b>'+(s.never?'ποτέ':fmt(s.lastReturned))+'</b></div>'+
        '<div class="kv"><span>Περιμένει</span><b style="color:'+col(s)+'">'+monthsTxt(s.rested)+'</b></div>';
   }
+  h+='<div class="btns" style="margin-top:14px"><button class="btn" onclick="terrForm({id:\''+t.id+'\'})">'+
+    ic('edit')+'Επεξεργασία τομέα</button></div>';
   h+='<h3>Ιστορικό</h3><div class="hist">';
   var rs=s.rows.slice().reverse();
   if(!rs.length) h+='<div>Καμία εγγραφή</div>';
@@ -1276,6 +1345,289 @@ function viewDetail(){
   if(g&&g.polygons&&g.polygons.length) drawLeaflet('dMap',peers,{focus:t.id,quiet:true,onPick:open_});
   else document.getElementById('dMap').innerHTML=
     '<div class="empty" style="padding:84px 20px">'+(t.mymaps_id?'Ο χάρτης φορτώνει…':'Δεν έχει σχεδιαστεί χάρτης')+'</div>';
+}
+
+/* ================= ΝΕΟΣ ΤΟΜΕΑΣ / ΑΛΛΑΓΗ ΤΟΜΕΑ =================
+   Όλα από την εφαρμογή: αριθμός, περιοχή (και νέα), όνομα, σύνδεση με My Maps.
+   Το σχέδιο γίνεται στο My Maps· εδώ επικολλάται ο σύνδεσμος και ελέγχεται αμέσως. */
+function midOf(s){
+  s=String(s||'').trim();
+  var m=s.match(/[?&#]mid=([\w-]+)/); if(m) return m[1];
+  return /^[\w-]{20,}$/.test(s)?s:'';
+}
+function tid(n){ n=parseInt(n,10); return 'T'+(n<10?'0':'')+n; }
+function nextNum(after){
+  var used={}, n=after||0;
+  D.territories.forEach(function(t){ used[parseInt(String(t.id).replace(/\D/g,''),10)]=1; });
+  if(!after) Object.keys(used).forEach(function(k){ if(+k>n) n=+k; });
+  n++; while(used[n]) n++;
+  return n;
+}
+function townNames(){
+  var o={}; D.territories.forEach(function(t){ var n=townOf(t); if(n) o[n]=1; });
+  return Object.keys(o).sort(function(a,b){ return a.localeCompare(b,'el'); });
+}
+/* σχήματα (λίστες [lat,lng]) σε μικρό SVG· hi = ποιο τονίζεται (-1 = όλα) */
+function shapeSvg(polys,w,h,hi){
+  var z=17, P=polys.map(function(p){ return p.map(function(c){ return [wx(c[1],z),wy(c[0],z)]; }); });
+  var all_=[].concat.apply([],P);
+  if(!all_.length) return '<svg viewBox="0 0 '+w+' '+h+'"></svg>';
+  var xs=all_.map(function(p){ return p[0]; }), ys=all_.map(function(p){ return p[1]; });
+  var x0=Math.min.apply(null,xs), x1=Math.max.apply(null,xs), y0=Math.min.apply(null,ys), y1=Math.max.apply(null,ys);
+  var s=Math.min((w-16)/((x1-x0)||1),(h-16)/((y1-y0)||1)), ox=(w-(x1-x0)*s)/2, oy=(h-(y1-y0)*s)/2;
+  var out='<svg viewBox="0 0 '+w+' '+h+'" aria-hidden="true">';
+  P.forEach(function(p,i){
+    var on=hi<0||hi===i;
+    out+='<path d="M'+p.map(function(q){ return ((q[0]-x0)*s+ox).toFixed(1)+' '+((q[1]-y0)*s+oy).toFixed(1); }).join(' L')+'Z" '+
+      'fill="'+(on?'var(--duo)':'var(--idle)')+'" fill-opacity="'+(on?.32:.12)+'" stroke="'+(on?'var(--duo)':'var(--idle)')+
+      '" stroke-width="'+(on?2:1)+'" stroke-linejoin="round"/>';
+  });
+  return out+'</svg>';
+}
+/* απλή κλήση στο script χωρίς ανανέωση δεδομένων (έλεγχος χάρτη) */
+function apiCall(body){
+  return fetch(API,{method:'POST',redirect:'follow',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)})
+    .then(function(r){ return r.text(); })
+    .then(function(t){
+      var j; try{ j=JSON.parse(t); }catch(e){ throw new Error('Το Google δεν απάντησε σωστά. Δοκίμασε ξανά.'); }
+      if(!j.ok){
+        if(/Άγνωστη ενέργεια/.test(String(j.error))) throw new Error('Χρειάζεται νέα ανάπτυξη του Code.gs (Deploy → New version).');
+        throw new Error(j.error||'σφάλμα');
+      }
+      return j;
+    });
+}
+function setGeo(id,g){
+  if(!g) return;
+  D.geo=D.geo||{maps:{}}; D.geo.maps=D.geo.maps||{}; D.geo.maps[id]=g; geoSet(D.geo); bump(); render();
+}
+function geoFrom(j){                       /* τα σχήματα που γύρισαν με την αποθήκευση */
+  (j.results||[j]).forEach(function(r){ if(r&&r.id&&r.geo) setGeo(r.id,r.geo); });
+}
+var PLUS_SVG='<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M12 6v12M6 12h12"/></svg>';
+function addBtn(town){
+  return '<button class="addsq" title="Νέος τομέας" aria-label="Νέος τομέας" onclick="terrForm({town:'+
+    (town?'\''+esc(town)+'\'':'\'\'')+'})">'+PLUS_SVG+'</button>';
+}
+
+function terrForm(o){
+  o=o||{};
+  var ed=o.id?D.territories.filter(function(t){ return t.id===o.id; })[0]:null;
+  var towns=townNames();
+  var st={
+    create:!ed, step:ed?0:1,
+    num: ed?parseInt(String(ed.id).replace(/\D/g,''),10):(o.num||nextNum()),
+    town: ed?townOf(ed):(o.town||(place&&place!=='all'?place:'')),
+    newTown:'', name: ed?ed.name:'', nameAuto:!ed, last:'',
+    link: ed&&ed.mymaps_id?'https://www.google.com/maps/d/viewer?mid='+ed.mymaps_id:'',
+    mid: ed?(ed.mymaps_id||''):'', shape: ed?String(ed.shape||''):'',
+    chk:null, busy:false, err:'', multi:false, nums:[]
+  };
+  if(st.town && towns.indexOf(st.town)<0){ st.newTown=st.town; st.town='__new__'; }
+  var orig=ed?{mid:st.mid,shape:st.shape}:null;
+  var d=modal('<div id="tf"></div>'), box=d.querySelector('#tf'), timer=null;
+
+  function townV(){ return st.town==='__new__'?st.newTown.trim():st.town; }
+  function autoName(){ return 'Τομέας '+st.num+' — '+(townV()||'…'); }
+  function nm(){ return (st.nameAuto?autoName():st.name).trim(); }
+  function val(id){ var e=box.querySelector('#'+id); return e?e.value:''; }
+  function read(){                          /* κρατάμε ό,τι γράφτηκε πριν ξαναζωγραφίσουμε */
+    if(box.querySelector('#tN')) st.num=parseInt(val('tN'),10)||st.num;
+    if(box.querySelector('#tT')) st.town=val('tT');
+    if(box.querySelector('#tNT')) st.newTown=val('tNT');
+    if(box.querySelector('#tNm')){ var v=val('tNm'); if(v!==autoName()){ st.name=v; st.nameAuto=false; } }
+    if(box.querySelector('#tL')) st.last=val('tL');
+    if(box.querySelector('#tM')) st.link=val('tM');
+    if(st.multi) st.nums=[].map.call(box.querySelectorAll('.shnum'),function(e){ return parseInt(e.value,10)||0; });
+  }
+  function fieldsHtml(){
+    return '<div class="two"><div><label>Αριθμός</label>'+
+        (st.create?'<input id="tN" type="number" inputmode="numeric" min="1" value="'+st.num+'">'+
+           '<div class="hint">ο επόμενος ελεύθερος</div>'
+          :'<div class="fake">'+esc(ed.id)+'</div>')+'</div>'+
+      '<div><label>Περιοχή</label><select id="tT">'+
+        (st.town?'':'<option value="">— διάλεξε —</option>')+
+        towns.map(function(n){ return '<option'+(st.town===n?' selected':'')+'>'+esc(n)+'</option>'; }).join('')+
+        '<option value="__new__"'+(st.town==='__new__'?' selected':'')+'>Νέα περιοχή…</option></select></div></div>'+
+      (st.town==='__new__'?'<label>Όνομα νέας περιοχής</label><input id="tNT" placeholder="π.χ. Άγιος Μάμας" value="'+esc(st.newTown)+'">':'')+
+      '<label>Όνομα τομέα</label><input id="tNm" value="'+esc(st.nameAuto?autoName():st.name)+'">'+
+      (st.create?'<div class="hint">Συμπληρώνεται μόνο του· αλλάζει αν θέλεις.</div>'+
+        '<label>Τελευταία ολοκλήρωση <span style="text-transform:none;letter-spacing:0">(προαιρετικό)</span></label>'+
+        '<input id="tL" type="date" value="'+esc(st.last)+'">'+
+        '<div class="hint">Κενό = νέος τομέας· μπαίνει πρώτος στην προτεραιότητα.</div>':'');
+  }
+  function checkHtml(){
+    if(st.busy) return '<div class="tfmsg"><span class="spin"></span> Έλεγχος χάρτη…</div>';
+    if(st.err) return '<div class="tfmsg bad">'+ic('cancel')+'<span>'+esc(st.err)+'</span></div>';
+    if(!st.chk) return '';
+    var sh=st.chk.shapes, polys=sh.map(function(x){ return x.coords; });
+    var pick=sh.length>1?(parseInt(st.shape,10)||1)-1:-1;
+    var h='<div class="preview">'+shapeSvg(polys,360,150,pick).replace('<svg ','<svg class="pv" ')+
+      '<div class="pf">'+ic('check')+'<div><b>'+(sh.length===1?'Βρέθηκε 1 σχήμα':'Βρέθηκαν '+sh.length+' σχήματα')+'</b>'+
+      '<small>'+esc(st.chk.title||'')+'</small></div></div></div>';
+    if(sh.length>1){
+      h+='<label>Ποιο σχήμα είναι αυτός ο τομέας;</label><div class="shlist">'+sh.map(function(x,i){
+        return '<button class="shape'+(i===pick?' on':'')+'" data-sh="'+(i+1)+'">'+shapeSvg(polys,46,40,i)+
+          '<span class="nm"><b>'+esc(x.name||('Σχήμα '+(i+1)))+'</b><small>σχήμα '+(i+1)+' στον χάρτη</small></span>'+
+          (i===pick?'<span class="cb">✓</span>':'')+'</button>'; }).join('')+'</div>';
+      if(st.create) h+='<button class="btn" id="tMulti" style="width:100%;margin-top:4px">'+PLUS_SVG+
+        'Ένας τομέας για κάθε σχήμα ('+sh.length+')</button>';
+    }
+    return h;
+  }
+  function mapHtml(){
+    return (st.create?
+      '<div class="mstep"><span class="k">1</span><div><b>Σχέδιο στο My Maps</b>'+
+        '<small>Νέος χάρτης → σχεδίαση του σχήματος του τομέα (εργαλείο «Προσθήκη γραμμής ή σχήματος»).</small>'+
+        '<button class="mini-btn" id="tOpen">'+ic('open')+'Άνοιγμα My Maps</button></div></div>'+
+      '<div class="mstep"><span class="k">2</span><div><b>Κοινοποίηση</b>'+
+        '<small>Κοινοποίηση → «Οποιοσδήποτε με τον σύνδεσμο μπορεί να δει» → αντιγραφή συνδέσμου.</small></div></div>'+
+      '<div class="mstep"><span class="k">3</span><div style="flex:1;min-width:0"><b>Επικόλληση εδώ</b></div></div>'
+      :'<label>Χάρτης My Maps</label>')+
+      '<input id="tM" placeholder="https://www.google.com/maps/d/…" value="'+esc(st.link)+'" autocomplete="off">'+
+      '<div id="tChk">'+checkHtml()+'</div>';
+  }
+  function draw(){
+    var h='';
+    if(st.multi){
+      var sh=st.chk.shapes;
+      h='<h2>Ένας τομέας για κάθε σχήμα</h2><div class="cs">'+esc(townV()||'')+' · '+sh.length+' σχήματα από τον ίδιο χάρτη</div>'+
+        sh.map(function(x,i){
+          return '<div class="shape">'+shapeSvg(sh.map(function(y){ return y.coords; }),46,40,i)+
+            '<span class="nm"><b>'+esc(x.name||('Σχήμα '+(i+1)))+'</b><small>σχήμα '+(i+1)+'</small></span>'+
+            '<input class="shnum" type="number" inputmode="numeric" value="'+(st.nums[i]||'')+'" aria-label="Αριθμός"></div>';
+        }).join('')+
+        '<div class="hint">Ονόματα: «Τομέας Ν — '+esc(townV()||'…')+'». Ο αριθμός κάθε σχήματος αλλάζει πατώντας τον.</div>'+
+        '<div id="tErr"></div>'+
+        '<div class="btns" style="margin-top:16px"><button class="btn" id="tBack">Πίσω</button>'+
+        '<button class="btn pri" id="tSaveAll">'+ic('check')+'Δημιουργία '+sh.length+' τομέων</button></div>';
+    } else if(st.step===1){
+      h='<h2>Νέος τομέας</h2><div class="stepper"><span class="on">1 · Στοιχεία</span><span>2 · Χάρτης</span></div>'+
+        fieldsHtml()+'<div id="tErr"></div>'+
+        '<div class="btns" style="margin-top:18px"><button class="btn" id="tX">Άκυρο</button>'+
+        '<button class="btn pri" id="tNext">Επόμενο: χάρτης</button></div>';
+    } else if(st.step===2){
+      h='<h2>Νέος τομέας · '+st.num+'</h2><div class="stepper"><span class="done">1 · Στοιχεία</span><span class="on">2 · Χάρτης</span></div>'+
+        mapHtml()+'<div id="tErr"></div>'+
+        '<div class="btns" style="margin-top:14px"><button class="btn" id="tBack">Πίσω</button>'+
+        '<button class="btn pri" id="tSave">'+ic('check')+'Αποθήκευση</button></div>'+
+        '<div class="btns"><button class="btn" id="tSaveNext">'+PLUS_SVG+'Αποθήκευση και επόμενος στην ίδια περιοχή</button></div>'+
+        (st.mid?'':'<div class="hint" style="text-align:center;margin-top:-4px">Ο χάρτης μπορεί να μπει και αργότερα, από την επεξεργασία του τομέα.</div>');
+    } else {
+      h='<h2>Επεξεργασία τομέα</h2><div class="cs">'+esc(ed.id)+' · '+esc(ed.name)+'</div>'+fieldsHtml()+mapHtml()+
+        (ed.mymaps_id?'<div class="btns" style="margin-top:8px"><button class="btn" id="tRe">'+ic('renew')+'Ξαναδιάβασμα σχήματος</button></div>'+
+          '<div class="hint" style="margin-top:-4px">Άλλαξες το σχήμα στο My Maps; Το «Ξαναδιάβασμα» φέρνει το νέο αμέσως.</div>':'')+
+        '<div id="tErr"></div>'+
+        '<div class="btns" style="margin-top:16px"><button class="btn" id="tX">Άκυρο</button>'+
+        '<button class="btn pri" id="tSave">'+ic('check')+'Αποθήκευση</button></div>'+
+        '<div class="btns"><button class="btn warn" id="tRet">'+ic('cancel')+'Απόσυρση τομέα</button></div>'+
+        '<div class="hint" style="text-align:center;margin-top:-4px">Κρύβεται από τις λίστες· το ιστορικό μένει. Επαναφορά από τις Ρυθμίσεις.</div>';
+    }
+    box.innerHTML=h; wire();
+  }
+  function err(msg){ var e=box.querySelector('#tErr'); if(e) e.innerHTML=msg?'<div class="tfmsg bad">'+ic('cancel')+'<span>'+esc(msg)+'</span></div>':''; }
+  function redrawChk(){ var c=box.querySelector('#tChk'); if(c){ c.innerHTML=checkHtml(); wireChk(); } }
+  function check(){
+    var mid=midOf(st.link);
+    st.chk=null; st.err='';
+    if(!st.link.trim()){ st.mid=''; redrawChk(); return; }
+    if(!mid){ st.mid=''; st.err='Δεν μοιάζει με σύνδεσμο My Maps (google.com/maps/d/…).'; redrawChk(); return; }
+    st.mid=mid; st.busy=true; redrawChk();
+    apiCall({action:'checkMap',mid:mid}).then(function(j){
+      if(st.mid!==mid) return;
+      st.busy=false; st.chk=j;
+      if(j.shapes.length===1) st.shape='';
+      else if(!(parseInt(st.shape,10)<=j.shapes.length)) st.shape='1';
+      redrawChk();
+    }).catch(function(e){ if(st.mid!==mid) return; st.busy=false; st.err=e.message; redrawChk(); });
+  }
+  function wireChk(){
+    [].forEach.call(box.querySelectorAll('.shape[data-sh]'),function(b){
+      b.onclick=function(){ st.shape=b.getAttribute('data-sh'); redrawChk(); }; });
+    var m=box.querySelector('#tMulti');
+    if(m) m.onclick=function(){ read(); if(!townV()){ st.step=1; draw(); err('Διάλεξε περιοχή πρώτα'); return; }
+      st.multi=true; var n=st.num-1; st.nums=st.chk.shapes.map(function(){ n=nextNum(n); return n; });
+      st.nums[0]=st.num; draw(); };
+  }
+  function validate(){
+    if(!townV()) return 'Διάλεξε περιοχή ή γράψε νέα';
+    if(st.create){
+      if(!(st.num>0)) return 'Γράψε αριθμό τομέα';
+      if(D.territories.some(function(t){ return t.id===tid(st.num); })) return 'Ο τομέας '+st.num+' υπάρχει ήδη — διάλεξε άλλον αριθμό';
+    }
+    if(!nm()) return 'Γράψε όνομα τομέα';
+    if(st.link.trim() && !st.mid) return 'Ο σύνδεσμος του χάρτη δεν αναγνωρίζεται';
+    if(st.busy) return 'Περίμενε να τελειώσει ο έλεγχος του χάρτη';
+    return '';
+  }
+  function save(next){
+    read(); var e=validate(); if(e){ err(e); return; }
+    var id=st.create?tid(st.num):ed.id, tw=townV();
+    var b={action:'saveTerritory',create:st.create,id:id,town:tw,name:nm()};
+    if(st.create){ b.mymaps_id=st.mid||''; b.shape=st.shape||''; if(st.last) b.last_completed=st.last; }
+    else if(st.mid!==orig.mid || st.shape!==orig.shape){ b.mymaps_id=st.mid||''; b.shape=st.shape||''; }
+    d.remove();
+    post(b,function(j){
+      geoFrom(j);
+      toast(st.create?('Νέος τομέας: '+nm()):'Αποθηκεύτηκε');
+      if(next) terrForm({town:tw,num:nextNum(st.num)});
+    });
+    if(!next && st.create) open_(id);
+  }
+  function wire(){
+    var q=function(id){ return box.querySelector('#'+id); };
+    var t=q('tT'); if(t) t.onchange=function(){ read(); draw(); };
+    var nN=q('tN'), nm_=q('tNm'), nt=q('tNT');
+    var syncName=function(){ if(st.nameAuto && nm_){ read(); nm_.value=autoName(); } };
+    if(nN) nN.oninput=syncName;
+    if(nt) nt.oninput=syncName;
+    if(nm_) nm_.oninput=function(){ st.nameAuto=false; };
+    var mi=q('tM'); if(mi) mi.oninput=function(){ st.link=mi.value; clearTimeout(timer); timer=setTimeout(check,500); };
+    var op=q('tOpen'); if(op) op.onclick=function(){ window.open('https://www.google.com/maps/d/create','_blank'); };
+    var x=q('tX'); if(x) x.onclick=function(){ d.remove(); };
+    var bk=q('tBack'); if(bk) bk.onclick=function(){ read(); if(st.multi) st.multi=false; else st.step=1; draw(); };
+    var nx=q('tNext'); if(nx) nx.onclick=function(){ read(); var e=validate(); if(e){ err(e); return; } st.step=2; draw(); };
+    var sv=q('tSave'); if(sv) sv.onclick=function(){ save(false); };
+    var sn=q('tSaveNext'); if(sn) sn.onclick=function(){ save(true); };
+    var re=q('tRe'); if(re) re.onclick=function(){ d.remove(); toast('Ξαναδιάβασμα σχήματος…');
+      post({action:'refreshMap',id:ed.id},function(j){ geoFrom(j); toast('Το σχήμα ανανεώθηκε'); }); };
+    var rt=q('tRet'); if(rt) rt.onclick=function(){ d.remove(); var id=ed.id; detail=null;
+      post({action:'saveTerritory',id:id,active:false},function(){});
+      toast('Ο τομέας '+ed.name+' αποσύρθηκε','Αναίρεση',function(){
+        post({action:'saveTerritory',id:id,active:true},function(){ toast('Επανήλθε'); }); }); };
+    var sa=q('tSaveAll'); if(sa) sa.onclick=function(){
+      read(); var tw=townV(), seen={}, bad='';
+      st.nums.forEach(function(n){ if(!(n>0)) bad='Κάθε σχήμα χρειάζεται αριθμό';
+        else if(seen[n]) bad='Ο αριθμός '+n+' μπαίνει δύο φορές';
+        else if(D.territories.some(function(t){ return t.id===tid(n); })) bad='Ο τομέας '+n+' υπάρχει ήδη';
+        seen[n]=1; });
+      if(bad){ err(bad); return; }
+      var ops=st.chk.shapes.map(function(x,i){
+        return {action:'saveTerritory',create:true,id:tid(st.nums[i]),town:tw,name:'Τομέας '+st.nums[i]+' — '+tw,
+                mymaps_id:st.mid,shape:String(i+1)}; });
+      d.remove();
+      postMany(ops,function(j){ geoFrom(j); toast('Δημιουργήθηκαν '+ops.length+' τομείς στην περιοχή '+tw); });
+      town=null; place='all'; openTown(tw);
+    };
+    wireChk();
+  }
+  draw();
+  if(st.step===0 && st.mid) check();          /* επεξεργασία: δείξε το τωρινό σχήμα */
+}
+
+/* ---------- σημειώσεις για κάθε υπηρεσιακό έτος (στο παράθυρο εκτύπωσης) ---------- */
+function isoD(d){ return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2); }
+function yearStats(y){
+  var r=svcYear(y), F=isoD(r.from), T=isoD(r.to);
+  var list=D.territories.filter(function(t){ return String(t.active).toUpperCase()!=='FALSE' &&
+    (!t.added || String(t.added).slice(0,10)<=T); });
+  var done=list.filter(function(t){
+    var lc=String(t.last_completed||'').slice(0,10);
+    if(lc && lc>=F && lc<=T) return true;
+    return (D._by&&D._by[t.id]||D.assignments.filter(function(a){ return a.territory_id===t.id; })).some(function(a){
+      var i=String(a.date_in||'').slice(0,10); return i && i>=F && i<=T; });
+  }).length;
+  return {n:list.length, done:done, not:list.length-done};
 }
 
 /* ================= ΕΝΕΡΓΕΙΕΣ ================= */
@@ -1633,13 +1985,27 @@ function openReport(){
     var y=+String(a.date_out||'').slice(0,4); if(y && y<first) first=y; });
   for(var y=cur+5;y>=first;y--)
     opts+='<option value="'+y+'"'+(y===cur?' selected':'')+'>'+y+'–'+(y+1)+'</option>';
+  /* σημειώσεις: πόσους τομείς είχαμε κάθε έτος και πόσοι δεν ολοκληρώθηκαν (μόνο στην εφαρμογή) */
+  all();
+  var notes='';
+  for(var yy=cur;yy>=Math.max(first,cur-5);yy--){
+    var st=yearStats(yy);
+    if(!st.n) continue;
+    notes+='<button data-y="'+yy+'"'+(yy===cur?' class="on"':'')+'><b>'+yy+'–'+(yy+1)+(yy===cur?'<i>τρέχον</i>':'')+'</b>'+
+      '<span>'+st.n+' τομείς · <em>'+st.not+'</em> '+(yy===cur?'δεν ολοκληρώθηκαν ακόμα':'δεν ολοκληρώθηκαν')+'</span></button>';
+  }
   var d=modal('<h2>Έντυπο διορισμού τομέα</h2>'+
     '<div class="cs">Ένα υπηρεσιακό έτος ανά εκτύπωση — Σεπτέμβριος έως Αύγουστος</div>'+
+    (notes?'<label>Σημειώσεις ανά έτος</label><div class="ystats">'+notes+'</div>':'')+
     '<label>Υπηρεσιακό έτος</label><select id="rY">'+opts+'</select>'+
     '<div class="btns" style="margin-top:18px"><button class="btn" id="rX">Άκυρο</button>'+
     '<button class="btn pri" id="rO">Εκτύπωση</button></div>');
   d.querySelector('#rX').onclick=function(){ d.remove(); };
   d.querySelector('#rO').onclick=function(){ var y=+d.querySelector('#rY').value; d.remove(); buildReport(y); };
+  var sel=d.querySelector('#rY'), marks=d.querySelectorAll('.ystats button');
+  var mark=function(){ [].forEach.call(marks,function(b){ b.classList.toggle('on',b.getAttribute('data-y')===sel.value); }); };
+  [].forEach.call(marks,function(b){ b.onclick=function(){ sel.value=b.getAttribute('data-y'); mark(); }; });
+  sel.onchange=mark;
 }
 /* σύντομος κωδικός περιοχής, μοναδικός (ΠΑΛΚ / ΠΑΛΧ κ.λπ.) */
 var _codes=null;
@@ -1739,6 +2105,57 @@ function buildReport(y){
   pa.className=ios?'ios':'pc'; pa.innerHTML=out;
   setTimeout(function(){ window.print(); },80);
 }
+/* ---------- Ειδοποιήσεις στο κινητό (μέσω της δωρεάν εφαρμογής ntfy ή email) ---------- */
+function notifyHtml(){
+  var topic=String(D.settings.notify_ntfy||''), mail=String(D.settings.notify_email||'');
+  return '<h3>Ειδοποιήσεις στο κινητό</h3>'+
+    '<p class="hint" style="margin:0 0 8px">Ειδοποίηση όταν κάποιος ζητά τομέα, ζητά ανανέωση ή δηλώνει ολοκλήρωση.</p>'+
+    (topic?
+      '<div class="kv"><span>Κωδικός καναλιού</span><b class="code">'+esc(topic)+'</b></div>'+
+      '<ol class="nlist"><li>Εγκατάσταση της δωρεάν εφαρμογής <b>ntfy</b> '+
+        '(<a href="https://apps.apple.com/app/ntfy/id1625396347" target="_blank" rel="noopener">iPhone</a> · '+
+        '<a href="https://play.google.com/store/apps/details?id=io.heckel.ntfy" target="_blank" rel="noopener">Android</a>).</li>'+
+        '<li>Στο ntfy: <b>+</b> → επικόλληση του κωδικού → <b>Subscribe</b>. Να επιτραπούν οι ειδοποιήσεις.</li>'+
+        '<li>«Δοκιμή» για έλεγχο.</li></ol>'+
+      '<div class="btns"><button class="btn" id="nC">'+ic('link')+'Αντιγραφή κωδικού</button>'+
+        '<button class="btn" id="nT">'+ic('bell')+'Δοκιμή</button></div>'+
+      '<div class="btns"><button class="btn warn" id="nOff">'+ic('cancel')+'Διακοπή ειδοποιήσεων</button></div>'
+     :'<div class="btns"><button class="btn pri" id="nOn">'+ic('bell')+'Ενεργοποίηση στο κινητό</button></div>')+
+    '<label>Και με email <span style="text-transform:none;letter-spacing:0">(προαιρετικό)</span></label>'+
+    '<div class="srow"><input id="nE" type="email" placeholder="όνομα@gmail.com" value="'+esc(mail)+'">'+
+      '<button class="addsq" id="nES" title="Αποθήκευση email" style="margin:0;height:auto">'+ic('check')+'</button></div>';
+}
+function wireNotify(d){
+  var q=function(id){ return d.querySelector('#'+id); };
+  var save=function(pairs,msg,reopen){
+    postMany(pairs.map(function(p){ return {action:'saveSetting',key:p[0],value:p[1]}; }),function(){
+      toast(msg); if(reopen){ d.remove(); openSettings(); setTimeout(function(){
+        var c=document.querySelector('.scrim .card'); if(c) c.scrollTop=c.scrollHeight; },60); } });
+  };
+  var on=q('nOn'); if(on) on.onclick=function(){
+    var a='abcdefghjkmnpqrstuvwxyz23456789', c='th-';
+    for(var i=0;i<14;i++) c+=a[Math.floor(Math.random()*a.length)];
+    save([['notify_ntfy',c],['app_url',appUrl()]],'Ειδοποιήσεις ενεργές — ακολούθησε τα 3 βήματα',true); };
+  var cp=q('nC'); if(cp) cp.onclick=function(){ copy(String(D.settings.notify_ntfy)); toast('Ο κωδικός αντιγράφηκε'); };
+  var te=q('nT'); if(te) te.onclick=function(){ toast('Αποστολή δοκιμής…');
+    apiCall({action:'testNotify'}).then(function(j){ toast(j.sent?'Στάλθηκε — έλεγξε το κινητό':'Δεν στάλθηκε'); })
+      .catch(function(e){ toast(e.message); }); };
+  var off=q('nOff'); if(off) off.onclick=function(){ save([['notify_ntfy','']],'Οι ειδοποιήσεις σταμάτησαν',true); };
+  var es=q('nES'); if(es) es.onclick=function(){ var v=q('nE').value.trim();
+    if(v && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)){ toast('Το email δεν φαίνεται σωστό'); return; }
+    save([['notify_email',v],['app_url',appUrl()]],v?'Θα έρχεται και email':'Χωρίς email',false); };
+  [].forEach.call(d.querySelectorAll('[data-restore]'),function(b){ b.onclick=function(){
+    var id=b.getAttribute('data-restore'); b.disabled=true;
+    post({action:'saveTerritory',id:id,active:true},function(){ toast('Ο τομέας επανήλθε'); }); }; });
+}
+/* αποσυρμένοι τομείς: επαναφορά */
+function retiredHtml(){
+  var r=D.territories.filter(function(t){ return String(t.active).toUpperCase()==='FALSE'; });
+  if(!r.length) return '';
+  return '<h3>Αποσυρμένοι τομείς</h3>'+r.map(function(t){
+    return '<div class="kv"><span style="text-transform:none;letter-spacing:0;font-size:13.5px;color:var(--text)">'+esc(t.name||t.id)+'</span>'+
+      '<b><button class="lnk" style="color:var(--accent);font-weight:600" data-restore="'+esc(t.id)+'">Επαναφορά</button></b></div>'; }).join('');
+}
 function openSettings(){
   var withMap=D.territories.filter(function(t){ return t.mymaps_id; }).length, ok=0, bad=[];
   if(D.geo) D.territories.forEach(function(t){ if(!t.mymaps_id) return;
@@ -1758,7 +2175,9 @@ function openSettings(){
       'Η «Ανανέωση χαρτών» ξαναδιαβάζει τα όρια από το Google My Maps. Χρειάζεται μόνο '+
       'όταν σχεδιάσεις νέο τομέα ή αλλάξεις ένα σχήμα — αλλιώς τα όρια κρατιούνται '+
       'αποθηκευμένα για 6 ώρες για να ανοίγει γρήγορα η εφαρμογή.</p>'+
-    '<div class="btns" style="margin-top:2px"><button class="btn" id="sM">Ανανέωση χαρτών</button></div>');
+    '<div class="btns" style="margin-top:2px"><button class="btn" id="sM">Ανανέωση χαρτών</button></div>'+
+    notifyHtml()+retiredHtml());
+  wireNotify(d);
   d.querySelector('#sS').onclick=function(){
     var v=[['hold_months',d.querySelector('#sH').value],['rest_months',d.querySelector('#sR').value],
            ['warn_days',d.querySelector('#sW').value]]; d.remove();
