@@ -75,6 +75,9 @@ header .ico{--icobg:var(--ground)}
 .req .w{font-size:14.5px;font-weight:600}
 .req .m{font-size:12px;color:var(--faint);margin-top:3px}
 main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 16px 24px}
+/* μικρή ένδειξη έκδοσης στο τέλος κάθε σελίδας */
+main::after{content:attr(data-ver);display:block;text-align:center;font-size:10px;letter-spacing:.06em;
+  color:var(--faint);opacity:.75;padding:22px 0 2px;grid-column:1/-1}
 nav{flex:0 0 auto;display:flex;border-top:1px solid var(--rule-soft);background:var(--sheet);padding-bottom:var(--safe-b)}
 nav button{flex:1;padding:9px 4px 12px;font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--faint)}
 nav button.on{color:var(--accent);box-shadow:inset 0 2px 0 var(--accent)}
@@ -366,6 +369,10 @@ nav button.on .ico .mp{fill:var(--sheet);stroke:none}
 .ystats span{color:var(--muted);text-align:right}
 .ystats em{font-style:normal;color:var(--coral);font-weight:600}
 .ystats i{font-style:normal;color:var(--faint);font-size:11px;margin-left:4px}
+.vlog{margin-top:8px;font-size:12.5px}
+.vlog summary{cursor:pointer;color:var(--accent);font-weight:600;padding:6px 0}
+.vlog div{display:flex;gap:10px;padding:6px 0;border-bottom:1px solid var(--rule-soft);color:var(--muted);line-height:1.4}
+.vlog b{flex:0 0 38px;color:var(--text)}
 /* ειδοποιήσεις */
 .code{font-family:ui-monospace,Menlo,monospace;font-size:14px;letter-spacing:.02em;color:var(--text)}
 .nlist{margin:6px 0 10px;padding-left:20px;font-size:12.5px;color:var(--muted);line-height:1.55}
@@ -483,7 +490,7 @@ nav button.on .ico .mp{fill:var(--sheet);stroke:none}
       <button onclick="openSettings()" title="Ρυθμίσεις" aria-label="Ρυθμίσεις"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h9"/><path d="M19 7h1"/><path d="M4 17h3"/><path d="M13 17h7"/><circle class="d1" cx="16" cy="7" r="2.5"/><circle class="d1" cx="10" cy="17" r="2.5"/></svg></button>
     </div>
   </header>
-  <main id="main"><div class="empty"><span class="spin"></span><br><br>Φόρτωση…</div></main>
+  <main id="main" data-ver="Territory Hub · v4.2"><div class="empty"><span class="spin"></span><br><br>Φόρτωση…</div></main>
   <nav>
     <button data-tab="map" class="on" onclick="go('map')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="d ns" d="M9 4l6 2.5V20l-6-2.5z"/><path d="M3 6.5 9 4l6 2.5L21 4v13.5L15 20l-6-2.5L3 20z"/><path d="M9 4v13.5"/><path d="M15 6.5V20"/></svg><span>Χάρτης</span></button>
     <button data-tab="list" onclick="go('list')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.3 L11.2 3.6 L12.4 11.2 L5.3 12.8 Z"/><path class="d1" d="M11.2 3.6 L20 5.3 L19.1 12 L12.4 11.2 Z"/><path d="M5.3 12.8 L12.4 11.2 L14.1 20.4 L4.4 20.4 Z"/><path class="d" d="M12.4 11.2 L19.1 12 L20 19.1 L14.1 20.4 Z"/></svg><span>Τομείς</span></button>
@@ -502,6 +509,7 @@ nav button.on .ico .mp{fill:var(--sheet);stroke:none}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
+var APP_VERSION='4.2', SCRIPT_NEEDS='3.1';
 /* ==================================================================
    Η ΜΟΝΗ ΓΡΑΜΜΗ ΠΟΥ ΙΣΩΣ ΧΡΕΙΑΣΤΕΙ ΝΑ ΑΛΛΑΞΕΙΣ
    ================================================================== */
@@ -786,6 +794,7 @@ function apply(j){
   D.territories=j.territories||[]; D.assignments=j.assignments||[]; D.people=j.people||[];
   D.requests=j.requests||[];
   D.settings=j.settings||{};
+  if(j.version!==undefined) D.scriptVersion=j.version;
   D.settings.hold_months=+(D.settings.hold_months||4);
   D.settings.rest_months=+(D.settings.rest_months||4);
   D.settings.warn_days=+(D.settings.warn_days||14);
@@ -957,21 +966,26 @@ function pubUrl(){
   if(/\/[^\/]*\.html?$/i.test(u)) return u.replace(/\/[^\/]*\.html?$/i,'/aitisi.html');
   return u.replace(/\/?$/,'/')+'aitisi.html';
 }
+function boardUrl(){ return pubUrl().replace(/aitisi\.html$/,'board.html'); }
+/* σύγκριση εκδόσεων 2.10 > 2.9 */
+function verNum(v){ var p=String(v||'0').split('.'); return (+p[0]||0)*1000+(+p[1]||0); }
 function appUrl(){ return location.href.split('#')[0].split('?')[0]; }
 var shareKind='pub';
 function shareApp(kind){
   if(kind) shareKind=kind;
-  var pub=shareKind==='pub';
-  var url=pub?pubUrl():appUrl();
+  var pub=shareKind==='pub', brd=shareKind==='board';
+  var url=pub?pubUrl():brd?boardUrl():appUrl();
   var msg=pub
     ? 'Σελίδα αιτήσεων τομέων:\n'+url+'\n\nΕπιλογή ονόματος την πρώτη φορά· μετά εμφανίζονται οι ελεύθεροι τομείς και οι δικοί σας.'
+    : brd ? 'Πίνακας τομέων — όλοι οι τομείς στον χάρτη:\n'+url
     : 'Εφαρμογή διαχείρισης τομέων:\n'+url;
-  var ttl=pub?'Σελίδα αιτήσεων':'Εφαρμογή διαχείρισης';
+  var ttl=pub?'Σελίδα αιτήσεων':brd?'Πίνακας τομέων':'Εφαρμογή διαχείρισης';
   var d=modal('<h2>Κοινοποίηση</h2>'+
     '<div class="seg" style="margin:6px 0 12px">'+
-      '<button class="'+(pub?'on':'')+'" id="kP">Σελίδα αιτήσεων</button>'+
-      '<button class="'+(pub?'':'on')+'" id="kA">Εφαρμογή διαχείρισης</button></div>'+
-    '<div class="cs">'+(pub?'Χωρίς κωδικό — μόνο προβολή και αιτήσεις'
+      '<button class="'+(pub?'on':'')+'" id="kP">Αιτήσεις</button>'+
+      '<button class="'+(brd?'on':'')+'" id="kB">Πίνακας</button>'+
+      '<button class="'+(pub||brd?'':'on')+'" id="kA">Διαχείριση</button></div>'+
+    '<div class="cs">'+(pub?'Χωρίς κωδικό — μόνο προβολή και αιτήσεις':brd?'Χάρτης όλων των τομέων — μόνο προβολή'
       :'<b style="color:var(--coral)">Πλήρης πρόσβαση</b> — μόνο σε όσους βοηθούν στη διαχείριση')+'</div>'+
     '<div style="background:var(--raised);border:1px solid var(--rule);border-radius:10px;'+
       'padding:12px 14px;font-size:13px;word-break:break-all;margin-bottom:14px">'+esc(url)+'</div>'+
@@ -981,10 +995,11 @@ function shareApp(kind){
       '<small>Για επικόλληση όπου θέλεις</small></div></button>'+
     '<button class="opt" id="aQ"><span class="ic">'+ic('qr')+'</span><div><b>QR κωδικός</b>'+
       '<small>Σάρωση με την κάμερα</small></div></button>'+
-    (pub?'<button class="opt" id="aO"><span class="ic">'+ic('open')+'</span><div><b>Άνοιγμα</b>'+
-      '<small>Προβολή της σελίδας αιτήσεων</small></div></button>':''));
+    (pub||brd?'<button class="opt" id="aO"><span class="ic">'+ic('open')+'</span><div><b>Άνοιγμα</b>'+
+      '<small>Προβολή '+(brd?'του Πίνακα τομέων':'της σελίδας αιτήσεων')+'</small></div></button>':''));
   d.querySelector('#kP').onclick=function(){ if(!pub){ d.remove(); shareApp('pub'); } };
-  d.querySelector('#kA').onclick=function(){ if(pub){ d.remove(); shareApp('app'); } };
+  d.querySelector('#kB').onclick=function(){ if(!brd){ d.remove(); shareApp('board'); } };
+  d.querySelector('#kA').onclick=function(){ if(pub||brd){ d.remove(); shareApp('app'); } };
   d.querySelector('#aS').onclick=function(){ d.remove();
     if(navigator.share) navigator.share({title:'Τομείς',text:msg}).catch(function(){});
     else { copy(msg); toast('Αντιγράφηκε'); } };
@@ -2225,6 +2240,24 @@ function buildReport(y){
   setTimeout(function(){ window.print(); },80);
 }
 /* ---------- Ειδοποιήσεις στο κινητό (μέσω της δωρεάν εφαρμογής ntfy ή email) ---------- */
+/* Ιστορικό εκδόσεων: πρώτος αριθμός = μεγάλη αλλαγή, δεύτερος = βελτίωση */
+var VLOG=[
+  ['4.2','Σύνδεσμος στον Πίνακα τομέων · αριθμός έκδοσης σε κάθε σελίδα'],
+  ['4.1','Κάρτα PDF: κεντρικοί δρόμοι πιο καθαροί, με ονόματα'],
+  ['4.0','Νέοι τομείς και περιοχές από την εφαρμογή · ειδοποιήσεις στο κινητό · σημειώσεις ετών στην εκτύπωση'],
+  ['3.5','Υπολογιστής: διόρθωση επικαλύψεων στις δύο στήλες'],
+  ['3.4','Νέα εμφάνιση για υπολογιστή · μικροί χάρτες κεντραρισμένοι στο iPhone'],
+  ['3.3','Κάρτα PDF: χάρτης Esri, χωρίς διακεκομμένες γραμμές'],
+  ['3.2','Νέα κάρτα PDF σε λευκό φόντο, στο ύφος της εφαρμογής'],
+  ['3.1','Απλούστερες αιτήσεις · κουμπιά κοινοποίησης στη σελίδα του τομέα'],
+  ['3.0','Territory Hub: νέο όνομα, λογότυπο, γραμματοσειρά και εικονίδια'],
+  ['2.2','Αιτήσεις ανανέωσης · προσθήκη ατόμου'],
+  ['2.1','Εκτύπωση: χωριστή μορφή για υπολογιστή και iPhone'],
+  ['2.0','Πολύ πιο γρήγορη φόρτωση και αποθήκευση'],
+  ['1.3','Αιτήσεις και ειδοποιήσεις μέσα στην εφαρμογή · κοινοποίηση'],
+  ['1.2','Έντυπο διορισμού (εκτύπωση) · κάρτα PDF'],
+  ['1.1','Διόρθωση εγγραφών και αναίρεση'],
+  ['1.0','Πρώτη έκδοση: χάρτης, τομείς, άτομα, παράδοση και επιστροφή']];
 function notifyHtml(){
   var topic=String(D.settings.notify_ntfy||''), mail=String(D.settings.notify_email||'');
   return '<h3>Ειδοποιήσεις στο κινητό</h3>'+
@@ -2295,6 +2328,13 @@ function openSettings(){
       'όταν σχεδιάσεις νέο τομέα ή αλλάξεις ένα σχήμα — αλλιώς τα όρια κρατιούνται '+
       'αποθηκευμένα για 6 ώρες για να ανοίγει γρήγορα η εφαρμογή.</p>'+
     '<div class="btns" style="margin-top:2px"><button class="btn" id="sM">Ανανέωση χαρτών</button></div>'+
+    '<h3>Έκδοση</h3><div class="kv"><span>Territory Hub</span><b>v'+APP_VERSION+'</b></div>'+
+    '<div class="kv"><span>Script (Code.gs)</span><b'+(verNum(D.scriptVersion)<verNum(SCRIPT_NEEDS)?' style="color:var(--coral)"':'')+'>'+
+      (D.scriptVersion?'v'+D.scriptVersion:'παλιά έκδοση')+'</b></div>'+
+    (verNum(D.scriptVersion)<verNum(SCRIPT_NEEDS)?'<p class="hint" style="margin:6px 0 0">Χρειάζεται Code.gs v'+SCRIPT_NEEDS+' — '+
+      'επικόλλησε το νέο και κάνε Deploy → Manage deployments → New version.</p>':'')+
+    '<details class="vlog"><summary>Ιστορικό εκδόσεων</summary>'+VLOG.map(function(v){
+      return '<div><b>v'+v[0]+'</b><span>'+v[1]+'</span></div>'; }).join('')+'</details>'+
     notifyHtml()+retiredHtml());
   wireNotify(d);
   d.querySelector('#sS').onclick=function(){
