@@ -378,7 +378,7 @@ nav button.on .ico .mp{fill:var(--sheet);stroke:none}
     </div></div>
     <button class="whob" id="who" hidden></button>
   </header>
-  <main id="main" data-ver="My Territories · v2.5"><div class="empty"><span class="spin"></span><br><br>Φόρτωση…</div></main>
+  <main id="main" data-ver="My Territories · v2.6"><div class="empty"><span class="spin"></span><br><br>Φόρτωση…</div></main>
   <nav id="nav">
     <button data-tab="free" class="on" onclick="go('free')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="d ns" d="M9 4l6 2.5V20l-6-2.5z"/><path d="M3 6.5 9 4l6 2.5L21 4v13.5L15 20l-6-2.5L3 20z"/><path d="M9 4v13.5"/><path d="M15 6.5V20"/></svg><span>Διαθέσιμοι τομείς</span></button>
     <button data-tab="mine" onclick="go('mine')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.3 L11.2 3.6 L12.4 11.2 L5.3 12.8 Z"/><path class="d1" d="M11.2 3.6 L20 5.3 L19.1 12 L12.4 11.2 Z"/><path d="M5.3 12.8 L12.4 11.2 L14.1 20.4 L4.4 20.4 Z"/><circle class="mb" cx="18.2" cy="18.2" r="5.3"/><circle class="mp" cx="18.2" cy="16.8" r="1.5"/><path class="mp" d="M15.7 21.2c0-1.5 1.1-2.3 2.5-2.3s2.5.8 2.5 2.3"/></svg><span>Οι τομείς μου</span></button>
@@ -390,7 +390,7 @@ nav button.on .ico .mp{fill:var(--sheet);stroke:none}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-var APP_VERSION='2.5';
+var APP_VERSION='2.6';
 var BOARD_URL=(function(){ var u=location.href.split('#')[0].split('?')[0]; return u.replace(/[^\/]*$/,'')+'board.html'; })();
 /* ==================================================================
    Σελίδα αιτήσεων — ίδια δεδομένα, ίδια εμφάνιση με την εφαρμογή του
@@ -616,7 +616,7 @@ var CARD_TILES=[
   {u:'https://tile.openstreetmap.org/{z}/{x}/{y}.png',credit:'OpenStreetMap'}];
 function cardTile(i,z,x,y){ return CARD_TILES[i].u.replace('{z}',z).replace('{x}',x).replace('{y}',y); }
 /* ---- Δρόμοι από το OpenStreetMap: οι κεντρικοί πιο έντονοι, με τα ονόματά τους ---- */
-var CARD_OVERPASS=['https://overpass-api.de/api/interpreter','https://overpass.kumi.systems/api/interpreter'];
+var CARD_OVERPASS=['https://overpass-api.de/api/interpreter','https://overpass.kumi.systems/api/interpreter','https://maps.mail.ru/osm/tools/overpass/api/interpreter'];
 var CARD_RANK={motorway:3,trunk:3,primary:3,secondary:3,motorway_link:2,trunk_link:2,primary_link:2,secondary_link:2,
   tertiary:2,tertiary_link:2,unclassified:1,residential:1,living_street:1,pedestrian:1};
 function cardRoads(s,w,n,e){
@@ -635,8 +635,9 @@ function cardRoads(s,w,n,e){
   return at(0);
 }
 var CARD_ROAD_STYLE={
-  3:{casing:'#FFFFFF',cw:22,line:'#56626D',lw:12,font:'700 28px ',col:'#18212A'},
-  2:{casing:'#FFFFFF',cw:17,line:'#7E8992',lw:8,font:'600 25px ',col:'#25303A'},
+  /* κεντρικοί: κίτρινοι με σκούρο περίγραμμα, όπως στους οδικούς χάρτες — ξεχωρίζουν και στην εκτύπωση */
+  3:{casing:'#6E5718',cw:20,line:'#F3C34A',lw:13,font:'700 28px ',col:'#18212A'},
+  2:{casing:'#7F8A93',cw:14,line:'#FFFFFF',lw:9,font:'600 25px ',col:'#25303A'},
   1:{casing:'#AAB3BA',cw:10,line:'#FFFFFF',lw:6.5,font:'500 21px ',col:'#3A4650'}};
 function cardDrawRoads(c,ways,P){
   var paths=ways.map(function(w){ return {r:CARD_RANK[w.tags.highway],pts:w.geometry.map(function(g){ return P(g.lat,g.lon); })}; });

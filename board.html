@@ -683,6 +683,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <style>
 /* Layout: one-screen app — Hub header, page switch, full-bleed map; territories in the wall boards' pencil colours; bottom sheet for the chosen territory */
 :root{
+  --road-main:#F2BE45; --road-main-case:#7A5E16; --road-minor:#FFFFFF; --road-minor-case:#9AA3AA;
   --ground:#F2F5F4; --sheet:#FFFFFF; --raised:#EAEFEE; --rule:#D2D9D7; --soft:#E5EAE9;
   --text:#151C22; --muted:#57646F; --faint:#84919D;
   --accent:#127966; --accent-ink:#FFFFFF; --wash:rgba(18,121,102,.08);
@@ -704,6 +705,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     --logo-tile:#1D242C; --logo-ink:#E4EBF2; --logo-accent:#6FD3C0; --logo-ring:#313C48;
     --edge:#E4EBF2; --fill-op:.55; --paper:#10151A; --paper-line:#1C232B;
     --tiles:none; --street-fx:grayscale(1) invert(1) brightness(.6) contrast(.75);
+    --road-main:#D7A93E; --road-main-case:#2E2510; --road-minor:#5E6873; --road-minor-case:#1F252C;
     --wall:#10151A; --sheet-paper:#1D242C; --sheet-ink:#E4EBF2; --sheet-muted:#93A3B3; --sheet-rule:#313C48;
     --fk-land:#161B21; --fk-town:#1E252D; --fk-street:#2E3741; --fk-road:#C9A24A; --fk-case:#7D6630;
     --shadow:0 18px 40px -20px rgba(0,0,0,.85);
@@ -718,6 +720,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   --logo-tile:#1D242C; --logo-ink:#E4EBF2; --logo-accent:#6FD3C0; --logo-ring:#313C48;
   --edge:#E4EBF2; --fill-op:.55; --paper:#10151A; --paper-line:#1C232B;
   --tiles:none; --street-fx:grayscale(1) invert(1) brightness(.6) contrast(.75);
+  --road-main:#D7A93E; --road-main-case:#2E2510; --road-minor:#5E6873; --road-minor-case:#1F252C;
   --wall:#10151A; --sheet-paper:#1D242C; --sheet-ink:#E4EBF2; --sheet-muted:#93A3B3; --sheet-rule:#313C48;
   --fk-land:#161B21; --fk-town:#1E252D; --fk-street:#2E3741; --fk-road:#C9A24A; --fk-case:#7D6630;
   --shadow:0 18px 40px -20px rgba(0,0,0,.85);
@@ -813,15 +816,17 @@ body.chips .hint{bottom:86px}
 .sheetp.big h2{font-size:15px}
 .bsvg{display:block;width:100%;height:auto;margin-top:6px}
 .bsvg .bt{cursor:pointer;transition:opacity .2s}
-.bsvg .shape{stroke:var(--sheet-paper);stroke-width:2.6;stroke-linejoin:round;vector-effect:non-scaling-stroke}
-.bsvg .bt:hover .shape{stroke:var(--sheet-ink)}
+.bsvg .shape{stroke:none;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.bsvg .bt:hover .shape{stroke:var(--sheet-ink);stroke-width:1.5}
 .bsvg .bt.me .shape{stroke:var(--accent);stroke-width:3.5}
 .bsvg .bt.sel .shape{stroke:var(--accent);stroke-width:4.5}
 .bsvg .bt.dim{opacity:.22}
 .bsvg{overflow:visible}
 .bsvg .tiles image{pointer-events:none}
-.bsvg .shape{fill-opacity:.62}
-.bsvg text{font-family:var(--f);font-weight:800;text-anchor:middle;dominant-baseline:central;pointer-events:none;fill:#151C22;stroke:#FFFFFF;stroke-linejoin:round;paint-order:stroke;font-variant-numeric:tabular-nums}
+.bsvg .shape{fill-opacity:.7}
+.bsvg text{font-family:var(--f);font-weight:800;text-anchor:middle;dominant-baseline:central;pointer-events:none;fill:#151C22;font-variant-numeric:tabular-nums}
+.bsvg text.out{fill:var(--sheet-ink)}
+.bsvg .road{fill:none;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke;pointer-events:none}
 .bsvg .lead{stroke:var(--sheet-ink);opacity:.7;stroke-linecap:round}
 .mosaic{display:grid;gap:5px;margin-top:10px;grid-auto-rows:46px}
 .tile{border:0;border-radius:7px;cursor:pointer;display:grid;place-items:center;min-width:0;background-color:var(--tc);color:#151C22;
@@ -938,7 +943,7 @@ body.boardmode .locate,body.boardmode .hint,body.boardmode .fake{display:none}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
 // ▼▼ Paste the address of your Apps Script web app (the same one the Hub uses) between the quotes ▼▼
-const BOARD_VERSION = '1.2';
+const BOARD_VERSION = '1.3';
 const API_URL = 'https://script.google.com/macros/s/AKfycbwRUO7Zf1Ngkx3HSNbu1DjIjPaAo2RWF8MSYGdJZIZeLDE3k5Nk_gogN6YNIiYw8ffi/exec';
 /* οι άλλες σελίδες είναι στον ίδιο φάκελο με αυτή — έτσι οι σύνδεσμοι δουλεύουν όπου κι αν ανέβει */
 const HERE = location.href.split('#')[0].split('?')[0].replace(/[^\/]*$/, '');
@@ -1041,7 +1046,8 @@ const edgeDist = (c, d, P) => { let best = Infinity;
     const t = ((a[0]-c[0])*ey - (a[1]-c[1])*ex) / den, u = ((a[0]-c[0])*d[1] - (a[1]-c[1])*d[0]) / den;
     if (t > 0 && u >= 0 && u <= 1 && t < best) best = t; }
   return best === Infinity ? 0 : best; };
-const NUM_PX = 15;                                  // ίδιο μέγεθος αριθμού παντού
+const NUM_PX = 15;                                  // ίδιο μέγεθος αριθμού παντού (χάρτης)
+const BOARD_PX = 20;                                // στον πίνακα: μεγαλύτερος, χωρίς περίγραμμα
 const needR = n => Math.max(11, String(n).length * NUM_PX * .34 + 4);
 /* θέση έξω από τον τομέα που δεν πέφτει πάνω σε άλλον αριθμό: δοκιμάζει γωνίες γύρω από την κατεύθυνση «προς τα έξω» */
 const overlaps = (b, boxes) => boxes.some(o => b[0] < o[2] && b[2] > o[0] && b[1] < o[3] && b[3] > o[1]);
@@ -1101,7 +1107,7 @@ function restyle(){
 }
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change', restyle);
 new MutationObserver(restyle).observe(root, {attributes:true, attributeFilter:['data-theme']});
-const retheme = () => { if (typeof setTiles === 'function' && typeof map !== 'undefined') setTiles();
+const retheme = () => { if (typeof setTiles === 'function' && typeof map !== 'undefined') { setTiles(); if (ROADS.length) drawMapRoads(); }
   if (typeof view !== 'undefined' && view === 'board' && page) renderBoard(page === 'polygyros'); };
 new MutationObserver(retheme).observe(root, {attributes:true, attributeFilter:['data-theme']});
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme);
@@ -1122,6 +1128,49 @@ function setTiles(){
 map.setMaxZoom(19);
 setTiles();
 map.createPane('roads').style.zIndex = 350;
+map.createPane('roadsTop').style.zIndex = 450;
+map.getPane('roadsTop').style.pointerEvents = 'none';
+// ---------- main roads (OpenStreetMap), drawn clearly on the map and on every board ----------
+const OVERPASS = ['https://overpass-api.de/api/interpreter','https://overpass.kumi.systems/api/interpreter','https://maps.mail.ru/osm/tools/overpass/api/interpreter'];
+const ROAD_RANK = {motorway:3, trunk:3, primary:3, secondary:3, motorway_link:3, trunk_link:3, primary_link:3, secondary_link:3, tertiary:2, tertiary_link:2};
+let ROADS = [];
+function loadRoads(){
+  try { const c = JSON.parse(localStorage.getItem('tb-roads') || 'null');
+    if (c && c.at > Date.now() - 7*864e5 && c.roads && c.roads.length) return Promise.resolve(c.roads); } catch (e) {}
+  const pts = Object.values(T).flatMap(t => t.ll || []); if (!pts.length) return Promise.resolve([]);
+  const la = pts.map(p => p[0]), lo = pts.map(p => p[1]);
+  const bb = [Math.min(...la)-.01, Math.min(...lo)-.01, Math.max(...la)+.01, Math.max(...lo)+.01].map(v => v.toFixed(4)).join(',');
+  const q = '[out:json][timeout:25];way["highway"~"^(' + Object.keys(ROAD_RANK).join('|') + ')$"](' + bb + ');out tags geom;';
+  const at = i => i >= OVERPASS.length ? Promise.resolve([]) :
+    fetch(OVERPASS[i], {method:'POST', body:'data=' + encodeURIComponent(q), headers:{'Content-Type':'application/x-www-form-urlencoded'}})
+      .then(r => { if (!r.ok) throw 0; return r.json(); })
+      .then(j => (j.elements || []).filter(x => x.geometry && x.geometry.length > 1).map(x => ({
+        r: ROAD_RANK[(x.tags || {}).highway] || 2, pts: x.geometry.map(g => [+g.lat.toFixed(5), +g.lon.toFixed(5)]) })))
+      .catch(() => at(i+1));
+  return at(0).then(roads => { if (roads.length) try { localStorage.setItem('tb-roads', JSON.stringify({at:Date.now(), roads})); } catch (e) {} return roads; });
+}
+const roadLayer = L.layerGroup();
+function drawMapRoads(){
+  roadLayer.clearLayers();
+  [2,3].forEach(r => ROADS.filter(x => x.r === r).forEach(x => {
+    L.polyline(x.pts, {pane:'roadsTop', color:css(r === 3 ? '--road-main-case' : '--road-minor-case'), weight:r === 3 ? 7 : 5, opacity:.9, interactive:false}).addTo(roadLayer);
+    L.polyline(x.pts, {pane:'roadsTop', color:css(r === 3 ? '--road-main' : '--road-minor'), weight:r === 3 ? 4 : 2.6, opacity:1, interactive:false}).addTo(roadLayer);
+  }));
+  roadLayer.addTo(map);
+}
+/* δρόμοι μέσα σε έναν πίνακα (σε pixel του ζουμ z) */
+function roadsSVG(z, vx, vy, vw, vh, OX, OY){
+  let out = '';
+  [2,3].forEach(r => ROADS.filter(x => x.r === r).forEach(x => {
+    const P = x.pts.map(p => { const q = merc(p[0], p[1], z); return [q[0]-OX, q[1]-OY]; });
+    if (!P.some(p => p[0] > vx && p[0] < vx+vw && p[1] > vy && p[1] < vy+vh)) return;
+    const d = 'M' + P.map(p => p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join('L');
+    out += `<path class="road" d="${d}" stroke="var(${r === 3 ? '--road-main-case' : '--road-minor-case'})" stroke-width="${r === 3 ? 6.5 : 4.2}" opacity=".85"/>` +
+           `<path class="road" d="${d}" stroke="var(${r === 3 ? '--road-main' : '--road-minor'})" stroke-width="${r === 3 ? 3.6 : 2.2}"/>`;
+  }));
+  return out;
+}
+
 
 function buildLayers(){
   Object.values(T).forEach(t => {
@@ -1236,44 +1285,49 @@ function sheetSVG(tw, big){
   const all = ts.flatMap(t => t.ll.map(p => merc(p[0], p[1], z)));
   const xs = all.map(p => p[0]), ys = all.map(p => p[1]);
   const x0 = Math.min(...xs), y0 = Math.min(...ys), w = Math.max(...xs)-x0, h = Math.max(...ys)-y0, W = Math.max(w, h), pad = W*.1 + 12;
-  const vx = x0-pad, vy = y0-pad, vw = w+2*pad, vh = h+2*pad, id = 'v' + tw.ns[0];
-  const c0 = [all.reduce((a,p) => a+p[0], 0)/all.length, all.reduce((a,p) => a+p[1], 0)/all.length];
+  const OX = Math.floor(x0-pad), OY = Math.floor(y0-pad);           // αρχή τοπικών συντεταγμένων
+  const M = (la, lo) => { const p = merc(la, lo, z); return [p[0]-OX, p[1]-OY]; };
+  const vx = x0-pad-OX, vy = y0-pad-OY, vw = w+2*pad, vh = h+2*pad, id = 'v' + tw.ns[0];
+  const c0 = [all.reduce((a,p) => a+p[0], 0)/all.length - OX, all.reduce((a,p) => a+p[1], 0)/all.length - OY];
   let s = `<svg class="bsvg" viewBox="${vx.toFixed(1)} ${vy.toFixed(1)} ${vw.toFixed(1)} ${vh.toFixed(1)}" role="img" aria-label="${tw.name}">
     <defs><clipPath id="${id}"><rect x="${vx.toFixed(1)}" y="${vy.toFixed(1)}" width="${vw.toFixed(1)}" height="${vh.toFixed(1)}" rx="${(W*.02).toFixed(1)}"/></clipPath>
     <pattern id="pen${tw.ns[0]}" patternUnits="userSpaceOnUse" width="${(W/120).toFixed(2)}" height="${(W/120).toFixed(2)}" patternTransform="rotate(28)"><rect width="${(W/360).toFixed(2)}" height="${(W/120).toFixed(2)}" fill="rgba(255,255,255,.3)"/></pattern></defs>
     <g class="tiles" clip-path="url(#${id})">`;
-  for (let X = Math.floor(vx/256); X <= Math.floor((vx+vw)/256); X++)
-    for (let Y = Math.floor(vy/256); Y <= Math.floor((vy+vh)/256); Y++)
-      s += `<image href="${BASE_TILE(dark)}${z}/${Y}/${X}" x="${X*256}" y="${Y*256}" width="256.6" height="256.6" preserveAspectRatio="none"/>`;
+  for (let X = Math.floor((vx+OX)/256); X <= Math.floor((vx+OX+vw)/256); X++)
+    for (let Y = Math.floor((vy+OY)/256); Y <= Math.floor((vy+OY+vh)/256); Y++)
+      s += `<image href="${BASE_TILE(dark)}${z}/${Y}/${X}" x="${X*256-OX}" y="${Y*256-OY}" width="256.6" height="256.6" preserveAspectRatio="none"/>`;
   s += '</g>';
+  let labels = '';
   ts.forEach(t => {
-    const P = t.ll.map(p => merc(p[0], p[1], z)), c = merc(t.lp[0], t.lp[1], z);
+    const P = t.ll.map(p => M(p[0], p[1])), c = M(t.lp[0], t.lp[1]);
     const d = 'M' + P.map(p => p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join('L') + 'Z';
     const dir = outDir(c, c0), ed = edgeDist(c, dir, P);
-    s += `<g class="bt" data-n="${t.n}" role="button" tabindex="0" aria-label="Τομέας ${t.n}"><path class="shape" d="${d}" fill="${t.fill}"/><path d="${d}" fill="url(#pen${tw.ns[0]})" pointer-events="none"/>
+    s += `<g class="bt" data-n="${t.n}" role="button" tabindex="0" aria-label="Τομέας ${t.n}"><path class="shape" d="${d}" fill="${t.fill}"/><path d="${d}" fill="url(#pen${tw.ns[0]})" pointer-events="none"/></g>`;
+    labels += `<g class="bl" data-ln="${t.n}"><path d="${d}" fill="none" style="display:none"/>
       <line class="lead" visibility="hidden"/><text x="${c[0].toFixed(1)}" y="${c[1].toFixed(1)}" data-x="${c[0].toFixed(1)}" data-y="${c[1].toFixed(1)}"
         data-r="${innerR(c, P).toFixed(1)}" data-dx="${dir[0].toFixed(3)}" data-dy="${dir[1].toFixed(3)}" data-ed="${ed.toFixed(1)}">${t.n}</text></g>`;
   });
-  return s + '</svg>';
+  return s + `<g clip-path="url(#${id})">${roadsSVG(z, vx, vy, vw, vh, OX, OY)}</g>` + labels + '</svg>';
 }
 /* μετά τη σχεδίαση: ίδιο μέγεθος αριθμού σε όλους τους πίνακες· αν δεν χωράει, δίπλα στον τομέα με μια γραμμή */
 function fitBoardLabels(){
   document.querySelectorAll('#board svg.bsvg').forEach(svg => {
     const vb = svg.viewBox.baseVal, wpx = svg.getBoundingClientRect().width; if (!wpx || !vb) return;
-    const k = wpx / vb.width, fs = NUM_PX / k;
+    const k = wpx / vb.width, fs = BOARD_PX / k;
     /* όλα σε pixel οθόνης, για να μην πέφτουν οι αριθμοί ο ένας πάνω στον άλλον */
-    const items = [...svg.querySelectorAll('g.bt')].map(g => {
+    const items = [...svg.querySelectorAll('g.bl')].map(g => {
       const tx = g.querySelector('text'), ln = g.querySelector('line.lead');
-      const P = g.querySelector('path.shape').getAttribute('d').slice(1, -1).split('L').map(q => q.split(' ').map(v => +v*k));
-      const c = [+tx.dataset.x*k, +tx.dataset.y*k], w = String(tx.textContent).length*NUM_PX*.62 + 6;
-      tx.setAttribute('font-size', fs.toFixed(2)); tx.style.strokeWidth = (3.6/k).toFixed(2) + 'px';
-      return {tx, ln, P, c, w, d:[+tx.dataset.dx, +tx.dataset.dy], fit: +tx.dataset.r*k >= needR(tx.textContent)};
+      const P = g.querySelector('path').getAttribute('d').slice(1, -1).split('L').map(q => q.split(' ').map(v => +v*k));
+      const c = [+tx.dataset.x*k, +tx.dataset.y*k], w = String(tx.textContent).length*BOARD_PX*.62 + 6;
+      tx.setAttribute('font-size', fs.toFixed(2));
+      return {tx, ln, P, c, w, d:[+tx.dataset.dx, +tx.dataset.dy], fit: +tx.dataset.r*k >= Math.max(13, String(tx.textContent).length*BOARD_PX*.34 + 5)};
     });
     const boxes = [];
     items.filter(i => i.fit).forEach(i => { i.tx.setAttribute('x', i.c[0]/k); i.tx.setAttribute('y', i.c[1]/k); i.ln.setAttribute('visibility', 'hidden');
-      boxes.push([i.c[0]-i.w/2, i.c[1]-NUM_PX/2-2, i.c[0]+i.w/2, i.c[1]+NUM_PX/2+2]); });
+      i.tx.classList.remove('out'); boxes.push([i.c[0]-i.w/2, i.c[1]-BOARD_PX/2-2, i.c[0]+i.w/2, i.c[1]+BOARD_PX/2+2]); });
     items.filter(i => !i.fit).forEach(i => {
-      const o = placeOut(i.c, i.P, i.d, i.w, NUM_PX + 2, 6, boxes) ||
+      i.tx.classList.add('out');
+      const o = placeOut(i.c, i.P, i.d, i.w, BOARD_PX + 2, 6, boxes) ||
         {x: i.c[0] + i.d[0]*(edgeDist(i.c, i.d, i.P) + 16), y: i.c[1] + i.d[1]*(edgeDist(i.c, i.d, i.P) + 16), b: null, dir: i.d, ed: edgeDist(i.c, i.d, i.P)};
       if (o.b) boxes.push(o.b);
       i.tx.setAttribute('x', (o.x/k).toFixed(1)); i.tx.setAttribute('y', (o.y/k).toFixed(1));
@@ -1464,7 +1518,18 @@ if (me) setMe(me, false);
 // Code.gs (?view=board) replies {ok, territories:[{n, mid, holder, hk, polygons:[[[lat,lng],…],…]}]}.
 // Borders built into this page are the fallback; the sheet's borders replace them when they arrive.
 const ringArea = r => { let a = 0; for (let i = 0, j = r.length-1; i < r.length; j = i++) a += (r[j][1]+r[i][1]) * (r[j][0]-r[i][0]); return Math.abs(a); };
+/* αν το Code.gs δεν ξέρει ακόμα το ?view=board, φτιάχνουμε τα ίδια στοιχεία από την κανονική απάντηση */
+function normalize(data){
+  if (!data || !Array.isArray(data.territories) || !data.territories.length || data.territories[0].n !== undefined) return data;
+  const maps = (data.boundaries && data.boundaries.maps) || {}, open = {};
+  (data.assignments || []).forEach(a => { if (a.territory_id && !a.date_in) open[a.territory_id] = a.person; });
+  const ini = nm => String(nm || '').replace(/\./g, ' ').trim().split(/\s+/).slice(0, 2).map(w => w.charAt(0).toUpperCase() + '.').join(' ');
+  return {ok:true, territories: data.territories.filter(t => String(t.active).toUpperCase() !== 'FALSE').map(t => ({
+    n: parseInt(String(t.id).replace(/\D/g, ''), 10), mid: t.mymaps_id || '', holder: open[t.id] ? ini(open[t.id]) : null, hk: open[t.id] || null,
+    polygons: maps[t.id] && maps[t.id].polygons ? maps[t.id].polygons.map(p => p.coords) : [] }))};
+}
 function applyLive(data){
+  data = normalize(data);
   if (!data || !Array.isArray(data.territories)) return false;
   let shapesChanged = false;
   const holders = {};
@@ -1487,11 +1552,16 @@ function applyLive(data){
   if (me) setMe(me, false); else restyle();
   return true;
 }
+function afterShapes(){
+  loadRoads().then(r => { if (!r.length) return; ROADS = r; drawMapRoads(); if (view === 'board') renderBoard(page === 'polygyros'); });
+}
+if (!API_URL) afterShapes();
 if (API_URL) {
   try { applyLive(JSON.parse(localStorage.getItem('tb-live') || 'null')); } catch (e) {}   // last good copy, shown instantly
   fetch(API_URL + '?view=board').then(r => r.json()).then(data => {
-    if (applyLive(data)) { try { localStorage.setItem('tb-live', JSON.stringify(data)); } catch (e) {} }
-  }).catch(() => toast('Δεν φορτώθηκαν τα νέα δεδομένα· εμφανίζονται τα τελευταία'));
+    if (applyLive(data)) { try { localStorage.setItem('tb-live', JSON.stringify(normalize(data))); } catch (e) {} }
+    afterShapes();
+  }).catch(() => { toast('Δεν φορτώθηκαν τα νέα δεδομένα· εμφανίζονται τα τελευταία'); afterShapes(); });
 }
 </script>
 
