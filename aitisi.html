@@ -378,7 +378,7 @@ nav button.on .ico .mp{fill:var(--sheet);stroke:none}
     </div></div>
     <button class="whob" id="who" hidden></button>
   </header>
-  <main id="main" data-ver="My Territories · v2.4"><div class="empty"><span class="spin"></span><br><br>Φόρτωση…</div></main>
+  <main id="main" data-ver="My Territories · v2.5"><div class="empty"><span class="spin"></span><br><br>Φόρτωση…</div></main>
   <nav id="nav">
     <button data-tab="free" class="on" onclick="go('free')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="d ns" d="M9 4l6 2.5V20l-6-2.5z"/><path d="M3 6.5 9 4l6 2.5L21 4v13.5L15 20l-6-2.5L3 20z"/><path d="M9 4v13.5"/><path d="M15 6.5V20"/></svg><span>Διαθέσιμοι τομείς</span></button>
     <button data-tab="mine" onclick="go('mine')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.3 L11.2 3.6 L12.4 11.2 L5.3 12.8 Z"/><path class="d1" d="M11.2 3.6 L20 5.3 L19.1 12 L12.4 11.2 Z"/><path d="M5.3 12.8 L12.4 11.2 L14.1 20.4 L4.4 20.4 Z"/><circle class="mb" cx="18.2" cy="18.2" r="5.3"/><circle class="mp" cx="18.2" cy="16.8" r="1.5"/><path class="mp" d="M15.7 21.2c0-1.5 1.1-2.3 2.5-2.3s2.5.8 2.5 2.3"/></svg><span>Οι τομείς μου</span></button>
@@ -390,7 +390,7 @@ nav button.on .ico .mp{fill:var(--sheet);stroke:none}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-var APP_VERSION='2.4';
+var APP_VERSION='2.5';
 var BOARD_URL=(function(){ var u=location.href.split('#')[0].split('?')[0]; return u.replace(/[^\/]*$/,'')+'board.html'; })();
 /* ==================================================================
    Σελίδα αιτήσεων — ίδια δεδομένα, ίδια εμφάνιση με την εφαρμογή του
@@ -401,7 +401,8 @@ var API = 'https://script.google.com/macros/s/AKfycbwRUO7Zf1Ngkx3HSNbu1DjIjPaAo2
 var D={territories:[],assignments:[],people:[],settings:{},requests:[],geo:null};
 var lmaps={}, tab='free', detail=null, me=localStorage.getItem('tomeis_me')||'';
 var START_T=(location.search.match(/[?&]t=(\d+)/)||[])[1]||'';
-if(location.hash==='#mine') tab='mine';
+var START_MINE=location.hash==='#mine';
+if(START_MINE) tab='mine';
 
 var TILES=[
   {u:'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
@@ -1171,7 +1172,8 @@ function addPerson(){
   d.querySelector('#yes').onclick=go;
   inp.onkeydown=function(e){ if(e.key==='Enter') go(); };
 }
-function setMe(n){ me=n; bump(); try{ localStorage.setItem('tomeis_me',n); }catch(e){} tab='free'; render(); }
+function setMe(n){ me=n; bump(); try{ localStorage.setItem('tomeis_me',n); }catch(e){}
+  tab=START_MINE?'mine':'free'; START_MINE=false; render(); }   /* από τον Πίνακα: μετά το όνομα, κατευθείαν «Οι τομείς μου» */
 function changeMe(){
   var d=sheet('<h3>Αλλαγή ονόματος</h3><div class="sh-sub">Τώρα: <b>'+esc(me)+'</b>. Θα επιλέξεις ξανά το όνομά σου από τη λίστα.</div>'+
     '<button class="big go" id="yes">Αλλαγή</button><button class="big" id="no">Άκυρο</button>');

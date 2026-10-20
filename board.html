@@ -689,7 +689,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   --duo:#6FD3C0; --duo-op:.6;
   --logo-tile:#FFFFFF; --logo-ink:#151C22; --logo-accent:#127966; --logo-ring:#C9D1CF;
   --edge:#FFFFFF; --fill-op:.62; --paper:#F6F7F5; --paper-line:#E3E7E4;
-  --tiles:none;
+  --tiles:none; --street-fx:grayscale(1) brightness(1.05) contrast(.92);
   --wall:#E4E8E6; --sheet-paper:#FFFFFF; --sheet-ink:#1C2125; --sheet-muted:#5D676E; --sheet-rule:#D6DBD7;
   --fk-land:#EEF0EA; --fk-town:#F7F4EC; --fk-street:#FFFFFF; --fk-road:#F6CF65; --fk-case:#D3A23C;
   --shadow:0 18px 40px -24px rgba(20,40,35,.45);
@@ -703,7 +703,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     --duo:#6FD3C0; --duo-op:.45;
     --logo-tile:#1D242C; --logo-ink:#E4EBF2; --logo-accent:#6FD3C0; --logo-ring:#313C48;
     --edge:#E4EBF2; --fill-op:.55; --paper:#10151A; --paper-line:#1C232B;
-    --tiles:brightness(.66) saturate(.9) contrast(1.06);
+    --tiles:none; --street-fx:grayscale(1) invert(1) brightness(.6) contrast(.75);
     --wall:#10151A; --sheet-paper:#1D242C; --sheet-ink:#E4EBF2; --sheet-muted:#93A3B3; --sheet-rule:#313C48;
     --fk-land:#161B21; --fk-town:#1E252D; --fk-street:#2E3741; --fk-road:#C9A24A; --fk-case:#7D6630;
     --shadow:0 18px 40px -20px rgba(0,0,0,.85);
@@ -717,7 +717,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   --duo:#6FD3C0; --duo-op:.45;
   --logo-tile:#1D242C; --logo-ink:#E4EBF2; --logo-accent:#6FD3C0; --logo-ring:#313C48;
   --edge:#E4EBF2; --fill-op:.55; --paper:#10151A; --paper-line:#1C232B;
-  --tiles:brightness(.66) saturate(.9) contrast(1.06);
+  --tiles:none; --street-fx:grayscale(1) invert(1) brightness(.6) contrast(.75);
   --wall:#10151A; --sheet-paper:#1D242C; --sheet-ink:#E4EBF2; --sheet-muted:#93A3B3; --sheet-rule:#313C48;
   --fk-land:#161B21; --fk-town:#1E252D; --fk-street:#2E3741; --fk-road:#C9A24A; --fk-case:#7D6630;
   --shadow:0 18px 40px -20px rgba(0,0,0,.85);
@@ -751,7 +751,7 @@ header{flex:0 0 auto;background:var(--ground);border-bottom:1px solid var(--soft
 .seg{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--raised);border:1px solid var(--rule);border-radius:10px;padding:2px}
 .seg a,.seg button{text-align:center;padding:8px 6px;border-radius:8px;border:0;background:none;text-decoration:none;color:var(--muted);font-weight:600;font-size:14.5px;cursor:pointer}
 .seg [aria-current="page"],.seg [aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);font-weight:700}
-.mine{display:flex;align-items:center;gap:7px;padding:0 12px;border-radius:10px;border:1px solid var(--rule);background:var(--sheet);font-weight:600;font-size:14px;cursor:pointer;white-space:nowrap}
+.mine{display:flex;align-items:center;gap:7px;color:var(--text);text-decoration:none;padding:0 12px;border-radius:10px;border:1px solid var(--rule);background:var(--sheet);font-weight:600;font-size:14px;cursor:pointer;white-space:nowrap}
 .mine[aria-pressed="true"]{border-color:var(--accent);background:var(--wash);color:var(--accent)}
 
 .stage{position:relative;flex:1 1 auto;min-height:0}
@@ -759,6 +759,8 @@ header{flex:0 0 auto;background:var(--ground);border-bottom:1px solid var(--soft
   background-image:linear-gradient(var(--paper-line) 1px,transparent 1px),linear-gradient(90deg,var(--paper-line) 1px,transparent 1px);background-size:32px 32px}
 .leaflet-container{font-family:var(--f)}
 .leaflet-tile-pane{filter:var(--tiles)}
+.streettiles{filter:var(--street-fx)}
+.lead-line{pointer-events:none}
 .leaflet-control-attribution{background:color-mix(in srgb,var(--sheet) 80%,transparent)!important;color:var(--faint)!important;font-size:10px}
 .leaflet-control-attribution a{color:var(--muted)!important}
 .leaflet-bar a{background:var(--sheet)!important;color:var(--text)!important;border-color:var(--soft)!important}
@@ -766,8 +768,8 @@ header{flex:0 0 auto;background:var(--ground);border-bottom:1px solid var(--soft
 
 /* territory number tags, edged in the territory's board colour */
 .num{display:grid;place-items:center}
-.num span{min-width:30px;height:30px;padding:0 7px;border-radius:9px;display:grid;place-items:center;background:var(--sheet);color:var(--text);
-  border:2.5px solid var(--tc);font-weight:800;font-size:15px;font-variant-numeric:tabular-nums;box-shadow:0 4px 10px -4px rgba(0,0,0,.45);cursor:pointer;transition:opacity .2s}
+.num span{min-width:30px;height:30px;padding:0 7px;border-radius:9px;display:grid;place-items:center;background:var(--tc);color:#151C22;
+  border:2px solid #FFFFFF;font-weight:800;font-size:15px;font-variant-numeric:tabular-nums;box-shadow:0 4px 10px -4px rgba(0,0,0,.45);cursor:pointer;transition:opacity .2s}
 .num.sel span{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
 .num.me span{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
 .num.dim span{opacity:.35}
@@ -816,10 +818,14 @@ body.chips .hint{bottom:86px}
 .bsvg .bt.me .shape{stroke:var(--accent);stroke-width:3.5}
 .bsvg .bt.sel .shape{stroke:var(--accent);stroke-width:4.5}
 .bsvg .bt.dim{opacity:.22}
-.bsvg text{font-family:Georgia,"Times New Roman",serif;font-weight:700;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.bsvg{overflow:visible}
+.bsvg .tiles image{pointer-events:none}
+.bsvg .shape{fill-opacity:.62}
+.bsvg text{font-family:var(--f);font-weight:800;text-anchor:middle;dominant-baseline:central;pointer-events:none;fill:#151C22;stroke:#FFFFFF;stroke-linejoin:round;paint-order:stroke;font-variant-numeric:tabular-nums}
+.bsvg .lead{stroke:var(--sheet-ink);opacity:.7;stroke-linecap:round}
 .mosaic{display:grid;gap:5px;margin-top:10px;grid-auto-rows:46px}
-.tile{border:0;border-radius:7px;cursor:pointer;display:grid;place-items:center;min-width:0;background-color:var(--tc);color:var(--ti);
-  background-image:repeating-linear-gradient(118deg,rgba(255,255,255,.22) 0 1.5px,transparent 1.5px 4.5px);font-family:Georgia,serif;font-weight:700;font-size:22px;transition:opacity .2s}
+.tile{border:0;border-radius:7px;cursor:pointer;display:grid;place-items:center;min-width:0;background-color:var(--tc);color:#151C22;
+  background-image:repeating-linear-gradient(118deg,rgba(255,255,255,.22) 0 1.5px,transparent 1.5px 4.5px);font-family:var(--f);font-weight:800;font-size:15px;transition:opacity .2s}
 .tile.me{box-shadow:inset 0 0 0 3px var(--accent)}
 .tile.dim{opacity:.22}
 .pending{font-size:10.5px;color:var(--sheet-muted);text-align:center;margin:6px 0 0}
@@ -839,7 +845,7 @@ body.boardmode .locate,body.boardmode .hint,body.boardmode .fake{display:none}
 .grab{width:44px;height:5px;border-radius:9px;background:var(--rule);margin:0 auto 14px}
 .ph{display:flex;align-items:center;gap:14px}
 .badge{width:58px;height:58px;border-radius:14px;flex:0 0 auto;display:grid;place-items:center;font-weight:800;font-size:25px;font-variant-numeric:tabular-nums;
-  background-color:var(--tc);color:var(--ti);background-image:repeating-linear-gradient(118deg,rgba(255,255,255,.22) 0 1.5px,transparent 1.5px 4.5px)}
+  background-color:var(--tc);color:#151C22;background-image:repeating-linear-gradient(118deg,rgba(255,255,255,.22) 0 1.5px,transparent 1.5px 4.5px)}
 .ph b{display:block;font-size:20px;font-weight:700;letter-spacing:-.015em}
 .ph .sub{display:block;color:var(--muted);font-size:14px}
 .ph .holder{display:block;color:var(--faint);font-size:12.5px;margin-top:3px}
@@ -886,7 +892,7 @@ body.boardmode .locate,body.boardmode .hint,body.boardmode .fake{display:none}
         <button class="icon" id="themeBtn" aria-label="Σκούρο / ανοιχτό">
           <svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17z" fill="var(--duo)" stroke="none"/></svg>
         </button>
-        <a class="req" id="reqTop" target="_blank" rel="noopener">
+        <a class="req" id="reqTop" href="aitisi.html">
           <svg class="ic" viewBox="0 0 24 24"><rect class="d" x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9z"/><path d="M5 6v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6"/><path d="M9 13l2 2 4-4"/></svg>
           <span><b>Αίτηση τομέα</b><small>στο My Territories</small></span></a>
       </div>
@@ -896,9 +902,9 @@ body.boardmode .locate,body.boardmode .hint,body.boardmode .fake{display:none}
         <a href="#polygyros" id="tabP">Πολύγυρος</a>
         <a href="#choria" id="tabC">Χωριά</a>
       </nav>
-      <button class="mine" id="mineBtn" aria-pressed="false">
+      <a class="mine" id="mineBtn" href="aitisi.html#mine">
         <svg class="ic" viewBox="0 0 24 24"><circle class="d" cx="12" cy="8" r="4"/><circle cx="12" cy="8" r="4"/><path d="M4.5 20.5c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"/></svg>
-        <span>Οι τομείς μου</span></button>
+        <span>Οι τομείς μου</span></a>
     </div>
   </header>
 
@@ -932,11 +938,14 @@ body.boardmode .locate,body.boardmode .hint,body.boardmode .fake{display:none}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
 // ▼▼ Paste the address of your Apps Script web app (the same one the Hub uses) between the quotes ▼▼
-const BOARD_VERSION = '1.1';
+const BOARD_VERSION = '1.2';
 const API_URL = 'https://script.google.com/macros/s/AKfycbwRUO7Zf1Ngkx3HSNbu1DjIjPaAo2RWF8MSYGdJZIZeLDE3k5Nk_gogN6YNIiYw8ffi/exec';
-const SITE = 'https://jwsimantra.github.io/';
-const REQUEST_URL = SITE + 'aitisi.html';
-const BOARD_URL = SITE + 'board.html';
+/* οι άλλες σελίδες είναι στον ίδιο φάκελο με αυτή — έτσι οι σύνδεσμοι δουλεύουν όπου κι αν ανέβει */
+const HERE = location.href.split('#')[0].split('?')[0].replace(/[^\/]*$/, '');
+const REQUEST_URL = HERE + 'aitisi.html';
+const BOARD_URL = HERE + 'board.html';
+/* καθαρός χάρτης χωρίς ανάγλυφο, ανοιχτός ή σκούρος όπως η σελίδα */
+const BASE_TILE = dark => 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_' + (dark ? 'Dark' : 'Light') + '_Gray_Base/MapServer/tile/';
 const TILE_URL = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}';
 const TILE_ATTR = 'Χάρτης: Esri · Territory Board v' + BOARD_VERSION;
 
@@ -1015,6 +1024,38 @@ function labelPoint(ll){
 }
 Object.values(T).forEach(t => { if (t.ll) t.lp = labelPoint(t.ll); });
 
+// ---------- geometry in screen pixels (for fitting numbers) ----------
+const merc = (lat, lon, z) => { const s = 256 * 2**z, r = lat*Math.PI/180;
+  return [(lon+180)/360*s, (1 - Math.log(Math.tan(r) + 1/Math.cos(r))/Math.PI)/2*s]; };
+const segD = (p, a, b) => { const dx = b[0]-a[0], dy = b[1]-a[1], L = dx*dx + dy*dy;
+  let u = L ? ((p[0]-a[0])*dx + (p[1]-a[1])*dy)/L : 0; u = Math.max(0, Math.min(1, u));
+  return Math.hypot(p[0]-a[0]-u*dx, p[1]-a[1]-u*dy); };
+/* πόσο «χώρο» έχει ο αριθμός: απόσταση από το κοντινότερο όριο */
+const innerR = (c, P) => { let d = Infinity; for (let i = 0; i < P.length; i++) d = Math.min(d, segD(c, P[i], P[(i+1) % P.length])); return d; };
+/* προς τα έξω από το κέντρο της περιοχής */
+const outDir = (c, o) => { const dx = c[0]-o[0], dy = c[1]-o[1], L = Math.hypot(dx, dy); return L < 1e-6 ? [1, 0] : [dx/L, dy/L]; };
+/* πόσο μακριά είναι το όριο προς αυτή την κατεύθυνση */
+const edgeDist = (c, d, P) => { let best = Infinity;
+  for (let i = 0; i < P.length; i++) { const a = P[i], b = P[(i+1) % P.length], ex = b[0]-a[0], ey = b[1]-a[1];
+    const den = d[0]*ey - d[1]*ex; if (Math.abs(den) < 1e-9) continue;
+    const t = ((a[0]-c[0])*ey - (a[1]-c[1])*ex) / den, u = ((a[0]-c[0])*d[1] - (a[1]-c[1])*d[0]) / den;
+    if (t > 0 && u >= 0 && u <= 1 && t < best) best = t; }
+  return best === Infinity ? 0 : best; };
+const NUM_PX = 15;                                  // ίδιο μέγεθος αριθμού παντού
+const needR = n => Math.max(11, String(n).length * NUM_PX * .34 + 4);
+/* θέση έξω από τον τομέα που δεν πέφτει πάνω σε άλλον αριθμό: δοκιμάζει γωνίες γύρω από την κατεύθυνση «προς τα έξω» */
+const overlaps = (b, boxes) => boxes.some(o => b[0] < o[2] && b[2] > o[0] && b[1] < o[3] && b[3] > o[1]);
+function placeOut(c, P, d, w, h, gap, boxes){
+  const base = Math.atan2(d[1], d[0]);
+  for (const step of [0, .6, -.6, 1.2, -1.2, 1.9, -1.9, Math.PI]) for (const extra of [0, 14]) {
+    const a = base + step, dir = [Math.cos(a), Math.sin(a)], ed = edgeDist(c, dir, P);
+    const r = ed + gap + extra + Math.abs(dir[0])*w/2 + Math.abs(dir[1])*h/2;
+    const x = c[0] + dir[0]*r, y = c[1] + dir[1]*r, b = [x-w/2-2, y-h/2-2, x+w/2+2, y+h/2+2];
+    if (!overlaps(b, boxes)) return {x, y, b, dir, ed};
+  }
+  return null;
+}
+
 // ---------- theme ----------
 const root = document.documentElement;
 const css = n => getComputedStyle(root).getPropertyValue(n).trim();
@@ -1028,7 +1069,7 @@ document.getElementById('themeBtn').onclick = () => {
 
 // ---------- my territories ----------
 let me = null;
-try { me = localStorage.getItem('tb-me'); } catch (e) {}
+try { localStorage.removeItem('tb-me'); } catch (e) {}
 const mineOf = key => Object.values(T).filter(t => t.hk === key).map(t => t.n).sort((a,b) => a-b);
 
 // ---------- map styling ----------
@@ -1060,14 +1101,26 @@ function restyle(){
 }
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change', restyle);
 new MutationObserver(restyle).observe(root, {attributes:true, attributeFilter:['data-theme']});
+const retheme = () => { if (typeof setTiles === 'function' && typeof map !== 'undefined') setTiles();
+  if (typeof view !== 'undefined' && view === 'board' && page) renderBoard(page === 'polygyros'); };
+new MutationObserver(retheme).observe(root, {attributes:true, attributeFilter:['data-theme']});
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme);
 
 // ---------- map ----------
 const map = L.map('map', {zoomControl:true}).setView([40.378, 23.443], 15);
 map.zoomControl.setPosition('bottomright');
-const tiles = L.tileLayer(TILE_URL, {maxZoom:19, attribution:TILE_ATTR}).addTo(map);
-let realTiles = false, fakeOn = false, fakeLayer = null;
-tiles.on('tileload', () => realTiles = true);
-tiles.on('tileerror', () => { if (!realTiles && !fakeOn) enableFake(); });
+let tiles = null, street = null, realTiles = false, fakeOn = false, fakeLayer = null;
+/* ως το ζουμ 16: καθαρός γκρι χάρτης (χωρίς ανάγλυφο). Από κοντά: ο οδικός χάρτης, σε γκρι τόνους */
+function setTiles(){
+  if (fakeOn) return;
+  if (tiles) map.removeLayer(tiles); if (street) map.removeLayer(street);
+  tiles = L.tileLayer(BASE_TILE(isDark()) + '{z}/{y}/{x}', {maxZoom:16, attribution:TILE_ATTR}).addTo(map);
+  street = L.tileLayer(TILE_URL, {minZoom:17, maxZoom:19, className:'streettiles', attribution:TILE_ATTR}).addTo(map);
+  tiles.on('tileload', () => realTiles = true);
+  tiles.on('tileerror', () => { if (!realTiles && !fakeOn) enableFake(); });
+}
+map.setMaxZoom(19);
+setTiles();
 map.createPane('roads').style.zIndex = 350;
 
 function buildLayers(){
@@ -1081,6 +1134,30 @@ function buildLayers(){
   });
 }
 buildLayers();
+const leaders = L.layerGroup().addTo(map);
+function placeLabels(){
+  const z = map.getZoom(); leaders.clearLayers();
+  const k = 1/(256*2**z), un = p => { const y = Math.PI*(1 - 2*p[1]*k); return [Math.atan(Math.sinh(y))*180/Math.PI, p[0]*k*360 - 180]; };
+  const ctr = {};
+  TOWNS.forEach(tw => { const P = tw.ns.flatMap(n => T[n].ll || []).map(p => merc(p[0], p[1], z));
+    if (P.length) ctr[tw.name] = [P.reduce((a,p) => a+p[0], 0)/P.length, P.reduce((a,p) => a+p[1], 0)/P.length]; });
+  const items = Object.values(T).filter(t => t.label && t.ll).map(t => {
+    const P = t.ll.map(p => merc(p[0], p[1], z)), c = merc(t.lp[0], t.lp[1], z), w = Math.max(30, String(t.n).length*9 + 16);
+    return {t, P, c, w, fit: innerR(c, P) >= needR(t.n) + 4};
+  });
+  const boxes = [];
+  items.filter(i => i.fit).forEach(i => { i.t.label.setLatLng(i.t.lp); i.t.label.setOpacity(1);
+    boxes.push([i.c[0]-i.w/2, i.c[1]-15, i.c[0]+i.w/2, i.c[1]+15]); });
+  items.filter(i => !i.fit).forEach(i => {
+    const d = outDir(i.c, ctr[i.t.town] || i.c), o = placeOut(i.c, i.P, d, i.w, 30, 8, boxes);
+    if (!o) { i.t.label.setLatLng(i.t.lp); i.t.label.setOpacity(z >= 15 ? 1 : 0); return; }   /* από πολύ μακριά: κρύβεται αν δεν χωράει πουθενά */
+    boxes.push(o.b); i.t.label.setLatLng(un([o.x, o.y])); i.t.label.setOpacity(1);
+    L.polyline([i.t.lp, un([i.c[0] + o.dir[0]*(o.ed + 5), i.c[1] + o.dir[1]*(o.ed + 5)])],
+      {color:css('--text'), weight:1.4, opacity:.55, interactive:false, className:'lead-line'}).addTo(leaders);
+  });
+}
+map.on('zoomend', placeLabels);
+placeLabels();
 function fitList(ns, extraBottom){
   const b = L.latLngBounds(ns.flatMap(n => T[n].ll || []));
   if (b.isValid()) map.fitBounds(b, {paddingTopLeft:[30,70], paddingBottomRight:[30, extraBottom || 40], maxZoom:17});
@@ -1151,23 +1228,62 @@ const SKETCH = { // drawn layout for towns whose outlines aren't in My Maps yet:
   'Όλυνθος':[2,{14:'1/1/2/3',15:'2/1/3/2',16:'3/1/4/2',17:'4/1/5/2',18:'2/2/5/3'}], 'Παντελίδας':[1,{69:'1/1/2/2'}]
 };
 function sheetSVG(tw, big){
-  const ts = tw.ns.map(n => T[n]);
-  const lat0 = ts[0].ll[0][0], kx = Math.cos(lat0*Math.PI/180)*111320, ky = 110540;
-  const xy = ll => ll.map(([la,lo]) => [lo*kx, -la*ky]);
-  const all = ts.flatMap(t => xy(t.ll));
+  const ts = tw.ns.map(n => T[n]), dark = isDark(), target = big ? 860 : 420;
+  let z = 16;
+  for (; z > 10; z--) { const P = ts.flatMap(t => t.ll.map(p => merc(p[0], p[1], z)));
+    const xs = P.map(p => p[0]), ys = P.map(p => p[1]);
+    if (Math.max(Math.max(...xs)-Math.min(...xs), Math.max(...ys)-Math.min(...ys)) <= target) break; }
+  const all = ts.flatMap(t => t.ll.map(p => merc(p[0], p[1], z)));
   const xs = all.map(p => p[0]), ys = all.map(p => p[1]);
-  const x0 = Math.min(...xs), y0 = Math.min(...ys), w = Math.max(...xs)-x0, h = Math.max(...ys)-y0, W = Math.max(w,h), pad = W*.05;
-  const fs = W * (big ? .03 : .1);
-  let s = `<svg class="bsvg" viewBox="${(x0-pad).toFixed(1)} ${(y0-pad).toFixed(1)} ${(w+2*pad).toFixed(1)} ${(h+2*pad).toFixed(1)}" role="img" aria-label="${tw.name}">
-    <defs><pattern id="pen${tw.ns[0]}" patternUnits="userSpaceOnUse" width="${W/120}" height="${W/120}" patternTransform="rotate(28)"><rect width="${W/360}" height="${W/120}" fill="rgba(255,255,255,.3)"/></pattern></defs>`;
+  const x0 = Math.min(...xs), y0 = Math.min(...ys), w = Math.max(...xs)-x0, h = Math.max(...ys)-y0, W = Math.max(w, h), pad = W*.1 + 12;
+  const vx = x0-pad, vy = y0-pad, vw = w+2*pad, vh = h+2*pad, id = 'v' + tw.ns[0];
+  const c0 = [all.reduce((a,p) => a+p[0], 0)/all.length, all.reduce((a,p) => a+p[1], 0)/all.length];
+  let s = `<svg class="bsvg" viewBox="${vx.toFixed(1)} ${vy.toFixed(1)} ${vw.toFixed(1)} ${vh.toFixed(1)}" role="img" aria-label="${tw.name}">
+    <defs><clipPath id="${id}"><rect x="${vx.toFixed(1)}" y="${vy.toFixed(1)}" width="${vw.toFixed(1)}" height="${vh.toFixed(1)}" rx="${(W*.02).toFixed(1)}"/></clipPath>
+    <pattern id="pen${tw.ns[0]}" patternUnits="userSpaceOnUse" width="${(W/120).toFixed(2)}" height="${(W/120).toFixed(2)}" patternTransform="rotate(28)"><rect width="${(W/360).toFixed(2)}" height="${(W/120).toFixed(2)}" fill="rgba(255,255,255,.3)"/></pattern></defs>
+    <g class="tiles" clip-path="url(#${id})">`;
+  for (let X = Math.floor(vx/256); X <= Math.floor((vx+vw)/256); X++)
+    for (let Y = Math.floor(vy/256); Y <= Math.floor((vy+vh)/256); Y++)
+      s += `<image href="${BASE_TILE(dark)}${z}/${Y}/${X}" x="${X*256}" y="${Y*256}" width="256.6" height="256.6" preserveAspectRatio="none"/>`;
+  s += '</g>';
   ts.forEach(t => {
-    const d = 'M' + xy(t.ll).map(p => p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join('L') + 'Z';
-    const [lx, ly] = [t.lp[1]*kx, -t.lp[0]*ky];
+    const P = t.ll.map(p => merc(p[0], p[1], z)), c = merc(t.lp[0], t.lp[1], z);
+    const d = 'M' + P.map(p => p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join('L') + 'Z';
+    const dir = outDir(c, c0), ed = edgeDist(c, dir, P);
     s += `<g class="bt" data-n="${t.n}" role="button" tabindex="0" aria-label="Τομέας ${t.n}"><path class="shape" d="${d}" fill="${t.fill}"/><path d="${d}" fill="url(#pen${tw.ns[0]})" pointer-events="none"/>
-      <text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" font-size="${fs.toFixed(1)}" fill="${t.ink}">${t.n}</text></g>`;
+      <line class="lead" visibility="hidden"/><text x="${c[0].toFixed(1)}" y="${c[1].toFixed(1)}" data-x="${c[0].toFixed(1)}" data-y="${c[1].toFixed(1)}"
+        data-r="${innerR(c, P).toFixed(1)}" data-dx="${dir[0].toFixed(3)}" data-dy="${dir[1].toFixed(3)}" data-ed="${ed.toFixed(1)}">${t.n}</text></g>`;
   });
   return s + '</svg>';
 }
+/* μετά τη σχεδίαση: ίδιο μέγεθος αριθμού σε όλους τους πίνακες· αν δεν χωράει, δίπλα στον τομέα με μια γραμμή */
+function fitBoardLabels(){
+  document.querySelectorAll('#board svg.bsvg').forEach(svg => {
+    const vb = svg.viewBox.baseVal, wpx = svg.getBoundingClientRect().width; if (!wpx || !vb) return;
+    const k = wpx / vb.width, fs = NUM_PX / k;
+    /* όλα σε pixel οθόνης, για να μην πέφτουν οι αριθμοί ο ένας πάνω στον άλλον */
+    const items = [...svg.querySelectorAll('g.bt')].map(g => {
+      const tx = g.querySelector('text'), ln = g.querySelector('line.lead');
+      const P = g.querySelector('path.shape').getAttribute('d').slice(1, -1).split('L').map(q => q.split(' ').map(v => +v*k));
+      const c = [+tx.dataset.x*k, +tx.dataset.y*k], w = String(tx.textContent).length*NUM_PX*.62 + 6;
+      tx.setAttribute('font-size', fs.toFixed(2)); tx.style.strokeWidth = (3.6/k).toFixed(2) + 'px';
+      return {tx, ln, P, c, w, d:[+tx.dataset.dx, +tx.dataset.dy], fit: +tx.dataset.r*k >= needR(tx.textContent)};
+    });
+    const boxes = [];
+    items.filter(i => i.fit).forEach(i => { i.tx.setAttribute('x', i.c[0]/k); i.tx.setAttribute('y', i.c[1]/k); i.ln.setAttribute('visibility', 'hidden');
+      boxes.push([i.c[0]-i.w/2, i.c[1]-NUM_PX/2-2, i.c[0]+i.w/2, i.c[1]+NUM_PX/2+2]); });
+    items.filter(i => !i.fit).forEach(i => {
+      const o = placeOut(i.c, i.P, i.d, i.w, NUM_PX + 2, 6, boxes) ||
+        {x: i.c[0] + i.d[0]*(edgeDist(i.c, i.d, i.P) + 16), y: i.c[1] + i.d[1]*(edgeDist(i.c, i.d, i.P) + 16), b: null, dir: i.d, ed: edgeDist(i.c, i.d, i.P)};
+      if (o.b) boxes.push(o.b);
+      i.tx.setAttribute('x', (o.x/k).toFixed(1)); i.tx.setAttribute('y', (o.y/k).toFixed(1));
+      i.ln.setAttribute('x1', (i.c[0]/k).toFixed(1)); i.ln.setAttribute('y1', (i.c[1]/k).toFixed(1));
+      i.ln.setAttribute('x2', ((i.c[0] + o.dir[0]*(o.ed + 4))/k).toFixed(1)); i.ln.setAttribute('y2', ((i.c[1] + o.dir[1]*(o.ed + 4))/k).toFixed(1));
+      i.ln.setAttribute('stroke-width', (1.3/k).toFixed(2)); i.ln.setAttribute('visibility', 'visible');
+    });
+  });
+}
+addEventListener('resize', () => { if (view === 'board') fitBoardLabels(); });
 function sketch(tw){
   const [cols, areas] = SKETCH[tw.name];
   return `<div class="mosaic" style="grid-template-columns:repeat(${cols},minmax(0,1fr))">${tw.ns.map(n => `<button class="tile" data-n="${n}" style="grid-area:${areas[n]};--tc:${T[n].fill};--ti:${T[n].ink}">${n}</button>`).join('')}</div>
@@ -1179,6 +1295,7 @@ function renderBoard(poly){
   else el.innerHTML = `<div class="wallgrid">${BOARD_ORDER.map(name => { const tw = TOWNS.find(x => x.name === name);
       return `<article class="sheetp"><h2>${tw.name}</h2>${tw.mapped ? sheetSVG(tw, false) : sketch(tw)}</article>`; }).join('')}</div><p class="boardhint">Πάτησε έναν τομέα</p><p class="boardver">Territory Board · v${BOARD_VERSION}</p>`;
   restyle();
+  requestAnimationFrame(fitBoardLabels);
 }
 document.getElementById('board').addEventListener('click', e => { const b = e.target.closest('[data-n]'); if (b) open(+b.dataset.n); });
 document.getElementById('board').addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[data-n]')) { e.preventDefault(); open(+e.target.dataset.n); } });
@@ -1186,7 +1303,7 @@ document.getElementById('board').addEventListener('keydown', e => { if ((e.key =
 // ---------- stand-in map, used only where real map images can't load (the Claude preview) ----------
 function townBox(tw){ const b = L.latLngBounds(tw.ns.flatMap(n => T[n].ll || [])); return b.isValid() ? b : null; }
 function enableFake(){
-  fakeOn = true; map.removeLayer(tiles);
+  fakeOn = true; map.removeLayer(tiles); if (street) map.removeLayer(street);
   document.getElementById('fake').hidden = false;
   const zones = TOWNS.map(townBox).filter(Boolean).map(b => b.pad(.35));
   const hash = k => { const x = Math.sin(k*127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
@@ -1254,16 +1371,11 @@ function open(n){
       ${t.holder ? `<span class="holder">Τον έχει: ${t.holder}</span>` : ''}</div>
       <button class="x" id="closeP" aria-label="Κλείσιμο">×</button></div>
     <div class="acts">
-      ${t.ll ? `<button class="btn pri" id="dlBtn">${I.dl}Λήψη χάρτη τομέα</button>` : ''}
       ${t.mid ? `<a class="btn" href="https://www.google.com/maps/d/viewer?mid=${t.mid}" target="_blank" rel="noopener">${I.map}Google Maps</a>` : ''}
       ${navUrl ? `<a class="btn" href="${navUrl}" target="_blank" rel="noopener">${I.nav}Οδηγίες</a>` : ''}
-      <button class="btn ${view === 'board' && t.ll ? '' : 'wide'}" id="copyBtn">${I.link}Αντιγραφή</button>
-      ${view === 'board' && t.ll ? `<button class="btn" id="onMap">${I.map}Στον χάρτη</button>` : ''}
+      ${view === 'board' && t.ll ? `<button class="btn wide" id="onMap">${I.map}Στον χάρτη</button>` : ''}
     </div>
-    <a class="reqbtn" href="${REQUEST_URL}?t=${t.n}" target="_blank" rel="noopener">${I.req}<span><b>Αίτηση για τον τομέα ${t.n}</b><small>Οι αιτήσεις γίνονται στο My Territories</small></span><span class="go" aria-hidden="true">↗</span></a>
     ${t.ll ? '' : '<p class="reqnote">Ο χάρτης αυτού του τομέα δεν έχει προστεθεί ακόμη.</p>'}`);
-  const dl = document.getElementById('dlBtn'); if (dl) dl.onclick = () => download(t, dl);
-  document.getElementById('copyBtn').onclick = () => copyLink(t);
   const om = document.getElementById('onMap');
   if (om) om.onclick = () => { close(); view = 'map'; goTo(n); };
   try { history.replaceState(null, '', '#t' + n); } catch (e) {}
@@ -1272,8 +1384,8 @@ function openTown(tw){
   sel = null; restyle();
   openSheet(`<div class="ph"><div><b id="pTitle">${tw.name}</b><span class="sub">Οι χάρτες των τομέων θα προστεθούν σύντομα</span></div>
     <button class="x" id="closeP" aria-label="Κλείσιμο">×</button></div>
-    <div class="soonlist">${tw.ns.map(n => `<a href="${REQUEST_URL}?t=${n}" target="_blank" rel="noopener">${n}</a>`).join('')}</div>
-    <a class="reqbtn" href="${REQUEST_URL}" target="_blank" rel="noopener">${I.req}<span><b>Αίτηση τομέα</b><small>Πάτησε έναν αριθμό ή άνοιξε το My Territories</small></span><span class="go" aria-hidden="true">↗</span></a>`);
+    <div class="soonlist">${tw.ns.map(n => `<a href="#t${n}" data-open="${n}">${n}</a>`).join('')}</div>`);
+  panel.querySelectorAll('[data-open]').forEach(a => a.onclick = e => { e.preventDefault(); open(+a.dataset.open); });
 }
 function close(){
   panel.hidden = true; scrim.hidden = true; sel = null; restyle();
@@ -1289,23 +1401,12 @@ function people(){
   Object.values(T).forEach(t => { if (t.hk) (byKey[t.hk] = byKey[t.hk] || {key:t.hk, name:t.holder, ns:[]}).ns.push(t.n); });
   return Object.values(byKey).sort((a,b) => a.name.localeCompare(b.name, 'el') || a.ns[0] - b.ns[0]);
 }
-document.getElementById('mineBtn').onclick = () => {
-  openSheet(`<div class="ph"><div><b id="pTitle">Οι τομείς μου</b><span class="sub">Διάλεξε το όνομά σου για να φωτιστούν οι τομείς σου</span></div>
-    <button class="x" id="closeP" aria-label="Κλείσιμο">×</button></div>
-    <div class="people">${people().map(p => `<button data-me="${p.key}" aria-pressed="${p.key === me}">${p.name}<span>${p.ns.length === 1 ? 'τομέας' : 'τομείς'} ${p.ns.sort((a,b)=>a-b).join(', ')}</span></button>`).join('')}</div>
-    ${me ? '<button class="btn wide" id="meOff" style="margin-top:12px;width:100%">Απενεργοποίηση</button>' : ''}
-    <a class="reqbtn" href="${REQUEST_URL}#mine" target="_blank" rel="noopener">${I.req}<span><b>Οι τομείς μου στο My Territories</b><small>Ανανέωση ή δήλωση ολοκλήρωσης</small></span><span class="go" aria-hidden="true">↗</span></a>
-    <p class="small">Η επιλογή μένει μόνο σε αυτό το κινητό.${API_URL ? '' : ' Τα ονόματα εδώ είναι παράδειγμα· θα έρχονται από το φύλλο.'}</p>`);
-  panel.querySelectorAll('[data-me]').forEach(b => b.onclick = () => setMe(b.dataset.me, true));
-  const off = document.getElementById('meOff'); if (off) off.onclick = () => setMe(null);
-};
 function setMe(name, jump){
   me = name;
   try { name ? localStorage.setItem('tb-me', name) : localStorage.removeItem('tb-me'); } catch (e) {}
   if (!panel.hidden) close();
   const ns = me ? mineOf(me) : [];
-  const btn = document.getElementById('mineBtn'), bar = document.getElementById('minebar');
-  btn.setAttribute('aria-pressed', !!me);
+  const bar = document.getElementById('minebar');
   if (me && ns.length) {
     bar.innerHTML = `<span>${nameOf(me)}</span><div class="ns">${ns.map(n => `<button data-go="${n}">${n}</button>`).join('')}</div><button class="off" aria-label="Απενεργοποίηση">×</button>`;
     bar.hidden = false;
@@ -1328,94 +1429,6 @@ function toast(msg){
   el.textContent = msg; el.hidden = false;
   clearTimeout(toastTimer); toastTimer = setTimeout(() => el.hidden = true, 2600);
 }
-async function copyLink(t){
-  const url = BOARD_URL + '#t' + t.n;
-  try { await navigator.clipboard.writeText(url); toast('Ο σύνδεσμος αντιγράφηκε'); }
-  catch (e) { toast(url); }
-}
-
-// ---------- downloadable territory map (PNG) ----------
-const merc = (lat, lon, z) => { const s = 256 * 2**z, r = lat*Math.PI/180;
-  return [(lon+180)/360*s, (1 - Math.log(Math.tan(r) + 1/Math.cos(r))/Math.PI)/2*s]; };
-function loadImg(src){ return new Promise(res => { const im = new Image(); im.crossOrigin = 'anonymous';
-  const to = setTimeout(() => res(null), 5000);
-  im.onload = () => { clearTimeout(to); res(im); }; im.onerror = () => { clearTimeout(to); res(null); }; im.src = src; }); }
-const hexA = (h, a) => `rgba(${parseInt(h.substr(1,2),16)},${parseInt(h.substr(3,2),16)},${parseInt(h.substr(5,2),16)},${a})`;
-async function drawCard(t, withTiles){
-  const W = 1240, H = 1754, M = 70, top = 230, mapH = H - top - 190;
-  const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
-  const g = cv.getContext('2d');
-  g.fillStyle = '#FFFFFF'; g.fillRect(0, 0, W, H);
-  g.fillStyle = t.fill; g.beginPath(); g.roundRect ? g.roundRect(M, 70, 120, 120, 22) : g.rect(M, 70, 120, 120); g.fill();
-  g.fillStyle = t.ink; g.font = '800 64px Geologica, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
-  g.fillText(String(t.n), M + 60, 132);
-  g.textAlign = 'left'; g.fillStyle = '#151C22'; g.font = '700 58px Geologica, sans-serif';
-  g.fillText('Τομέας ' + t.n, M + 150, 112);
-  g.fillStyle = '#57646F'; g.font = '500 36px Geologica, sans-serif';
-  g.fillText(t.town + (t.hood ? ' · ' + t.hood : ''), M + 150, 166);
-  const box = {x:M, y:top, w:W - 2*M, h:mapH};
-  const lats = t.ll.map(p => p[0]), lons = t.ll.map(p => p[1]);
-  let z = 19, a, b;
-  for (; z > 12; z--) {
-    a = merc(Math.max(...lats), Math.min(...lons), z); b = merc(Math.min(...lats), Math.max(...lons), z);
-    if ((b[0]-a[0]) * 1.3 <= box.w && (b[1]-a[1]) * 1.3 <= box.h) break;
-  }
-  const cx = (a[0]+b[0])/2, cy = (a[1]+b[1])/2, ox = box.x + box.w/2 - cx, oy = box.y + box.h/2 - cy;
-  const P = ([la,lo]) => { const p = merc(la, lo, z); return [p[0]+ox, p[1]+oy]; };
-  const path = ll => { g.beginPath(); ll.forEach((p,i) => { const q = P(p); i ? g.lineTo(...q) : g.moveTo(...q); }); g.closePath(); };
-  g.save(); g.beginPath(); g.rect(box.x, box.y, box.w, box.h); g.clip();
-  g.fillStyle = '#F2F4F2'; g.fillRect(box.x, box.y, box.w, box.h);
-  if (withTiles) {
-    const x0 = Math.floor((box.x-ox)/256), x1 = Math.floor((box.x+box.w-ox)/256), y0 = Math.floor((box.y-oy)/256), y1 = Math.floor((box.y+box.h-oy)/256);
-    const jobs = [];
-    for (let x = x0; x <= x1; x++) for (let y = y0; y <= y1; y++)
-      jobs.push(loadImg(`https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/${z}/${y}/${x}`).then(im => im && g.drawImage(im, x*256+ox, y*256+oy, 256, 256)));
-    await Promise.all(jobs);
-  }
-  t.tw.ns.forEach(n => { const o = T[n]; if (!o.ll || n === t.n) return;
-    path(o.ll); g.fillStyle = hexA(o.fill, .18); g.fill(); g.strokeStyle = 'rgba(21,28,34,.35)'; g.lineWidth = 2; g.setLineDash([10,8]); g.stroke(); g.setLineDash([]);
-    const q = P(o.lp); g.fillStyle = 'rgba(21,28,34,.6)'; g.font = '700 30px Geologica, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(String(n), q[0], q[1]); });
-  path(t.ll); g.fillStyle = hexA(t.fill, .38); g.fill();
-  g.lineJoin = 'round'; g.strokeStyle = '#FFFFFF'; g.lineWidth = 12; g.stroke();
-  g.strokeStyle = '#151C22'; g.lineWidth = 5; g.stroke();
-  const lq = P(t.lp);
-  g.fillStyle = t.fill; g.beginPath(); g.arc(lq[0], lq[1], 46, 0, Math.PI*2); g.fill();
-  g.strokeStyle = '#FFFFFF'; g.lineWidth = 5; g.stroke();
-  g.fillStyle = t.ink; g.font = '800 44px Geologica, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(String(t.n), lq[0], lq[1]+2);
-  g.restore();
-  g.strokeStyle = '#D2D9D7'; g.lineWidth = 2; g.strokeRect(box.x, box.y, box.w, box.h);
-  const nx = box.x + box.w - 60, ny = box.y + 70;
-  g.fillStyle = '#FFFFFF'; g.beginPath(); g.arc(nx, ny, 40, 0, Math.PI*2); g.fill();
-  g.fillStyle = '#151C22'; g.beginPath(); g.moveTo(nx, ny-30); g.lineTo(nx+14, ny+10); g.lineTo(nx, ny+2); g.lineTo(nx-14, ny+10); g.closePath(); g.fill();
-  g.font = '700 22px Geologica, sans-serif'; g.textAlign = 'center'; g.fillText('Β', nx, ny+26);
-  const mpp = 156543.03 * Math.cos(t.lp[0]*Math.PI/180) / 2**z;
-  const nice = [50,100,200,250,500,1000].find(m => m/mpp > 140) || 1000, px = nice/mpp;
-  const sx = box.x + 24, sy = box.y + box.h - 34;
-  g.fillStyle = 'rgba(255,255,255,.9)'; g.fillRect(sx-12, sy-36, px+120, 56);
-  g.fillStyle = '#151C22'; g.fillRect(sx, sy-6, px, 8); g.textAlign = 'left'; g.font = '600 24px Geologica, sans-serif';
-  g.fillText(nice >= 1000 ? (nice/1000) + ' χλμ' : nice + ' μ', sx + px + 14, sy - 2);
-  g.textAlign = 'left'; g.fillStyle = '#57646F'; g.font = '500 28px Geologica, sans-serif';
-  g.fillText('Χάρτης στο κινητό: ' + BOARD_URL.replace('https://','') + '#t' + t.n, M, H - 120);
-  g.fillStyle = '#84919D'; g.font = '400 22px Geologica, sans-serif';
-  g.fillText(withTiles ? 'Χάρτης: Esri' : 'Territory Board', M, H - 80);
-  return cv;
-}
-const toBlob = cv => new Promise((res, rej) => { try { cv.toBlob(b => b ? res(b) : rej(), 'image/png'); } catch (e) { rej(e); } });
-async function download(t, btn){
-  btn.disabled = true; const old = btn.innerHTML; btn.innerHTML = I.dl + 'Ετοιμάζεται…';
-  let blob;
-  try { await document.fonts.ready; } catch (e) {}
-  try { blob = await toBlob(await drawCard(t, true)); }
-  catch (e) { blob = await toBlob(await drawCard(t, false)); }
-  const name = `tomeas-${t.n}.png`;
-  try {
-    const dlc = window.claude && await window.claude.use('downloads');
-    if (dlc) { await dlc.save({filename:name, data:blob}); toast('Ο χάρτης αποθηκεύτηκε'); }
-    else { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000); }
-  } catch (e) { if (e && e.code !== 'declined') toast('Η λήψη δεν έγινε. Δοκίμασε ξανά.'); }
-  btn.disabled = false; btn.innerHTML = old;
-}
-
 // ---------- where am I ----------
 let watch = null, meDot = null;
 document.getElementById('locate').onclick = function(){
@@ -1431,6 +1444,7 @@ document.getElementById('locate').onclick = function(){
 
 // ---------- search & start ----------
 document.getElementById('reqTop').href = REQUEST_URL;
+document.getElementById('mineBtn').href = REQUEST_URL + '#mine';
 document.getElementById('find').addEventListener('submit', e => {
   e.preventDefault();
   const inp = document.getElementById('findNum'), n = +inp.value;
@@ -1467,7 +1481,7 @@ function applyLive(data){
   setHolders(holders);
   if (shapesChanged) {
     TOWNS.forEach(tw => tw.mapped = tw.ns.every(n => T[n].ll));
-    buildLayers();
+    buildLayers(); placeLabels();
     if (view === 'board') renderBoard(page === 'polygyros'); else renderChips();
   }
   if (me) setMe(me, false); else restyle();
