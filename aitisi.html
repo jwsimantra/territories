@@ -378,7 +378,7 @@ nav button.on .ico .mp{fill:var(--sheet);stroke:none}
     </div></div>
     <button class="whob" id="who" hidden></button>
   </header>
-  <main id="main" data-ver="My Territories · v2.6"><div class="empty"><span class="spin"></span><br><br>Φόρτωση…</div></main>
+  <main id="main" data-ver="My Territories · v2.7"><div class="empty"><span class="spin"></span><br><br>Φόρτωση…</div></main>
   <nav id="nav">
     <button data-tab="free" class="on" onclick="go('free')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="d ns" d="M9 4l6 2.5V20l-6-2.5z"/><path d="M3 6.5 9 4l6 2.5L21 4v13.5L15 20l-6-2.5L3 20z"/><path d="M9 4v13.5"/><path d="M15 6.5V20"/></svg><span>Διαθέσιμοι τομείς</span></button>
     <button data-tab="mine" onclick="go('mine')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.3 L11.2 3.6 L12.4 11.2 L5.3 12.8 Z"/><path class="d1" d="M11.2 3.6 L20 5.3 L19.1 12 L12.4 11.2 Z"/><path d="M5.3 12.8 L12.4 11.2 L14.1 20.4 L4.4 20.4 Z"/><circle class="mb" cx="18.2" cy="18.2" r="5.3"/><circle class="mp" cx="18.2" cy="16.8" r="1.5"/><path class="mp" d="M15.7 21.2c0-1.5 1.1-2.3 2.5-2.3s2.5.8 2.5 2.3"/></svg><span>Οι τομείς μου</span></button>
@@ -390,7 +390,7 @@ nav button.on .ico .mp{fill:var(--sheet);stroke:none}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-var APP_VERSION='2.6';
+var APP_VERSION='2.7';
 var BOARD_URL=(function(){ var u=location.href.split('#')[0].split('?')[0]; return u.replace(/[^\/]*$/,'')+'board.html'; })();
 /* ==================================================================
    Σελίδα αιτήσεων — ίδια δεδομένα, ίδια εμφάνιση με την εφαρμογή του
@@ -724,6 +724,83 @@ function cardLabels(c,ways,P,box,taken,F){
   });
   c.textBaseline='alphabetic'; c.textAlign='left';
 }
+/* Χωριά: πιο έντονα ονόματα δρόμων, που ακολουθούν και τους στριφογυριστούς δρόμους (γράμμα-γράμμα) */
+var CARD_VILLAGE_FONT={3:'800 31px ',2:'700 28px ',1:'700 25px '};
+function cardLabelsCurved(c,ways,P,box,taken,F){
+  var runs=[];
+  ways.forEach(function(w){
+    var nm=String((w.tags||{}).name||'').trim(); if(!nm) return;
+    var r=CARD_RANK[w.tags.highway], full=w.geometry.map(function(g){ return P(g.lat,g.lon); });
+    cardClip(full,[box[0]+12,box[1]+12,box[2]-12,box[3]-12]).forEach(function(pts){
+      /* κομμάτια χωρίς απότομες στροφές */
+      var i=0;
+      while(i<pts.length-1){
+        var j=i+1, run=[pts[i],pts[j]];
+        while(j<pts.length-1){
+          var a0=Math.atan2(pts[j][1]-pts[j-1][1],pts[j][0]-pts[j-1][0]), a1=Math.atan2(pts[j+1][1]-pts[j][1],pts[j+1][0]-pts[j][0]);
+          var d=Math.abs(a1-a0); if(d>Math.PI) d=2*Math.PI-d;
+          if(d>0.75) break;
+          run.push(pts[j+1]); j++;
+        }
+        var cum=[0]; for(var q=1;q<run.length;q++) cum.push(cum[q-1]+Math.hypot(run[q][0]-run[q-1][0],run[q][1]-run[q-1][1]));
+        var L0=cum[cum.length-1];
+        runs.push({nm:nm,r:r,pts:run,cum:cum,len:L0,
+          rev:{pts:run.slice().reverse(),cum:cum.slice().reverse().map(function(v){ return L0-v; })}});
+        i=j;
+      }
+    });
+  });
+  runs.sort(function(a,b){ return (b.r-a.r)||(b.len-a.len); });
+  var at=function(k,s){ var p=k.pts,cm=k.cum,i=1; while(i<cm.length-1&&cm[i]<s) i++;
+    var f=(s-cm[i-1])/((cm[i]-cm[i-1])||1); return [p[i-1][0]+(p[i][0]-p[i-1][0])*f, p[i-1][1]+(p[i][1]-p[i-1][1])*f]; };
+  var shortNm=function(x){ return x.replace(/^Εθνική Οδός\s*/,'Ε.Ο. ').replace(/^Επαρχιακή Οδός\s*/,'Επ.Ο. ')
+    .replace(/^Λεωφόρος\s*/,'Λεωφ. ').replace(/^Οδός\s+/,''); };
+  var placed=taken.slice(), named={}, n=0;
+  runs.forEach(function(k){
+    if(n>=40) return;
+    var base=CARD_VILLAGE_FONT[k.r], size=parseInt(base.split(' ')[1],10), w0=base.split(' ')[0];
+    var texts=[k.nm]; if(shortNm(k.nm)!==k.nm) texts.push(shortNm(k.nm));
+    var done=false;
+    texts.forEach(function(txt){ [0,-3].forEach(function(dz){ if(done) return;
+      var fs=size+dz; c.font=w0+' '+fs+'px '+F;
+      var ch=Array.from(txt), cw=ch.map(function(x){ return c.measureText(x).width; }), tw=cw.reduce(function(a,b){ return a+b; },0);
+      if(k.len<tw+30) return;
+      [0.5,0.3,0.7,0.18,0.82].forEach(function(fr){ if(done) return;
+        var s0=k.len*fr-tw/2; if(s0<10||s0+tw>k.len-10) return;
+        var mid=at(k,s0+tw/2);
+        /* να διαβάζεται από αριστερά προς τα δεξιά: αν το κομμάτι πάει προς τα αριστερά, το διαβάζουμε ανάποδα */
+        var ka=at(k,s0), kb=at(k,s0+tw);
+        if(kb[0]<ka[0]){ k={nm:k.nm,r:k.r,len:k.len,pts:k.rev.pts,cum:k.rev.cum,rev:{pts:k.pts,cum:k.cum}}; s0=k.len-s0-tw; }
+        if((named[k.nm]||[]).some(function(p){ return Math.hypot(p[0]-mid[0],p[1]-mid[1])<420; })) return;
+        /* θέση και γωνία κάθε γράμματος */
+        var glyphs=[], s=s0, ok=true;
+        for(var g=0;g<ch.length;g++){
+          var cx=s+cw[g]/2, p=at(k,cx), pa=at(k,Math.max(0,cx-fs*.6)), pb=at(k,Math.min(k.len,cx+fs*.6));
+          var ang=Math.atan2(pb[1]-pa[1],pb[0]-pa[0]);
+          var bb=[p[0]-fs*.42,p[1]-fs*.42,p[0]+fs*.42,p[1]+fs*.42];
+          if(bb[0]<box[0]+6||bb[1]<box[1]+6||bb[2]>box[2]-6||bb[3]>box[3]-6||
+             placed.some(function(o){ return bb[0]<o[2]&&bb[2]>o[0]&&bb[1]<o[3]&&bb[3]>o[1]; })){ ok=false; break; }
+          glyphs.push({t:ch[g],p:p,a:ang,b:bb}); s+=cw[g];
+        }
+        if(!ok) return;
+        /* απότομη στροφή μέσα στη λέξη: δεν διαβάζεται, το αφήνουμε */
+        for(var g2=1;g2<glyphs.length;g2++){ var dd=Math.abs(glyphs[g2].a-glyphs[g2-1].a); if(dd>Math.PI) dd=2*Math.PI-dd; if(dd>0.5) return; }
+        glyphs.forEach(function(G){ placed.push(G.b); });
+        (named[k.nm]=named[k.nm]||[]).push(mid); n++; done=true;
+        c.textAlign='center'; c.textBaseline='middle'; c.lineJoin='round';
+        ['halo','fill'].forEach(function(pass){
+          glyphs.forEach(function(G){
+            c.save(); c.translate(G.p[0],G.p[1]); c.rotate(G.a);
+            if(pass==='halo'){ c.strokeStyle='rgba(255,255,255,.97)'; c.lineWidth=10; c.strokeText(G.t,0,1); }
+            else { c.fillStyle='#10171D'; c.fillText(G.t,0,1); }
+            c.restore();
+          });
+        });
+      });
+    }); });
+  });
+  c.textBaseline='alphabetic'; c.textAlign='left';
+}
 function cardRR(c,x,y,w,h,r){ c.beginPath(); c.moveTo(x+r,y); c.arcTo(x+w,y,x+w,y+h,r); c.arcTo(x+w,y+h,x,y+h,r);
   c.arcTo(x,y+h,x,y,r); c.arcTo(x,y,x+w,y,r); c.closePath(); }
 function cardIcon(c,x,y,sz,parts,stroke){
@@ -905,7 +982,9 @@ function drawCard(t,mode){
     c.globalCompositeOperation='saturation'; c.globalAlpha=.8; c.fillStyle='#808080'; c.fillRect(mapX,mapY,mapW,mapH);
     c.globalCompositeOperation='source-over'; c.globalAlpha=1;
     /* με δικούς μας δρόμους, το υπόβαθρο ξεθωριάζει περισσότερο ώστε να ξεχωρίζουν */
-    c.fillStyle=ways?'rgba(255,255,255,.42)':'rgba(255,255,255,.12)'; c.fillRect(mapX,mapY,mapW,mapH);
+    var village=String(t.town||'').trim()!=='Πολύγυρος';
+    /* με δικούς μας δρόμους το υπόβαθρο ξεθωριάζει· στα χωριά περισσότερο, για να ξεχωρίζουν τα ονόματα */
+    c.fillStyle=ways?(village?'rgba(255,255,255,.55)':'rgba(255,255,255,.42)'):'rgba(255,255,255,.12)'; c.fillRect(mapX,mapY,mapW,mapH);
     if(ways){ cardDrawRoads(c,ways,P); credit=credit+' · δρόμοι: OpenStreetMap'; }
 
     /* ο τομέας */
@@ -919,7 +998,7 @@ function drawCard(t,mode){
       var ce=cardCenter(pts); if(!main||ce[2]>main[2]) main=ce;
     });
     c.font='800 40px '+F; var bw=Math.max(84,c.measureText(num).width+44);
-    if(ways) cardLabels(c,ways,P,[mapX,mapY,mapX+mapW,mapY+mapH],
+    if(ways) (village?cardLabelsCurved:cardLabels)(c,ways,P,[mapX,mapY,mapX+mapW,mapY+mapH],
       main?[[main[0]-bw/2-10,main[1]-40,main[0]+bw/2+10,main[1]+40]]:[],F);
     if(main){
       c.font='800 40px '+F;
