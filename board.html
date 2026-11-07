@@ -771,8 +771,8 @@ header{flex:0 0 auto;background:var(--ground);border-bottom:1px solid var(--soft
 
 /* territory number tags, edged in the territory's board colour */
 .num{display:grid;place-items:center}
-.num span{min-width:30px;height:30px;padding:0 7px;border-radius:9px;display:grid;place-items:center;background:var(--tc);color:#151C22;
-  border:2px solid #FFFFFF;font-weight:800;font-size:15px;font-variant-numeric:tabular-nums;box-shadow:0 4px 10px -4px rgba(0,0,0,.45);cursor:pointer;transition:opacity .2s}
+.num span{min-width:calc(var(--map-num,15px)*2);height:calc(var(--map-num,15px)*2);padding:0 7px;border-radius:9px;display:grid;place-items:center;background:var(--tc);color:#151C22;
+  border:2px solid #FFFFFF;font-weight:800;font-size:var(--map-num,15px);font-variant-numeric:tabular-nums;box-shadow:0 4px 10px -4px rgba(0,0,0,.45);cursor:pointer;transition:opacity .2s}
 .num.sel span{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
 .num.me span{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
 .num.dim span{opacity:.35}
@@ -807,12 +807,11 @@ body.chips .hint{bottom:86px}
 /* board view: paper sheets on a wall, like the real boards */
 .boardview{position:absolute;inset:0;z-index:450;overflow:auto;background:var(--wall);
   padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(12px,env(safe-area-inset-right,0px));padding-block:66px 40px}
-.wallgrid{columns:2 160px;column-gap:12px;max-width:1100px;margin:0 auto}
-.wallgrid .sheetp{break-inside:avoid;margin:0 0 12px;display:block}
-@media(min-width:700px){.wallgrid{columns:4 170px}}
+.wallgrid{position:relative;max-width:1200px;margin:0 auto;min-height:40px}
+.wallgrid .sheetp{position:absolute;margin:0;display:block;width:170px;max-width:100%;box-sizing:border-box}
 .sheetp{background:var(--sheet-paper);color:var(--sheet-ink);border-radius:5px;border:1px solid var(--sheet-rule);box-shadow:var(--shadow);padding:12px 8px 8px}
 .sheetp h2{margin:0;font-size:12.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;text-align:center}
-.sheetp.big{max-width:900px;margin:0 auto;padding:16px 10px 12px}
+.sheetp.big{max-width:100%;margin:0 auto;padding:16px 10px 12px}
 .sheetp.big h2{font-size:15px}
 .bsvg{display:block;width:100%;height:auto;margin-top:6px}
 .bsvg .bt{cursor:pointer;transition:opacity .2s}
@@ -827,7 +826,16 @@ body.chips .hint{bottom:86px}
 .bsvg text{font-family:var(--f);font-weight:800;text-anchor:middle;dominant-baseline:central;pointer-events:none;fill:#151C22;font-variant-numeric:tabular-nums}
 .bsvg text.out{fill:var(--sheet-ink)}
 .bsvg .road{fill:none;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke;pointer-events:none}
-.bsvg .lead{stroke:var(--sheet-ink);opacity:.7;stroke-linecap:round}
+.bsvg .lead{stroke:var(--sheet-muted);opacity:.6;stroke-linecap:round}
+.bsvg .dot{fill:var(--sheet-muted);opacity:.75}
+.bsvg .pill{stroke:var(--sheet-paper);stroke-width:1.5;vector-effect:non-scaling-stroke;cursor:pointer;pointer-events:auto}
+.bsvg.call .bl{cursor:pointer}
+/* μυστικό μενού μεγεθών */
+.sz{display:grid;gap:14px;margin-top:16px}
+.sz label{display:grid;grid-template-columns:1fr auto;gap:4px 10px;font-size:14px;font-weight:600}
+.sz label b{font-variant-numeric:tabular-nums;color:var(--accent)}
+.sz input[type=range]{grid-column:1/-1;width:100%;accent-color:var(--accent)}
+.sz small{grid-column:1/-1;color:var(--faint);font-size:12px;font-weight:500}
 .mosaic{display:grid;gap:5px;margin-top:10px;grid-auto-rows:46px}
 .tile{border:0;border-radius:7px;cursor:pointer;display:grid;place-items:center;min-width:0;background-color:var(--tc);color:#151C22;
   background-image:repeating-linear-gradient(118deg,rgba(255,255,255,.22) 0 1.5px,transparent 1.5px 4.5px);font-family:var(--f);font-weight:800;font-size:15px;transition:opacity .2s}
@@ -943,7 +951,7 @@ body.boardmode .locate,body.boardmode .hint,body.boardmode .fake{display:none}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
 // ▼▼ Paste the address of your Apps Script web app (the same one the Hub uses) between the quotes ▼▼
-const BOARD_VERSION = '1.4';
+const BOARD_VERSION = '1.6';
 const API_URL = 'https://script.google.com/macros/s/AKfycbwRUO7Zf1Ngkx3HSNbu1DjIjPaAo2RWF8MSYGdJZIZeLDE3k5Nk_gogN6YNIiYw8ffi/exec';
 /* οι άλλες σελίδες είναι στον ίδιο φάκελο με αυτή — έτσι οι σύνδεσμοι δουλεύουν όπου κι αν ανέβει */
 const HERE = location.href.split('#')[0].split('?')[0].replace(/[^\/]*$/, '');
@@ -1046,9 +1054,19 @@ const edgeDist = (c, d, P) => { let best = Infinity;
     const t = ((a[0]-c[0])*ey - (a[1]-c[1])*ex) / den, u = ((a[0]-c[0])*d[1] - (a[1]-c[1])*d[0]) / den;
     if (t > 0 && u >= 0 && u <= 1 && t < best) best = t; }
   return best === Infinity ? 0 : best; };
-const NUM_PX = 15;                                  // ίδιο μέγεθος αριθμού παντού (χάρτης)
-const BOARD_PX = 20;                                // στον πίνακα: μεγαλύτερος, χωρίς περίγραμμα
-const needR = n => Math.max(11, String(n).length * NUM_PX * .34 + 4);
+/* μεγέθη: από το φύλλο (για όλους) · αλλαγές στο μυστικό μενού μένουν σε αυτή τη συσκευή μέχρι «Αποθήκευση για όλους» */
+const SIZE_DEF = {num:20, min:12, polyMin:9, scale:1, mapNum:15};
+const SIZES = Object.assign({}, SIZE_DEF);
+let sheetSizes = {};
+function loadSizes(fromSheet){
+  if (fromSheet) { sheetSizes = {};
+    Object.keys(SIZE_DEF).forEach(k => { const v = parseFloat(fromSheet['board_' + k]); if (isFinite(v) && v > 0) sheetSizes[k] = v; }); }
+  Object.assign(SIZES, SIZE_DEF, sheetSizes);
+  try { const l = JSON.parse(localStorage.getItem('tb-sizes') || 'null'); if (l) Object.assign(SIZES, l); } catch (e) {}
+  document.documentElement.style.setProperty('--map-num', SIZES.mapNum + 'px');
+}
+loadSizes();
+const needR = n => Math.max(11 * SIZES.mapNum / 15, String(n).length * SIZES.mapNum * .34 + 4);
 /* θέση έξω από τον τομέα που δεν πέφτει πάνω σε άλλον αριθμό: δοκιμάζει γωνίες γύρω από την κατεύθυνση «προς τα έξω» */
 const overlaps = (b, boxes) => boxes.some(o => b[0] < o[2] && b[2] > o[0] && b[1] < o[3] && b[3] > o[1]);
 function placeOut(c, P, d, w, h, gap, boxes){
@@ -1187,23 +1205,12 @@ buildLayers();
 const leaders = L.layerGroup().addTo(map);
 function placeLabels(){
   const z = map.getZoom(); leaders.clearLayers();
-  const k = 1/(256*2**z), un = p => { const y = Math.PI*(1 - 2*p[1]*k); return [Math.atan(Math.sinh(y))*180/Math.PI, p[0]*k*360 - 180]; };
-  const ctr = {};
-  TOWNS.forEach(tw => { const P = tw.ns.flatMap(n => T[n].ll || []).map(p => merc(p[0], p[1], z));
-    if (P.length) ctr[tw.name] = [P.reduce((a,p) => a+p[0], 0)/P.length, P.reduce((a,p) => a+p[1], 0)/P.length]; });
-  const items = Object.values(T).filter(t => t.label && t.ll).map(t => {
-    const P = t.ll.map(p => merc(p[0], p[1], z)), c = merc(t.lp[0], t.lp[1], z), w = Math.max(30, String(t.n).length*9 + 16);
-    return {t, P, c, w, fit: innerR(c, P) >= needR(t.n) + 4};
-  });
-  const boxes = [];
-  items.filter(i => i.fit).forEach(i => { i.t.label.setLatLng(i.t.lp); i.t.label.setOpacity(1);
-    boxes.push([i.c[0]-i.w/2, i.c[1]-15, i.c[0]+i.w/2, i.c[1]+15]); });
-  items.filter(i => !i.fit).forEach(i => {
-    const d = outDir(i.c, ctr[i.t.town] || i.c), o = placeOut(i.c, i.P, d, i.w, 30, 8, boxes);
-    if (!o) { i.t.label.setLatLng(i.t.lp); i.t.label.setOpacity(z >= 15 ? 1 : 0); return; }   /* από πολύ μακριά: κρύβεται αν δεν χωράει πουθενά */
-    boxes.push(o.b); i.t.label.setLatLng(un([o.x, o.y])); i.t.label.setOpacity(1);
-    L.polyline([i.t.lp, un([i.c[0] + o.dir[0]*(o.ed + 5), i.c[1] + o.dir[1]*(o.ed + 5)])],
-      {color:css('--text'), weight:1.4, opacity:.55, interactive:false, className:'lead-line'}).addTo(leaders);
+  Object.values(T).forEach(t => {
+    if (!t.label || !t.ll) return;
+    const P = t.ll.map(p => merc(p[0], p[1], z)), c = merc(t.lp[0], t.lp[1], z);
+    t.label.setLatLng(t.lp);
+    t.label.setOpacity(innerR(c, P) >= needR(t.n) + 2 ? 1 : 0);      /* από μακριά: ο αριθμός κρύβεται, δεν μετακινείται */
+    const el = t.label.getElement(); if (el) el.style.pointerEvents = innerR(c, P) >= needR(t.n) + 2 ? '' : 'none';
   });
 }
 map.on('zoomend', placeLabels);
@@ -1277,7 +1284,7 @@ const SKETCH = { // drawn layout for towns whose outlines aren't in My Maps yet:
   'Πορταριά':[3,{10:'1/1/3/2',11:'1/2/2/3',12:'1/3/2/4',13:'2/2/3/4'}],
   'Όλυνθος':[2,{14:'1/1/2/3',15:'2/1/3/2',16:'3/1/4/2',17:'4/1/5/2',18:'2/2/5/3'}], 'Παντελίδας':[1,{69:'1/1/2/2'}]
 };
-function sheetSVG(tw, big){
+function sheetSVG(tw, big, call){
   const ts = tw.ns.map(n => T[n]), dark = isDark(), target = big ? 860 : 420;
   let z = 16;
   for (; z > 10; z--) { const P = ts.flatMap(t => t.ll.map(p => merc(p[0], p[1], z)));
@@ -1285,12 +1292,14 @@ function sheetSVG(tw, big){
     if (Math.max(Math.max(...xs)-Math.min(...xs), Math.max(...ys)-Math.min(...ys)) <= target) break; }
   const all = ts.flatMap(t => t.ll.map(p => merc(p[0], p[1], z)));
   const xs = all.map(p => p[0]), ys = all.map(p => p[1]);
-  const x0 = Math.min(...xs), y0 = Math.min(...ys), w = Math.max(...xs)-x0, h = Math.max(...ys)-y0, W = Math.max(w, h), pad = W*.1 + 12;
+  const x0 = Math.min(...xs), y0 = Math.min(...ys), w = Math.max(...xs)-x0, h = Math.max(...ys)-y0, W = Math.max(w, h);
+  /* call: οι αριθμοί μπαίνουν γύρω από την περιοχή — χρειάζεται χώρος στις άκρες (σε pixel οθόνης) */
+  const pad = call ? call.px * w / Math.max(40, call.wpx - 2*call.px) : W*.1 + 12;
   const OX = Math.floor(x0-pad), OY = Math.floor(y0-pad);           // αρχή τοπικών συντεταγμένων
   const M = (la, lo) => { const p = merc(la, lo, z); return [p[0]-OX, p[1]-OY]; };
   const vx = x0-pad-OX, vy = y0-pad-OY, vw = w+2*pad, vh = h+2*pad, id = 'v' + tw.ns[0];
   const c0 = [all.reduce((a,p) => a+p[0], 0)/all.length - OX, all.reduce((a,p) => a+p[1], 0)/all.length - OY];
-  let s = `<svg class="bsvg" viewBox="${vx.toFixed(1)} ${vy.toFixed(1)} ${vw.toFixed(1)} ${vh.toFixed(1)}" role="img" aria-label="${tw.name}">
+  let s = `<svg class="bsvg${call ? ' call' : ''}" data-tw="${tw.name}" data-big="${big ? 1 : ''}" viewBox="${vx.toFixed(1)} ${vy.toFixed(1)} ${vw.toFixed(1)} ${vh.toFixed(1)}" role="img" aria-label="${tw.name}">
     <defs><clipPath id="${id}"><rect x="${vx.toFixed(1)}" y="${vy.toFixed(1)}" width="${vw.toFixed(1)}" height="${vh.toFixed(1)}" rx="${(W*.02).toFixed(1)}"/></clipPath>
     <pattern id="pen${tw.ns[0]}" patternUnits="userSpaceOnUse" width="${(W/120).toFixed(2)}" height="${(W/120).toFixed(2)}" patternTransform="rotate(28)"><rect width="${(W/360).toFixed(2)}" height="${(W/120).toFixed(2)}" fill="rgba(255,255,255,.3)"/></pattern></defs>
     <g class="tiles" clip-path="url(#${id})">`;
@@ -1311,35 +1320,140 @@ function sheetSVG(tw, big){
   });
   return s + labels + '</svg>';
 }
-/* μετά τη σχεδίαση: ίδιο μέγεθος αριθμού σε όλους τους πίνακες· αν δεν χωράει, δίπλα στον τομέα με μια γραμμή */
+/* Αριθμοί στον πίνακα:
+   1) κάθε περιοχή παίρνει όσο πλάτος χρειάζεται ώστε οι αριθμοί να χωράνε μέσα (όχι περισσότερο)
+   2) αν δεν χωράει στην οθόνη, οι αριθμοί μικραίνουν όσο χρειάζεται (Πολύγυρος: ακόμη πιο μικροί)
+   3) μόνο ό,τι δεν χωράει ούτε έτσι μπαίνει δίπλα, με απαλή γραμμή */
+const fitNeed = (fs, n) => Math.max(fs*.55, String(n).length*fs*.31 + 3);
+function sheetItems(svg){
+  return [...svg.querySelectorAll('g.bl')].map(g => { const tx = g.querySelector('text');
+    return {g, tx, ln: g.querySelector('line.lead'), n: tx.textContent, x: +tx.dataset.x, y: +tx.dataset.y, r0: +tx.dataset.r,
+      d: [+tx.dataset.dx, +tx.dataset.dy], fill: (T[+tx.textContent] || {}).fill || '#ccc'}; });
+}
+/* πλάτος κάθε χωριού = όσο χρειάζεται για να χωρέσουν οι αριθμοί · μετά «τούβλα» σε στήλες χωρίς κενά */
+const WALL_GAP = 12, WALL_COL = 160;
+function sizeSheets(){
+  const board = document.getElementById('board'); if (!board) return;
+  const grid = board.querySelector('.wallgrid');
+  const CW = grid ? grid.clientWidth : board.clientWidth - 24; if (CW <= 0) return;
+  const cols = Math.max(1, Math.floor((CW + WALL_GAP) / (WALL_COL + WALL_GAP))), colW = (CW - (cols - 1) * WALL_GAP) / cols;
+  const arts = [...board.querySelectorAll('.sheetp')];
+  arts.forEach(art => {
+    const big = art.classList.contains('big'), padX = big ? 22 : 18;
+    const svg = art.querySelector('svg.bsvg');
+    let w;
+    if (!svg) w = 170 * SIZES.scale;                               /* χωρίς χάρτη ακόμα */
+    else {
+      const vb = svg.viewBox.baseVal, items = sheetItems(svg);
+      const kNeed = items.length ? Math.max(...items.map(i => fitNeed(SIZES.num, i.n) / Math.max(.5, i.r0))) : 1;
+      w = kNeed * vb.width * SIZES.scale + padX;
+    }
+    if (big || !grid) { art.style.width = Math.round(Math.max(big ? 300 : WALL_COL, Math.min(CW, w))) + 'px'; return; }
+    const span = Math.min(cols, Math.max(1, Math.ceil((w + WALL_GAP) / (colW + WALL_GAP) - .06)));
+    art.dataset.span = span; art.style.width = (span * colW + (span - 1) * WALL_GAP).toFixed(1) + 'px';
+  });
+  if (!grid) return;
+  const colH = new Array(cols).fill(0);
+  arts.forEach(art => {
+    const span = +art.dataset.span || 1, h = art.offsetHeight;
+    let best = 0, bestTop = Infinity;
+    for (let c = 0; c + span <= cols; c++) { const top = Math.max(...colH.slice(c, c + span)); if (top < bestTop - 1) { bestTop = top; best = c; } }
+    art.style.left = (best * (colW + WALL_GAP)).toFixed(1) + 'px'; art.style.top = bestTop + 'px';
+    for (let c = best; c < best + span; c++) colH[c] = bestTop + h + WALL_GAP;
+  });
+  grid.style.height = Math.max(0, Math.max(...colH) - WALL_GAP) + 'px';
+}
 function fitBoardLabels(){
+  sizeSheets();
+  requestAnimationFrame(placeBoardLabels);
+}
+function placeBoardLabels(){
   document.querySelectorAll('#board svg.bsvg').forEach(svg => {
     const vb = svg.viewBox.baseVal, wpx = svg.getBoundingClientRect().width; if (!wpx || !vb) return;
-    const k = wpx / vb.width, fs = BOARD_PX / k;
-    /* όλα σε pixel οθόνης, για να μην πέφτουν οι αριθμοί ο ένας πάνω στον άλλον */
-    const items = [...svg.querySelectorAll('g.bl')].map(g => {
-      const tx = g.querySelector('text'), ln = g.querySelector('line.lead');
-      const P = g.querySelector('path').getAttribute('d').slice(1, -1).split('L').map(q => q.split(' ').map(v => +v*k));
-      const c = [+tx.dataset.x*k, +tx.dataset.y*k], w = String(tx.textContent).length*BOARD_PX*.62 + 6;
-      tx.setAttribute('font-size', fs.toFixed(2));
-      return {tx, ln, P, c, w, d:[+tx.dataset.dx, +tx.dataset.dy], fit: +tx.dataset.r*k >= Math.max(13, String(tx.textContent).length*BOARD_PX*.34 + 5)};
-    });
+    const k = wpx / vb.width, big = !!svg.closest('.sheetp.big'), floor = Math.min(SIZES.num, big ? SIZES.polyMin : SIZES.min);
+    const items = sheetItems(svg).map(i => Object.assign(i, {r: i.r0 * k,
+      P: i.g.querySelector('path').getAttribute('d').slice(1, -1).split('L').map(q => q.split(' ').map(v => +v*k))}));
+    const miss = f => items.filter(i => i.r < fitNeed(f, i.n)).length, least = miss(floor);
+    let fs = floor; for (let f = SIZES.num; f >= floor; f -= .5) if (miss(f) <= least) { fs = f; break; }
     const boxes = [];
-    items.filter(i => i.fit).forEach(i => { i.tx.setAttribute('x', i.c[0]/k); i.tx.setAttribute('y', i.c[1]/k); i.ln.setAttribute('visibility', 'hidden');
-      i.tx.classList.remove('out'); boxes.push([i.c[0]-i.w/2, i.c[1]-BOARD_PX/2-2, i.c[0]+i.w/2, i.c[1]+BOARD_PX/2+2]); });
-    items.filter(i => !i.fit).forEach(i => {
-      i.tx.classList.add('out');
-      const o = placeOut(i.c, i.P, i.d, i.w, BOARD_PX + 2, 6, boxes) ||
-        {x: i.c[0] + i.d[0]*(edgeDist(i.c, i.d, i.P) + 16), y: i.c[1] + i.d[1]*(edgeDist(i.c, i.d, i.P) + 16), b: null, dir: i.d, ed: edgeDist(i.c, i.d, i.P)};
+    items.forEach(i => { i.g.querySelectorAll('.pill,.dot').forEach(e => e.remove()); i.tx.setAttribute('font-size', (fs/k).toFixed(2)); });
+    items.filter(i => i.r >= fitNeed(fs, i.n)).forEach(i => {
+      i.tx.setAttribute('x', i.x); i.tx.setAttribute('y', i.y); i.ln.setAttribute('visibility', 'hidden');
+      const w = String(i.n).length*fs*.62 + 4; boxes.push([i.x*k - w/2, i.y*k - fs/2, i.x*k + w/2, i.y*k + fs/2]);
+    });
+    items.filter(i => i.r < fitNeed(fs, i.n)).forEach(i => {
+      const c = [i.x*k, i.y*k], w = String(i.n).length*fs*.62 + 12, h = fs + 6;
+      const o = placeOut(c, i.P, i.d, w, h, 8, boxes) || (() => { const ed = edgeDist(c, i.d, i.P), r = ed + 8 + w/2;
+        return {x: c[0] + i.d[0]*r, y: c[1] + i.d[1]*r, b: null, dir: i.d, ed}; })();
       if (o.b) boxes.push(o.b);
+      const NS = 'http://www.w3.org/2000/svg', pill = document.createElementNS(NS, 'rect'), dot = document.createElementNS(NS, 'circle');
+      pill.setAttribute('class', 'pill'); pill.setAttribute('fill', i.fill);
+      pill.setAttribute('x', ((o.x - w/2)/k).toFixed(1)); pill.setAttribute('y', ((o.y - h/2)/k).toFixed(1));
+      pill.setAttribute('width', (w/k).toFixed(1)); pill.setAttribute('height', (h/k).toFixed(1)); pill.setAttribute('rx', (h/2/k).toFixed(1));
+      dot.setAttribute('class', 'dot'); dot.setAttribute('cx', i.x); dot.setAttribute('cy', i.y); dot.setAttribute('r', (2.2/k).toFixed(2));
+      i.g.insertBefore(pill, i.tx); i.g.insertBefore(dot, i.ln);
+      const dx = c[0] - o.x, dy = c[1] - o.y, L = Math.hypot(dx, dy) || 1;
+      const tt = Math.min((w/2) / Math.max(1e-6, Math.abs(dx/L)), (h/2) / Math.max(1e-6, Math.abs(dy/L)));
+      i.ln.setAttribute('x1', i.x); i.ln.setAttribute('y1', i.y);
+      i.ln.setAttribute('x2', ((o.x + dx/L*tt)/k).toFixed(1)); i.ln.setAttribute('y2', ((o.y + dy/L*tt)/k).toFixed(1));
+      i.ln.setAttribute('stroke-width', (1.1/k).toFixed(2)); i.ln.setAttribute('visibility', 'visible');
       i.tx.setAttribute('x', (o.x/k).toFixed(1)); i.tx.setAttribute('y', (o.y/k).toFixed(1));
-      i.ln.setAttribute('x1', (i.c[0]/k).toFixed(1)); i.ln.setAttribute('y1', (i.c[1]/k).toFixed(1));
-      i.ln.setAttribute('x2', ((i.c[0] + o.dir[0]*(o.ed + 4))/k).toFixed(1)); i.ln.setAttribute('y2', ((i.c[1] + o.dir[1]*(o.ed + 4))/k).toFixed(1));
-      i.ln.setAttribute('stroke-width', (1.3/k).toFixed(2)); i.ln.setAttribute('visibility', 'visible');
     });
   });
 }
-addEventListener('resize', () => { if (view === 'board') fitBoardLabels(); });
+
+/* ---------- μυστικό μενού μεγεθών: 5 γρήγορα πατήματα στο λογότυπο ---------- */
+let secretTaps = 0, secretTimer = null;
+document.querySelector('.mark').addEventListener('click', () => {
+  secretTaps++; clearTimeout(secretTimer); secretTimer = setTimeout(() => secretTaps = 0, 2500);
+  if (secretTaps >= 5) { secretTaps = 0; openSizes(); }
+});
+document.querySelector('.mark').style.cursor = 'pointer';
+const SIZE_UI = [
+  ['num', 'Αριθμοί στον πίνακα', 12, 32, 1, 'px', 'Το κανονικό μέγεθος των αριθμών'],
+  ['min', 'Ελάχιστο μέγεθος — χωριά', 8, 24, 1, 'px', 'Πόσο μπορούν να μικρύνουν για να χωρέσουν'],
+  ['polyMin', 'Ελάχιστο μέγεθος — Πολύγυρος', 6, 24, 1, 'px', ''],
+  ['scale', 'Μέγεθος περιοχών', .6, 2.5, .05, '×', 'Μεγαλύτερο = πιο μεγάλες περιοχές στον πίνακα'],
+  ['mapNum', 'Αριθμοί στον χάρτη', 10, 24, 1, 'px', '']];
+function openSizes(){
+  const fmtV = (k, v) => k === 'scale' ? (+v).toFixed(2) + '×' : v + ' px';
+  openSheet(`<div class="ph"><div><b id="pTitle">Μεγέθη</b><span class="sub">Οι αλλαγές φαίνονται αμέσως</span></div>
+      <button class="x" id="closeP" aria-label="Κλείσιμο">×</button></div>
+    <div class="sz">${SIZE_UI.map(([k, t, mn, mx, st, , hint]) => `<label>${t}<b id="v_${k}">${fmtV(k, SIZES[k])}</b>
+      <input type="range" data-k="${k}" min="${mn}" max="${mx}" step="${st}" value="${SIZES[k]}">${hint ? `<small>${hint}</small>` : ''}</label>`).join('')}</div>
+    <div class="acts"><button class="btn" id="szReset">Επαναφορά</button>
+      <button class="btn pri" id="szSave" style="grid-column:auto">Αποθήκευση για όλους</button></div>
+    <p class="small">Χωρίς αποθήκευση, οι αλλαγές μένουν μόνο σε αυτή τη συσκευή.</p>`);
+  let t = null;
+  const redraw = () => { clearTimeout(t); t = setTimeout(() => { if (view === 'board') renderBoard(page === 'polygyros'); else placeLabels(); }, 120); };
+  panel.querySelectorAll('input[type=range]').forEach(r => r.oninput = () => {
+    const k = r.dataset.k, v = +r.value; SIZES[k] = v; document.getElementById('v_' + k).textContent = fmtV(k, v);
+    const loc = {}; Object.keys(SIZE_DEF).forEach(x => { if (SIZES[x] !== (sheetSizes[x] ?? SIZE_DEF[x])) loc[x] = SIZES[x]; });
+    try { localStorage.setItem('tb-sizes', JSON.stringify(loc)); } catch (e) {}
+    document.documentElement.style.setProperty('--map-num', SIZES.mapNum + 'px'); redraw();
+  });
+  document.getElementById('szReset').onclick = () => {
+    /* πίσω στα αρχικά μεγέθη — σε αυτή τη συσκευή, μέχρι «Αποθήκευση για όλους» */
+    const loc = {}; Object.keys(SIZE_DEF).forEach(x => { if (SIZE_DEF[x] !== (sheetSizes[x] ?? SIZE_DEF[x])) loc[x] = SIZE_DEF[x]; });
+    try { Object.keys(loc).length ? localStorage.setItem('tb-sizes', JSON.stringify(loc)) : localStorage.removeItem('tb-sizes'); } catch (e) {}
+    Object.assign(SIZES, SIZE_DEF); document.documentElement.style.setProperty('--map-num', SIZES.mapNum + 'px');
+    close(); redraw(); openSizes();
+  };
+  document.getElementById('szSave').onclick = () => {
+    if (!API_URL) { toast('Δεν υπάρχει σύνδεση με το φύλλο'); return; }
+    const ops = Object.keys(SIZE_DEF).map(k => ({action:'saveSetting', key:'board_' + k, value:SIZES[k]}));
+    fetch(API_URL, {method:'POST', redirect:'follow', headers:{'Content-Type':'text/plain;charset=utf-8'}, body:JSON.stringify({action:'batch', ops})})
+      .then(r => r.json()).then(j => {
+        if (!j.ok) throw new Error(j.error);
+        Object.keys(SIZE_DEF).forEach(k => sheetSizes[k] = SIZES[k]);
+        try { localStorage.removeItem('tb-sizes'); } catch (e) {}
+        toast('Αποθηκεύτηκε για όλους');
+      }).catch(() => toast('Δεν αποθηκεύτηκε — δοκίμασε ξανά'));
+  };
+}
+let rzT = null;
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (view === 'board') fitBoardLabels(); });
+addEventListener('resize', () => { clearTimeout(rzT); rzT = setTimeout(() => { if (view === 'board') fitBoardLabels(); }, 150); });
 function sketch(tw){
   const [cols, areas] = SKETCH[tw.name];
   return `<div class="mosaic" style="grid-template-columns:repeat(${cols},minmax(0,1fr))">${tw.ns.map(n => `<button class="tile" data-n="${n}" style="grid-area:${areas[n]};--tc:${T[n].fill};--ti:${T[n].ink}">${n}</button>`).join('')}</div>
@@ -1353,7 +1467,7 @@ function renderBoard(poly){
   restyle();
   requestAnimationFrame(fitBoardLabels);
 }
-document.getElementById('board').addEventListener('click', e => { const b = e.target.closest('[data-n]'); if (b) open(+b.dataset.n); });
+document.getElementById('board').addEventListener('click', e => { const b = e.target.closest('[data-n],[data-ln]'); if (b) open(+(b.dataset.n || b.dataset.ln)); });
 document.getElementById('board').addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[data-n]')) { e.preventDefault(); open(+e.target.dataset.n); } });
 
 // ---------- stand-in map, used only where real map images can't load (the Claude preview) ----------
@@ -1526,13 +1640,15 @@ function normalize(data){
   const maps = (data.boundaries && data.boundaries.maps) || {}, open = {};
   (data.assignments || []).forEach(a => { if (a.territory_id && !a.date_in) open[a.territory_id] = a.person; });
   const ini = nm => String(nm || '').replace(/\./g, ' ').trim().split(/\s+/).slice(0, 2).map(w => w.charAt(0).toUpperCase() + '.').join(' ');
-  return {ok:true, territories: data.territories.filter(t => String(t.active).toUpperCase() !== 'FALSE').map(t => ({
+  return {ok:true, settings: data.settings || {}, territories: data.territories.filter(t => String(t.active).toUpperCase() !== 'FALSE').map(t => ({
     n: parseInt(String(t.id).replace(/\D/g, ''), 10), mid: t.mymaps_id || '', holder: open[t.id] ? ini(open[t.id]) : null, hk: open[t.id] || null,
     polygons: maps[t.id] && maps[t.id].polygons ? maps[t.id].polygons.map(p => p.coords) : [] }))};
 }
 function applyLive(data){
   data = normalize(data);
   if (!data || !Array.isArray(data.territories)) return false;
+  if (data.settings) { const before = JSON.stringify(SIZES); loadSizes(data.settings);
+    if (JSON.stringify(SIZES) !== before && typeof view !== 'undefined') { if (view === 'board' && page) renderBoard(page === 'polygyros'); else placeLabels(); } }
   let shapesChanged = false;
   const holders = {};
   data.territories.forEach(r => {

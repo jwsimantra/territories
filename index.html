@@ -490,7 +490,7 @@ nav button.on .ico .mp{fill:var(--sheet);stroke:none}
       <button onclick="openSettings()" title="Ρυθμίσεις" aria-label="Ρυθμίσεις"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h9"/><path d="M19 7h1"/><path d="M4 17h3"/><path d="M13 17h7"/><circle class="d1" cx="16" cy="7" r="2.5"/><circle class="d1" cx="10" cy="17" r="2.5"/></svg></button>
     </div>
   </header>
-  <main id="main" data-ver="Territory Hub · v4.4"><div class="empty"><span class="spin"></span><br><br>Φόρτωση…</div></main>
+  <main id="main" data-ver="Territory Hub · v4.5"><div class="empty"><span class="spin"></span><br><br>Φόρτωση…</div></main>
   <nav>
     <button data-tab="map" class="on" onclick="go('map')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="d ns" d="M9 4l6 2.5V20l-6-2.5z"/><path d="M3 6.5 9 4l6 2.5L21 4v13.5L15 20l-6-2.5L3 20z"/><path d="M9 4v13.5"/><path d="M15 6.5V20"/></svg><span>Χάρτης</span></button>
     <button data-tab="list" onclick="go('list')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.3 L11.2 3.6 L12.4 11.2 L5.3 12.8 Z"/><path class="d1" d="M11.2 3.6 L20 5.3 L19.1 12 L12.4 11.2 Z"/><path d="M5.3 12.8 L12.4 11.2 L14.1 20.4 L4.4 20.4 Z"/><path class="d" d="M12.4 11.2 L19.1 12 L20 19.1 L14.1 20.4 Z"/></svg><span>Τομείς</span></button>
@@ -509,7 +509,7 @@ nav button.on .ico .mp{fill:var(--sheet);stroke:none}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-var APP_VERSION='4.4', SCRIPT_NEEDS='3.1';
+var APP_VERSION='4.5', SCRIPT_NEEDS='3.1';
 /* ==================================================================
    Η ΜΟΝΗ ΓΡΑΜΜΗ ΠΟΥ ΙΣΩΣ ΧΡΕΙΑΣΤΕΙ ΝΑ ΑΛΛΑΞΕΙΣ
    ================================================================== */
@@ -1319,7 +1319,8 @@ function viewDetail(){
       'οι υπόλοιποι τομείς της περιοχής φαίνονται αχνοί — πάτησέ τους για να τους ανοίξεις</p>'+
     '<div class="btns">'+
       (out?'<button class="btn pri" onclick="doTakeBack(\''+t.id+'\')">'+ic('ret')+'Επιστροφή</button>'
-          :'<button class="btn pri" onclick="doGiveOut(\''+t.id+'\')">'+ic('give')+'Ανάθεση</button>')+'</div>'+
+          :'<button class="btn pri" onclick="doGiveOut(\''+t.id+'\')">'+ic('give')+'Ανάθεση</button>')+
+      (t.mymaps_id?'<button class="btn" onclick="openMaps(\''+t.id+'\')">'+ic('pin')+'Google Maps</button>':'')+'</div>'+
     /* οι επιλογές κοινοποίησης φαίνονται κατευθείαν στη σελίδα */
     (function(){ var dis=t.mymaps_id?'':' disabled', id='\''+t.id+'\'';
       return '<div class="acts">'+
@@ -1357,7 +1358,7 @@ function viewDetail(){
   $('#main').innerHTML=h+'</div>';
 
   var g=geoOf(t.id);
-  if(g&&g.polygons&&g.polygons.length) drawLeaflet('dMap',peers,{focus:t.id,quiet:true,onPick:open_});
+  if(g&&g.polygons&&g.polygons.length) { drawLeaflet('dMap',peers,{focus:t.id,quiet:true,onPick:open_}); cardWarm([t]); }
   else document.getElementById('dMap').innerHTML=
     '<div class="empty" style="padding:84px 20px">'+(t.mymaps_id?'Ο χάρτης φορτώνει…':'Δεν έχει σχεδιαστεί χάρτης')+'</div>';
 }
@@ -1745,6 +1746,7 @@ function doTakeBack(id){
 }
 /* Κοινοποίηση τομέα: τα κουμπιά βρίσκονται πάνω στη σελίδα του τομέα */
 function mapsLink(t){ return 'https://www.google.com/maps/d/viewer?mid='+t.mymaps_id; }
+function openMaps(id){ var t=byId(id); if(t&&t.mymaps_id) window.open(mapsLink(t),'_blank'); }
 function cardSend(id){ var t=byId(id); if(t&&t.mymaps_id) makeCard(t,'share'); }
 function cardSave(id){ var t=byId(id); if(t&&t.mymaps_id) makeCard(t,'download'); }
 function linkSend(id){
@@ -1771,10 +1773,18 @@ function copy(s){
 /* ================= ΚΑΡΤΑ A6 (PDF) =================
    Ζωγραφίζεται σε canvas και μπαίνει στο PDF ως εικόνα.
    Έτσι τα ελληνικά βγαίνουν σωστά χωρίς να ενσωματώσουμε γραμματοσειρά. */
+/* εικόνες υποβάθρου: μένουν στη μνήμη (η 2η κάρτα βγαίνει αμέσως) και δεν περιμένουν για πάντα */
+var CARD_IMG={};
 function loadImg(url){
-  return new Promise(function(res){
-    var i=new Image(); i.crossOrigin='anonymous';
-    i.onload=function(){ res(i); }; i.onerror=function(){ res(null); }; i.src=url; });
+  if(CARD_IMG[url]) return CARD_IMG[url];
+  var p=new Promise(function(res){
+    var i=new Image(), done=false, tm=null; i.crossOrigin='anonymous';
+    var fin=function(v){ if(done) return; done=true; clearTimeout(tm); if(!v) delete CARD_IMG[url]; res(v); };
+    tm=setTimeout(function(){ fin(null); },7000);
+    i.onload=function(){ fin(i); }; i.onerror=function(){ fin(null); }; i.src=url; });
+  CARD_IMG[url]=p;
+  var ks=Object.keys(CARD_IMG); if(ks.length>400) delete CARD_IMG[ks[0]];
+  return p;
 }
 var CARD_BRAND={kind:'A',name:'Territory Hub'};
 var CARD_K={text:'#151C22',muted:'#57646F',faint:'#84919D',rule:'#D2D9D7',soft:'#E5EAE9',
@@ -1788,20 +1798,55 @@ function cardTile(i,z,x,y){ return CARD_TILES[i].u.replace('{z}',z).replace('{x}
 var CARD_OVERPASS=['https://overpass-api.de/api/interpreter','https://overpass.kumi.systems/api/interpreter','https://maps.mail.ru/osm/tools/overpass/api/interpreter'];
 var CARD_RANK={motorway:3,trunk:3,primary:3,secondary:3,motorway_link:2,trunk_link:2,primary_link:2,secondary_link:2,
   tertiary:2,tertiary_link:2,unclassified:1,residential:1,living_street:1,pedestrian:1};
+function cardRoadsFetch(q){
+  /* ρωτάει τον 1ο διακομιστή· αν αργεί πάνω από 2,5" ρωτάει και τον επόμενο — κρατάει την πρώτη απάντηση.
+     Το πολύ 9": μετά η κάρτα βγαίνει χωρίς τους δικούς μας δρόμους (με τους δρόμους του υποβάθρου) */
+  return new Promise(function(res){
+    var N=CARD_OVERPASS.length, next=0, failed=0, done=false, ctls=[], hedge=null, dead=null;
+    var fin=function(v){ if(done) return; done=true; clearInterval(hedge); clearTimeout(dead);
+      ctls.forEach(function(c){ try{ c.abort(); }catch(e){} }); res(v); };
+    var start=function(){
+      if(done||next>=N) return; var i=next++;
+      var ctl=window.AbortController?new AbortController():null; if(ctl) ctls.push(ctl);
+      fetch(CARD_OVERPASS[i],{method:'POST',body:'data='+encodeURIComponent(q),
+          headers:{'Content-Type':'application/x-www-form-urlencoded'},signal:ctl?ctl.signal:undefined})
+        .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+        .then(function(j){ fin((j.elements||[]).filter(function(x){
+          return x.type==='way' && x.geometry && x.geometry.length>1 && CARD_RANK[(x.tags||{}).highway]; })); })
+        .catch(function(){ if(++failed>=N) fin(null); else start(); });
+    };
+    start(); hedge=setInterval(start,2500); dead=setTimeout(function(){ fin(null); },9000);
+  });
+}
+/* οι δρόμοι κάθε τομέα φυλάγονται στη συσκευή (30 μέρες) — από τη 2η φορά η κάρτα δεν περιμένει τίποτα */
+var CARD_ROADS={}, CARD_ROADS_LS='tomeis_roads';
+function cardRoadsStore(){ try{ return JSON.parse(localStorage.getItem(CARD_ROADS_LS)||'{}')||{}; }catch(e){ return {}; } }
+function cardRoadsSave(k,ways){
+  var all=cardRoadsStore();
+  all[k]={t:Date.now(),w:ways.map(function(x){ var g=[];
+    x.geometry.forEach(function(p){ g.push(+(+p.lat).toFixed(5),+(+p.lon).toFixed(5)); });
+    return [x.tags.highway,x.tags.name||'',g]; })};
+  var ks=Object.keys(all).sort(function(a,b){ return all[a].t-all[b].t; });
+  for(var tries=0;tries<6;tries++){
+    try{ localStorage.setItem(CARD_ROADS_LS,JSON.stringify(all)); return; }
+    catch(e){ for(var d=0;d<Math.max(1,Math.ceil(ks.length/3));d++){ var o=ks.shift(); if(o===undefined||o===k) break; delete all[o]; } }
+  }
+}
 function cardRoads(s,w,n,e){
-  var q='[out:json][timeout:12];way["highway"~"^('+Object.keys(CARD_RANK).join('|')+')$"]('+
+  var k=[s,w,n,e].map(function(v){ return v.toFixed(4); }).join(',');
+  if(CARD_ROADS[k]) return CARD_ROADS[k];
+  var hit=cardRoadsStore()[k];
+  if(hit && Date.now()-hit.t<30*864e5){
+    var ways=hit.w.map(function(r){ var g=[]; for(var i=0;i<r[2].length;i+=2) g.push({lat:r[2][i],lon:r[2][i+1]});
+      return {type:'way',tags:r[1]?{highway:r[0],name:r[1]}:{highway:r[0]},geometry:g}; });
+    return (CARD_ROADS[k]=Promise.resolve(ways));
+  }
+  var q='[out:json][timeout:10];way["highway"~"^('+Object.keys(CARD_RANK).join('|')+')$"]('+
     [s,w,n,e].map(function(v){ return v.toFixed(5); }).join(',')+');out tags geom;';
-  var at=function(i){
-    if(i>=CARD_OVERPASS.length) return Promise.resolve(null);
-    var ctl=window.AbortController?new AbortController():null, tm=setTimeout(function(){ if(ctl) ctl.abort(); },9000);
-    return fetch(CARD_OVERPASS[i],{method:'POST',body:'data='+encodeURIComponent(q),
-        headers:{'Content-Type':'application/x-www-form-urlencoded'},signal:ctl?ctl.signal:undefined})
-      .then(function(r){ clearTimeout(tm); if(!r.ok) throw new Error(r.status); return r.json(); })
-      .then(function(j){ return (j.elements||[]).filter(function(x){
-        return x.type==='way' && x.geometry && x.geometry.length>1 && CARD_RANK[(x.tags||{}).highway]; }); })
-      .catch(function(){ clearTimeout(tm); return at(i+1); });
-  };
-  return at(0);
+  var p=cardRoadsFetch(q).then(function(ways){
+    if(ways) cardRoadsSave(k,ways); else delete CARD_ROADS[k];
+    return ways; });
+  return (CARD_ROADS[k]=p);
 }
 var CARD_ROAD_STYLE={
   /* κεντρικοί: κίτρινοι με σκούρο περίγραμμα, όπως στους οδικούς χάρτες — ξεχωρίζουν και στην εκτύπωση */
@@ -2009,6 +2054,49 @@ function cardFonts(){
     Promise.all(ws.map(function(w){ return document.fonts.load(w+' 30px Geologica','Αα12'); })).catch(function(){}),
     new Promise(function(r){ setTimeout(r,2500); })]);
 }
+/* Ζουμ και θέση του χάρτη της κάρτας (ίδια για την κάρτα και για το προφόρτωμα) */
+var CARD_MAP={x:64,y:214,w:1112,h:940};
+function cardFrame(b){
+  var mapX=CARD_MAP.x, mapY=CARD_MAP.y, mapW=CARD_MAP.w, mapH=CARD_MAP.h;
+  /* Ζουμ: το μεγαλύτερο όπου ο τομέας χωράει με κλίμακα 2 (ευανάγνωστα ονόματα δρόμων),
+     μετά μεγέθυνση ώστε ο τομέας να γεμίζει το πλαίσιο */
+  var pad=0.14, fw=mapW*(1-2*pad), fh=mapH*(1-2*pad), z=1;
+  for(var zz=19;zz>=1;zz--){
+    var pw=Math.abs(wx(b[3],zz)-wx(b[1],zz)), ph=Math.abs(wy(b[0],zz)-wy(b[2],zz));
+    if(pw*2<=fw && ph*2<=fh){ z=zz; break; }
+  }
+  var pw0=Math.max(1e-6,Math.abs(wx(b[3],z)-wx(b[1],z))), ph0=Math.max(1e-6,Math.abs(wy(b[0],z)-wy(b[2],z)));
+  var scale=Math.max(2,Math.min(3,fw/pw0,fh/ph0));
+  var x0=wx(b[1],z), x1=wx(b[3],z), y0=wy(b[2],z), y1=wy(b[0],z);
+  var ox=(mapW/scale-(x1-x0))/2-x0, oy=(mapH/scale-(y1-y0))/2-y0;
+  var tx0=Math.floor((0-ox)/256), tx1=Math.floor((mapW/scale-ox)/256);
+  var ty0=Math.floor((0-oy)/256), ty1=Math.floor((mapH/scale-oy)/256);
+  var jobs=[], nn=Math.pow(2,z);
+  for(var X=tx0;X<=tx1;X++) for(var Y=ty0;Y<=ty1;Y++){ if(Y<0||Y>=nn) continue;
+    jobs.push({x:X,y:Y,tx:((X%nn)+nn)%nn}); }
+  jobs=jobs.slice(0,30);
+  /* όρια του πλαισίου σε γεωγραφικές συντεταγμένες, για τους δρόμους */
+  var W2=256*Math.pow(2,z);
+  var lngAt=function(px){ return ((px-mapX)/scale-ox)/W2*360-180; };
+  var latAt=function(py){ var y=((py-mapY)/scale-oy)/W2; return Math.atan(Math.sinh(Math.PI*(1-2*y)))*180/Math.PI; };
+  return {z:z,scale:scale,ox:ox,oy:oy,jobs:jobs,
+    box:[latAt(mapY+mapH),lngAt(mapX),latAt(mapY),lngAt(mapX+mapW)],
+    P:function(lat,lng){ return [mapX+(wx(lng,z)+ox)*scale, mapY+(wy(lat,z)+oy)*scale]; }};
+}
+/* Προφόρτωμα: μόλις ανοίξει ένας τομέας, κατεβαίνουν ήσυχα το υπόβαθρο και οι δρόμοι της κάρτας του */
+var cardWarmT=null, cardWarmQ=[];
+function cardWarm(ts){
+  cardWarmQ=cardWarmQ.concat(ts).slice(-4); clearTimeout(cardWarmT);
+  cardWarmT=setTimeout(function(){
+    var q=cardWarmQ; cardWarmQ=[];
+    q.forEach(function(t){ try{
+      if(!t||!t.mymaps_id||!geoOf(t.id)) return;
+      var fr=cardFrame(bboxOf([t]));
+      fr.jobs.forEach(function(j){ loadImg(cardTile(0,fr.z,j.tx,j.y)); });
+      cardRoads.apply(null,fr.box);
+    }catch(e){} });
+  },700);
+}
 function makeCard(t,mode){
   toast('Δημιουργία κάρτας…');
   cardFonts().then(function(){ drawCard(t,mode); });
@@ -2033,7 +2121,7 @@ function drawCard(t,mode){
   c.fillStyle=K.muted; c.font='400 30px '+F; c.fillText(t.town||'',tx,M+102);
 
   /* ---- χάρτης ---- */
-  var mapX=M, mapY=M+150, mapW=W-M*2, mapH=940, R=30;
+  var mapX=CARD_MAP.x, mapY=CARD_MAP.y, mapW=CARD_MAP.w, mapH=CARD_MAP.h, R=30;
   var url=t.mymaps_id?('https://www.google.com/maps/d/viewer?mid='+t.mymaps_id):'';
   var credit=CARD_TILES[0].credit;
   var b=geoOf(t.id)?bboxOf([t]):null;
@@ -2105,7 +2193,9 @@ function drawCard(t,mode){
     var file=null;
     try{ file=new File([blob],fn,{type:'application/pdf'}); }catch(e){}
     if(mode!=='download' && file && navigator.canShare && navigator.canShare({files:[file]}))
-      navigator.share({files:[file],text:t.name}).catch(function(){});
+      navigator.share({files:[file],text:t.name}).catch(function(e){
+        /* το κινητό αρνείται την αποστολή αν πέρασε ώρα από το πάτημα — ένα πάτημα ακόμα */
+        if(e&&e.name==='NotAllowedError') toast('Η κάρτα είναι έτοιμη','Αποστολή',function(){ navigator.share({files:[file],text:t.name}).catch(function(){ dl(); }); }); });
     else dl();
     toast('Η κάρτα είναι έτοιμη');
   }
@@ -2114,31 +2204,10 @@ function drawCard(t,mode){
   c.fillStyle='#F1F3F2'; c.fillRect(mapX,mapY,mapW,mapH);
   if(!b){ c.restore(); finish(); return; }
 
-  /* Ζουμ: το μεγαλύτερο όπου ο τομέας χωράει με κλίμακα 2 (ευανάγνωστα ονόματα δρόμων),
-     μετά μεγέθυνση ώστε ο τομέας να γεμίζει το πλαίσιο */
-  var pad=0.14, fw=mapW*(1-2*pad), fh=mapH*(1-2*pad), z=1;
-  for(var zz=19;zz>=1;zz--){
-    var pw=Math.abs(wx(b[3],zz)-wx(b[1],zz)), ph=Math.abs(wy(b[0],zz)-wy(b[2],zz));
-    if(pw*2<=fw && ph*2<=fh){ z=zz; break; }
-  }
-  var pw0=Math.max(1e-6,Math.abs(wx(b[3],z)-wx(b[1],z))), ph0=Math.max(1e-6,Math.abs(wy(b[0],z)-wy(b[2],z)));
-  var scale=Math.max(2,Math.min(3,fw/pw0,fh/ph0));
-  var x0=wx(b[1],z), x1=wx(b[3],z), y0=wy(b[2],z), y1=wy(b[0],z);
-  var ox=(mapW/scale-(x1-x0))/2-x0, oy=(mapH/scale-(y1-y0))/2-y0;
-  function P(lat,lng){ return [mapX+(wx(lng,z)+ox)*scale, mapY+(wy(lat,z)+oy)*scale]; }
-  var tx0=Math.floor((0-ox)/256), tx1=Math.floor((mapW/scale-ox)/256);
-  var ty0=Math.floor((0-oy)/256), ty1=Math.floor((mapH/scale-oy)/256);
-  var jobs=[], nn=Math.pow(2,z);
-  for(var X=tx0;X<=tx1;X++) for(var Y=ty0;Y<=ty1;Y++){ if(Y<0||Y>=nn) continue;
-    jobs.push({x:X,y:Y,tx:((X%nn)+nn)%nn}); }
-  jobs=jobs.slice(0,30);
+  var fr=cardFrame(b), z=fr.z, scale=fr.scale, ox=fr.ox, oy=fr.oy, jobs=fr.jobs, P=fr.P;
   function load(i){ return Promise.all(jobs.map(function(j){
     return loadImg(cardTile(i,z,j.tx,j.y)).then(function(img){ return {img:img,j:j}; }); })); }
-  /* όρια του πλαισίου σε γεωγραφικές συντεταγμένες, για τους δρόμους */
-  var W2=256*Math.pow(2,z);
-  var lngAt=function(px){ return ((px-mapX)/scale-ox)/W2*360-180; };
-  var latAt=function(py){ var y=((py-mapY)/scale-oy)/W2; return Math.atan(Math.sinh(Math.PI*(1-2*y)))*180/Math.PI; };
-  var roadsP=cardRoads(latAt(mapY+mapH),lngAt(mapX),latAt(mapY),lngAt(mapX+mapW)), ways=null;
+  var roadsP=cardRoads.apply(null,fr.box), ways=null;
   load(0).then(function(res){
     var ok=res.filter(function(r){ return r.img; }).length;
     if(ok>=res.length/2) return res;
@@ -2322,6 +2391,7 @@ function buildReport(y){
 /* ---------- Ειδοποιήσεις στο κινητό (μέσω της δωρεάν εφαρμογής ntfy ή email) ---------- */
 /* Ιστορικό εκδόσεων: πρώτος αριθμός = μεγάλη αλλαγή, δεύτερος = βελτίωση */
 var VLOG=[
+  ['4.5','Κάρτα PDF πολύ πιο γρήγορη (ετοιμάζεται μόλις ανοίξεις τον τομέα) · κουμπί Google Maps στη σελίδα του τομέα'],
   ['4.4','Κάρτα PDF στα χωριά: πιο έντονα ονόματα δρόμων, και στους στριφογυριστούς δρόμους'],
   ['4.3','Κάρτα PDF: κεντρικοί δρόμοι κίτρινοι, πολύ πιο καθαροί'],
   ['4.2','Σύνδεσμος στον Πίνακα τομέων · αριθμός έκδοσης σε κάθε σελίδα'],
