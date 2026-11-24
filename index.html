@@ -269,7 +269,13 @@ h3{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--fa
 label{display:block;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);margin:12px 0 5px}
 input,select{width:100%;background:var(--raised);border:1px solid var(--rule);border-radius:9px;
   padding:11px 12px;color:var(--text);font:inherit;font-size:16px;min-width:0}
-input[type="date"]{padding:9px 6px 9px 10px}
+input[type="date"]{padding:9px 6px 9px 10px;-webkit-appearance:none;appearance:none;display:block;width:100%;max-width:100%;min-width:0;
+  height:46px;line-height:26px;text-align:left}
+input[type="date"]::-webkit-date-and-time-value{text-align:left;margin:0}
+.dpick{position:relative}
+.dpick .ph{display:none;position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--faint);font-size:15px;pointer-events:none}
+html.ios .dpick input.empty+.ph{display:block}
+.dclr{float:right;text-transform:none;letter-spacing:0;color:var(--accent);font-weight:600;font-size:12px}
 .check{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:13.5px;color:var(--muted)}
 .check input{width:20px;height:20px;flex:0 0 auto;accent-color:var(--accent)}
 
@@ -528,7 +534,7 @@ nav button.on .ico .mp{fill:var(--sheet);stroke:none}
       <button onclick="openSettings()" title="Ρυθμίσεις" aria-label="Ρυθμίσεις"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h9"/><path d="M19 7h1"/><path d="M4 17h3"/><path d="M13 17h7"/><circle class="d1" cx="16" cy="7" r="2.5"/><circle class="d1" cx="10" cy="17" r="2.5"/></svg></button>
     </div>
   </header>
-  <main id="main" data-ver="Territory Hub · v5.1"><div class="empty"><span class="spin"></span><br><br>Φόρτωση…</div></main>
+  <main id="main" data-ver="Territory Hub · v5.3"><div class="empty"><span class="spin"></span><br><br>Φόρτωση…</div></main>
   <nav>
     <button data-tab="map" class="on" onclick="go('map')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="d ns" d="M9 4l6 2.5V20l-6-2.5z"/><path d="M3 6.5 9 4l6 2.5L21 4v13.5L15 20l-6-2.5L3 20z"/><path d="M9 4v13.5"/><path d="M15 6.5V20"/></svg><span>Χάρτης</span></button>
     <button data-tab="list" onclick="go('list')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.3 L11.2 3.6 L12.4 11.2 L5.3 12.8 Z"/><path class="d1" d="M11.2 3.6 L20 5.3 L19.1 12 L12.4 11.2 Z"/><path d="M5.3 12.8 L12.4 11.2 L14.1 20.4 L4.4 20.4 Z"/><path class="d" d="M12.4 11.2 L19.1 12 L20 19.1 L14.1 20.4 Z"/></svg><span>Τομείς</span></button>
@@ -547,7 +553,7 @@ nav button.on .ico .mp{fill:var(--sheet);stroke:none}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-var APP_VERSION='5.1', SCRIPT_NEEDS='3.4';
+var APP_VERSION='5.3', SCRIPT_NEEDS='3.4';
 /* ==================================================================
    Η ΜΟΝΗ ΓΡΑΜΜΗ ΠΟΥ ΙΣΩΣ ΧΡΕΙΑΣΤΕΙ ΝΑ ΑΛΛΑΞΕΙΣ
    ================================================================== */
@@ -1270,12 +1276,10 @@ function lastDone(t){
   return d;
 }
 /* Ποιοι τομείς πρέπει να ολοκληρωθούν ώστε στο έντυπο των 12 μηνών πριν την επίσκεψη να φαίνονται όλοι.
-   Ένας τομέας θέλει το πολύ «μήνες κράτησης» (4) για να τελειώσει:
-   όσοι είναι ήδη δοσμένοι και λήγουν πριν την επίσκεψη θεωρούνται ότι θα ολοκληρωθούν· οι υπόλοιποι μετράνε. */
+   Μετράει ΜΟΝΟ η ολοκλήρωση μέσα στους 12 μήνες — ένας δοσμένος τομέας μετράει ως «να ολοκληρωθεί» μέχρι να επιστραφεί. */
 function coNeed(v){
   var lim=isoD(addM(v.to,-12));
-  return all().filter(function(t){ var d=lastDone(t); if(d&&d>=lim) return false;
-      return !(isOut(t.s)&&t.s.dueOn<=v.from); })
+  return all().filter(function(t){ var d=lastDone(t); return !d||d<lim; })
     .sort(function(a,b){ return lastDone(a).localeCompare(lastDone(b)); });
 }
 /* ως πότε πρέπει να δοθούν για να προλάβουν (επίσκεψη − μήνες κράτησης) */
@@ -1297,16 +1301,16 @@ function coCard(){
 }
 function openCo(){
   var v=coVisit(); if(!v) return openSettings('co');
-  var need=coNeed(v), by=coGiveBy(v), late=by<new Date();
+  var need=coNeed(v);
   var h='<h2 class="ht">'+ic('people')+'Επίσκεψη επισκόπου</h2><div class="cs">'+coWhen(v)+'</div>';
   if(!need.length) h+='<div class="empty" style="padding:22px 0">Όλοι ολοκληρωμένοι ✓</div>';
   else {
-    h+='<div class="cs" style="margin-top:-8px">'+need.length+(need.length===1?' τομέας':' τομείς')+' · να δοθούν '+
-      (late?'<b style="color:var(--coral)">άμεσα</b>':'ως <b>'+fmt(by)+'</b>')+'</div><div class="hist">';
-    need.forEach(function(t){ var d=lastDone(t), s=t.s;
-      h+='<button class="hrow" onclick="closeCo();open_(\''+t.id+'\')"><b>'+esc(t.name)+'</b><span>'+
-        (isOut(s)?'<i style="font-style:normal;color:var(--amber)">λήγει '+fmt(s.dueOn)+'</i>':(d?fmt(d):'ποτέ'))+'</span></button>'; });
-    h+='</div>';
+    h+='<div class="cs" style="margin-top:-8px">'+need.length+(need.length===1?' τομέας να ολοκληρωθεί':' τομείς να ολοκληρωθούν')+'</div>';
+    need.forEach(function(t){ var s=t.s;
+      h+='<button class="row" onclick="closeCo();open_(\''+t.id+'\')">'+
+        '<div class="thumb">'+miniSvg(inTown(t.town),52,44,t.id)+'</div>'+
+        '<div class="info"><div class="nm">'+esc(t.name)+'</div>'+
+        (isOut(s)?'<div class="dt" style="color:var(--blue)">'+esc(s.holder)+'</div>':'')+'</div></button>'; });
   }
   h+='<div class="btns" style="margin-top:16px"><button class="btn" onclick="closeCo()">Κλείσιμο</button></div>';
   var m=modal(h); m.classList.add('co');
@@ -2683,6 +2687,8 @@ function buildReport(y){
 }
 /* Ιστορικό εκδόσεων: πρώτος αριθμός = μεγάλη αλλαγή, δεύτερος = βελτίωση */
 var VLOG=[
+  ['5.3','Επίσκεψη επισκόπου: μετράνε μόνο οι ολοκληρωμένοι τομείς μέσα στους 12 μήνες'],
+  ['5.2','Διόρθωση ημερομηνιών στο iPhone · λίστα επίσκεψης επισκόπου με εικονίδια τομέων'],
   ['5.1','Επίσκεψη επισκόπου: μετράει ότι κάθε τομέας θέλει έως 4 μήνες · πιο μικρή κάρτα και λιτή λίστα · ο χρόνος κάλυψης μετριέται μόνος του (εκτός αν «Αβέβαιο») · κλείσιμο ειδοποιήσεων χωρίς απάντηση'],
   ['5.0','Επίσκεψη επισκόπου: πόσοι τομείς μένουν ως τότε · έντυπο τελευταίων 12 μηνών · υπενθυμίσεις «τελείωσε;» στους 2 και 3 μήνες · '+
     'πόσο κράτησε η κάλυψη και πόσο χρειάζεται συνήθως κάθε τομέας · χρώματα ως 8 μήνες (ρύθμιση) · νέες ρυθμίσεις σε ομάδες · χωρίς ειδοποιήσεις και σύνδεσμο My Territories'],
@@ -2718,6 +2724,18 @@ function sgrp(id,icon,title,body){
   return '<section class="sgrp" id="g_'+id+'"><h4>'+ic(icon)+title+'</h4>'+body+'</section>'; }
 function numIn(id,lab,val,min,max,suf,step){
   return '<div class="nin"><label for="'+id+'">'+lab+'</label><div class="nbox"><input type="number" id="'+id+'" value="'+val+'" min="'+min+'" max="'+max+'" step="'+(step||1)+'" inputmode="decimal"><span>'+suf+'</span></div></div>'; }
+/* πεδίο ημερομηνίας που φαίνεται σωστά και στο iPhone (και όταν είναι άδειο) */
+function dateIn(id,lab,val){ val=String(val||'').slice(0,10);
+  return '<label for="'+id+'">'+lab+'<button type="button" class="dclr" data-clr="'+id+'"'+(val?'':' hidden')+'>καθαρισμός</button></label>'+
+    '<div class="dpick"><input type="date" id="'+id+'" value="'+esc(val)+'"'+(val?'':' class="empty"')+'><span class="ph">Πάτησε για ημερομηνία</span></div>'; }
+/* το iPhone δείχνει τα άδεια πεδία ημερομηνίας εντελώς κενά — εκεί βάζουμε δική μας ένδειξη */
+if(/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1)) document.documentElement.classList.add('ios');
+function wireDates(d){
+  [].forEach.call(d.querySelectorAll('.dpick input'),function(i){ var c=d.querySelector('[data-clr="'+i.id+'"]');
+    var upd=function(){ i.classList.toggle('empty',!i.value); if(c) c.hidden=!i.value; };
+    i.addEventListener('input',upd); i.addEventListener('change',upd);
+    if(c) c.onclick=function(e){ e.preventDefault(); i.value=''; upd(); }; });
+}
 function openSettings(focus){
   var S=D.settings, withMap=D.territories.filter(function(t){ return t.mymaps_id; }).length, ok=0, bad=[];
   if(D.geo) D.territories.forEach(function(t){ if(!t.mymaps_id) return;
@@ -2739,8 +2757,8 @@ function openSettings(focus){
       '<div class="lramplab" id="sAl">'+bandLabels().map(function(x){ return '<span>'+x+'</span>'; }).join('')+'</div>'+
       '<div class="hint">Μήνες από την τελευταία ολοκλήρωση. Ισχύει για τον χάρτη και τις λίστες.</div>')+
     sgrp('co','people','Επίσκεψη επισκόπου περιοχής',
-      '<label for="sL">Τελευταία επίσκεψη</label><input type="date" id="sL" value="'+esc(String(S.co_last||'').slice(0,10))+'">'+
-      '<label for="sN">Επόμενη επίσκεψη <span style="text-transform:none;letter-spacing:0">(αν την ξέρεις)</span></label><input type="date" id="sN" value="'+esc(String(S.co_next||'').slice(0,10))+'">'+
+      dateIn('sL','Τελευταία επίσκεψη',S.co_last)+
+      dateIn('sN','Επόμενη επίσκεψη <span style="text-transform:none;letter-spacing:0">(αν την ξέρεις)</span>',S.co_next)+
       '<div class="hint">Για την επόμενη γράψε τη Δευτέρα της εβδομάδας. Αν δεν την ξέρεις, υπολογίζεται 5½–6½ μήνες μετά την τελευταία.'+
         (v&&!v.passed?'<br><b style="color:var(--text)">Τώρα: '+coWhen(v)+'</b>':'')+'</div>')+
     '<div class="btns" style="margin-top:14px"><button class="btn pri" id="sS">'+ic('check')+'Αποθήκευση</button></div>'+
@@ -2760,7 +2778,7 @@ function openSettings(focus){
       (ls?'<div class="kv"><span>Τελευταία αποθήκευση</span><b>'+sec(ls.ms)+(ls.srv&&ls.srv.total?' <small style="color:var(--faint);font-weight:500">· Google '+sec(ls.srv.total)+'</small>':'')+'</b></div>':'')+
       '<details class="vlog"><summary>Ιστορικό εκδόσεων</summary>'+VLOG.map(function(x){
         return '<div><b>v'+x[0]+'</b><span>'+x[1]+'</span></div>'; }).join('')+'</details>');
-  var d=modal(h);
+  var d=modal(h); wireDates(d);
   var q=function(id){ return d.querySelector('#'+id); };
   q('sA').oninput=function(){ var keep=D.settings.age_max; D.settings.age_max=+this.value||keep;
     q('sAl').innerHTML=bandLabels().map(function(x){ return '<span>'+x+'</span>'; }).join(''); D.settings.age_max=keep; };
