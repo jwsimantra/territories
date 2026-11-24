@@ -534,7 +534,7 @@ nav button.on .ico .mp{fill:var(--sheet);stroke:none}
       <button onclick="openSettings()" title="Ρυθμίσεις" aria-label="Ρυθμίσεις"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h9"/><path d="M19 7h1"/><path d="M4 17h3"/><path d="M13 17h7"/><circle class="d1" cx="16" cy="7" r="2.5"/><circle class="d1" cx="10" cy="17" r="2.5"/></svg></button>
     </div>
   </header>
-  <main id="main" data-ver="Territory Hub · v5.3"><div class="empty"><span class="spin"></span><br><br>Φόρτωση…</div></main>
+  <main id="main" data-ver="Territory Hub · v5.4"><div class="empty"><span class="spin"></span><br><br>Φόρτωση…</div></main>
   <nav>
     <button data-tab="map" class="on" onclick="go('map')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="d ns" d="M9 4l6 2.5V20l-6-2.5z"/><path d="M3 6.5 9 4l6 2.5L21 4v13.5L15 20l-6-2.5L3 20z"/><path d="M9 4v13.5"/><path d="M15 6.5V20"/></svg><span>Χάρτης</span></button>
     <button data-tab="list" onclick="go('list')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.3 L11.2 3.6 L12.4 11.2 L5.3 12.8 Z"/><path class="d1" d="M11.2 3.6 L20 5.3 L19.1 12 L12.4 11.2 Z"/><path d="M5.3 12.8 L12.4 11.2 L14.1 20.4 L4.4 20.4 Z"/><path class="d" d="M12.4 11.2 L19.1 12 L20 19.1 L14.1 20.4 Z"/></svg><span>Τομείς</span></button>
@@ -553,7 +553,7 @@ nav button.on .ico .mp{fill:var(--sheet);stroke:none}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-var APP_VERSION='5.3', SCRIPT_NEEDS='3.4';
+var APP_VERSION='5.4', SCRIPT_NEEDS='3.4';
 /* ==================================================================
    Η ΜΟΝΗ ΓΡΑΜΜΗ ΠΟΥ ΙΣΩΣ ΧΡΕΙΑΣΤΕΙ ΝΑ ΑΛΛΑΞΕΙΣ
    ================================================================== */
@@ -1276,10 +1276,12 @@ function lastDone(t){
   return d;
 }
 /* Ποιοι τομείς πρέπει να ολοκληρωθούν ώστε στο έντυπο των 12 μηνών πριν την επίσκεψη να φαίνονται όλοι.
-   Μετράει ΜΟΝΟ η ολοκλήρωση μέσα στους 12 μήνες — ένας δοσμένος τομέας μετράει ως «να ολοκληρωθεί» μέχρι να επιστραφεί. */
+   Ένας τομέας θέλει το πολύ «μήνες κράτησης» (4) για να τελειώσει:
+   όσοι είναι ήδη δοσμένοι και λήγουν πριν την επίσκεψη θεωρούνται ότι θα ολοκληρωθούν· οι υπόλοιποι μετράνε. */
 function coNeed(v){
   var lim=isoD(addM(v.to,-12));
-  return all().filter(function(t){ var d=lastDone(t); return !d||d<lim; })
+  return all().filter(function(t){ var d=lastDone(t); if(d&&d>=lim) return false;
+      return !(isOut(t.s)&&t.s.dueOn<=v.from); })
     .sort(function(a,b){ return lastDone(a).localeCompare(lastDone(b)); });
 }
 /* ως πότε πρέπει να δοθούν για να προλάβουν (επίσκεψη − μήνες κράτησης) */
@@ -2687,7 +2689,7 @@ function buildReport(y){
 }
 /* Ιστορικό εκδόσεων: πρώτος αριθμός = μεγάλη αλλαγή, δεύτερος = βελτίωση */
 var VLOG=[
-  ['5.3','Επίσκεψη επισκόπου: μετράνε μόνο οι ολοκληρωμένοι τομείς μέσα στους 12 μήνες'],
+  ['5.4','Επίσκεψη επισκόπου: ξανά όπως στην 5.2 — οι δοσμένοι που λήγουν πριν την επίσκεψη δεν μετράνε'],
   ['5.2','Διόρθωση ημερομηνιών στο iPhone · λίστα επίσκεψης επισκόπου με εικονίδια τομέων'],
   ['5.1','Επίσκεψη επισκόπου: μετράει ότι κάθε τομέας θέλει έως 4 μήνες · πιο μικρή κάρτα και λιτή λίστα · ο χρόνος κάλυψης μετριέται μόνος του (εκτός αν «Αβέβαιο») · κλείσιμο ειδοποιήσεων χωρίς απάντηση'],
   ['5.0','Επίσκεψη επισκόπου: πόσοι τομείς μένουν ως τότε · έντυπο τελευταίων 12 μηνών · υπενθυμίσεις «τελείωσε;» στους 2 και 3 μήνες · '+

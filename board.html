@@ -769,10 +769,11 @@ header{flex:0 0 auto;background:var(--ground);border-bottom:1px solid var(--soft
 .leaflet-bar a{background:var(--sheet)!important;color:var(--text)!important;border-color:var(--soft)!important}
 .leaflet-bar{border:1px solid var(--rule)!important;box-shadow:var(--shadow)!important}
 
-/* territory number tags, edged in the territory's board colour */
+/* αριθμοί τομέων στον χάρτη — όπως στο My Territories: στρογγυλό σήμα με περίγραμμα στο χρώμα του τομέα */
 .num{display:grid;place-items:center}
-.num span{min-width:calc(var(--map-num,15px)*2);height:calc(var(--map-num,15px)*2);padding:0 7px;border-radius:9px;display:grid;place-items:center;background:var(--tc);color:#151C22;
-  border:2px solid #FFFFFF;font-weight:800;font-size:var(--map-num,15px);font-variant-numeric:tabular-nums;box-shadow:0 4px 10px -4px rgba(0,0,0,.45);cursor:pointer;transition:opacity .2s}
+.num span{min-width:calc(var(--map-num,13px)*2);height:calc(var(--map-num,13px)*2);padding:0 6px;border-radius:99px;display:grid;place-items:center;
+  background:var(--sheet);color:var(--text);border:2.5px solid var(--tc);font-weight:800;font-size:var(--map-num,13px);line-height:1;
+  font-variant-numeric:tabular-nums;box-shadow:0 1px 4px rgba(0,0,0,.35);cursor:pointer}
 .num.sel span{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
 .num.me span{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
 .num.dim span{opacity:.35}
@@ -947,7 +948,7 @@ body.boardmode .locate,body.boardmode .hint,body.boardmode .fake{display:none}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
 // ▼▼ Paste the address of your Apps Script web app (the same one the Hub uses) between the quotes ▼▼
-const BOARD_VERSION = '1.7';
+const BOARD_VERSION = '1.8';
 const API_URL = 'https://script.google.com/macros/s/AKfycbwRUO7Zf1Ngkx3HSNbu1DjIjPaAo2RWF8MSYGdJZIZeLDE3k5Nk_gogN6YNIiYw8ffi/exec';
 /* οι άλλες σελίδες είναι στον ίδιο φάκελο με αυτή — έτσι οι σύνδεσμοι δουλεύουν όπου κι αν ανέβει */
 const HERE = location.href.split('#')[0].split('?')[0].replace(/[^\/]*$/, '');
@@ -1050,7 +1051,7 @@ const edgeDist = (c, d, P) => { let best = Infinity;
     if (t > 0 && u >= 0 && u <= 1 && t < best) best = t; }
   return best === Infinity ? 0 : best; };
 /* μεγέθη: από το φύλλο (για όλους) · αλλαγές στο μυστικό μενού μένουν σε αυτή τη συσκευή μέχρι «Αποθήκευση για όλους» */
-const SIZE_DEF = {num:20, min:12, polyMin:9, scale:1, mapNum:15};
+const SIZE_DEF = {num:20, min:12, polyMin:9, scale:1, mapNum:13};
 const SIZES = Object.assign({}, SIZE_DEF);
 let sheetSizes = {};
 function loadSizes(fromSheet){
@@ -1200,12 +1201,17 @@ buildLayers();
 const leaders = L.layerGroup().addTo(map);
 function placeLabels(){
   const z = map.getZoom(); leaders.clearLayers();
+  /* όσο απομακρύνεσαι, τα σήματα μικραίνουν ώστε να μην πέφτουν το ένα πάνω στο άλλο (όχι κάτω από 9 px) */
+  const rs = Object.values(T).filter(t => t.ll && t.label).map(t => innerR(merc(t.lp[0], t.lp[1], z), t.ll.map(p => merc(p[0], p[1], z)))).sort((a, b) => a - b);
+  const med = rs.length ? rs[Math.floor(rs.length * .4)] : 99, full = SIZES.mapNum * 1.15;
+  const want = SIZES.mapNum * med / full, px = Math.max(9, Math.min(SIZES.mapNum, want)), far = want < 6.5;   /* πολύ μακριά: κρύβονται */
+  document.getElementById('map').style.setProperty('--map-num', px.toFixed(1) + 'px');
   Object.values(T).forEach(t => {
     if (!t.label || !t.ll) return;
     const P = t.ll.map(p => merc(p[0], p[1], z)), c = merc(t.lp[0], t.lp[1], z);
-    t.label.setLatLng(t.lp);
-    t.label.setOpacity(innerR(c, P) >= needR(t.n) + 2 ? 1 : 0);      /* από μακριά: ο αριθμός κρύβεται, δεν μετακινείται */
-    const el = t.label.getElement(); if (el) el.style.pointerEvents = innerR(c, P) >= needR(t.n) + 2 ? '' : 'none';
+    t.label.setLatLng(t.lp);                                     /* ο αριθμός φαίνεται πάντα, στο κέντρο του τομέα */
+    t.label.setOpacity(far ? 0 : 1);
+    const el = t.label.getElement(); if (el) el.style.pointerEvents = far ? 'none' : '';
   });
 }
 map.on('zoomend', placeLabels);
