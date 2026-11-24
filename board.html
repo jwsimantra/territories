@@ -817,12 +817,11 @@ body.chips .hint{bottom:86px}
 .bsvg{overflow:visible}
 .bsvg .tiles image{pointer-events:none}
 .bsvg .shape{fill-opacity:.7}
-.bsvg text{font-family:var(--f);font-weight:800;text-anchor:middle;dominant-baseline:central;pointer-events:none;fill:#151C22;font-variant-numeric:tabular-nums}
-.bsvg text.out{fill:var(--sheet-ink)}
+.bsvg text{font-family:var(--f);font-weight:800;text-anchor:middle;dominant-baseline:central;pointer-events:none;fill:var(--sheet-ink);font-variant-numeric:tabular-nums}
 .bsvg .road{fill:none;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke;pointer-events:none}
 .bsvg .lead{stroke:var(--sheet-muted);opacity:.6;stroke-linecap:round}
 .bsvg .dot{fill:var(--sheet-muted);opacity:.75}
-.bsvg .pill{stroke:var(--sheet-paper);stroke-width:1.5;vector-effect:non-scaling-stroke;cursor:pointer;pointer-events:auto}
+.bsvg .nbd{fill:var(--sheet-paper);stroke-width:2.5;vector-effect:non-scaling-stroke;cursor:pointer;pointer-events:auto;filter:drop-shadow(0 1px 2px rgba(0,0,0,.3))}
 .bsvg.call .bl{cursor:pointer}
 /* μυστικό μενού μεγεθών */
 .sz{display:grid;gap:14px;margin-top:16px}
@@ -831,6 +830,9 @@ body.chips .hint{bottom:86px}
 .sz input[type=range]{grid-column:1/-1;width:100%;accent-color:var(--accent)}
 .sz small{grid-column:1/-1;color:var(--faint);font-size:12px;font-weight:500}
 .mosaic{display:grid;gap:5px;margin-top:10px;grid-auto-rows:46px}
+.tile .nbs{min-width:calc(var(--bnum,15px)*1.85);height:calc(var(--bnum,15px)*1.85);padding:0 6px;border-radius:99px;display:grid;place-items:center;
+  background:var(--sheet-paper);color:var(--sheet-ink);border:2.5px solid var(--tc);font-size:var(--bnum,15px);font-weight:800;line-height:1;
+  font-variant-numeric:tabular-nums;box-shadow:0 1px 3px rgba(0,0,0,.3)}
 .tile{border:0;border-radius:7px;cursor:pointer;display:grid;place-items:center;min-width:0;background-color:var(--tc);color:#151C22;
   background-image:repeating-linear-gradient(118deg,rgba(255,255,255,.22) 0 1.5px,transparent 1.5px 4.5px);font-family:var(--f);font-weight:800;font-size:15px;transition:opacity .2s}
 .tile.me{box-shadow:inset 0 0 0 3px var(--accent)}
@@ -936,7 +938,7 @@ body.boardmode .locate,body.boardmode .hint,body.boardmode .fake{display:none}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
 // ▼▼ Paste the address of your Apps Script web app (the same one the Hub uses) between the quotes ▼▼
-const BOARD_VERSION = '1.9';
+const BOARD_VERSION = '2.0';
 const API_URL = 'https://script.google.com/macros/s/AKfycbwRUO7Zf1Ngkx3HSNbu1DjIjPaAo2RWF8MSYGdJZIZeLDE3k5Nk_gogN6YNIiYw8ffi/exec';
 /* οι άλλες σελίδες είναι στον ίδιο φάκελο με αυτή — έτσι οι σύνδεσμοι δουλεύουν όπου κι αν ανέβει */
 const HERE = location.href.split('#')[0].split('?')[0].replace(/[^\/]*$/, '');
@@ -1039,7 +1041,7 @@ const edgeDist = (c, d, P) => { let best = Infinity;
     if (t > 0 && u >= 0 && u <= 1 && t < best) best = t; }
   return best === Infinity ? 0 : best; };
 /* μεγέθη: από το φύλλο (για όλους) · αλλαγές στο μυστικό μενού μένουν σε αυτή τη συσκευή μέχρι «Αποθήκευση για όλους» */
-const SIZE_DEF = {num:20, min:12, polyMin:9, scale:1, mapNum:13};
+const SIZE_DEF = {num:15, min:11, polyMin:9, scale:1, mapNum:13};
 const SIZES = Object.assign({}, SIZE_DEF);
 let sheetSizes = {};
 function loadSizes(fromSheet){
@@ -1048,6 +1050,7 @@ function loadSizes(fromSheet){
   Object.assign(SIZES, SIZE_DEF, sheetSizes);
   try { const l = JSON.parse(localStorage.getItem('tb-sizes') || 'null'); if (l) Object.assign(SIZES, l); } catch (e) {}
   document.documentElement.style.setProperty('--map-num', SIZES.mapNum + 'px');
+  document.documentElement.style.setProperty('--bnum', SIZES.num + 'px');
 }
 loadSizes();
 /* θέση έξω από τον τομέα που δεν πέφτει πάνω σε άλλον αριθμό: δοκιμάζει γωνίες γύρω από την κατεύθυνση «προς τα έξω» */
@@ -1311,7 +1314,9 @@ function sheetSVG(tw, big, call){
    1) κάθε περιοχή παίρνει όσο πλάτος χρειάζεται ώστε οι αριθμοί να χωράνε μέσα (όχι περισσότερο)
    2) αν δεν χωράει στην οθόνη, οι αριθμοί μικραίνουν όσο χρειάζεται (Πολύγυρος: ακόμη πιο μικροί)
    3) μόνο ό,τι δεν χωράει ούτε έτσι μπαίνει δίπλα, με απαλή γραμμή */
-const fitNeed = (fs, n) => Math.max(fs*.55, String(n).length*fs*.31 + 3);
+/* σήμα αριθμού (όπως στον χάρτη): στρογγυλό, με περίγραμμα στο χρώμα του τομέα */
+const badge = (fs, n) => { const h = fs*1.85; return {h, w: Math.max(h, String(n).length*fs*.62 + fs*.95)}; };
+const fitNeed = (fs, n) => { const b = badge(fs, n); return Math.max(b.w, b.h)/2*.92; };
 function sheetItems(svg){
   return [...svg.querySelectorAll('g.bl')].map(g => { const tx = g.querySelector('text');
     return {g, tx, ln: g.querySelector('line.lead'), n: tx.textContent, x: +tx.dataset.x, y: +tx.dataset.y, r0: +tx.dataset.r,
@@ -1363,22 +1368,27 @@ function placeBoardLabels(){
     const miss = f => items.filter(i => i.r < fitNeed(f, i.n)).length, least = miss(floor);
     let fs = floor; for (let f = SIZES.num; f >= floor; f -= .5) if (miss(f) <= least) { fs = f; break; }
     const boxes = [];
-    items.forEach(i => { i.g.querySelectorAll('.pill,.dot').forEach(e => e.remove()); i.tx.setAttribute('font-size', (fs/k).toFixed(2)); });
+    const NS = 'http://www.w3.org/2000/svg';
+    const mkBadge = (i, cx, cy, w, h) => { const r = document.createElementNS(NS, 'rect');
+      r.setAttribute('class', 'nbd'); r.setAttribute('stroke', i.fill);
+      r.setAttribute('x', ((cx - w/2)/k).toFixed(1)); r.setAttribute('y', ((cy - h/2)/k).toFixed(1));
+      r.setAttribute('width', (w/k).toFixed(1)); r.setAttribute('height', (h/k).toFixed(1)); r.setAttribute('rx', (h/2/k).toFixed(1));
+      i.g.insertBefore(r, i.tx); };
+    items.forEach(i => { i.g.querySelectorAll('.nbd,.dot').forEach(e => e.remove()); i.tx.setAttribute('font-size', (fs/k).toFixed(2)); });
     items.filter(i => i.r >= fitNeed(fs, i.n)).forEach(i => {
       i.tx.setAttribute('x', i.x); i.tx.setAttribute('y', i.y); i.ln.setAttribute('visibility', 'hidden');
-      const w = String(i.n).length*fs*.62 + 4; boxes.push([i.x*k - w/2, i.y*k - fs/2, i.x*k + w/2, i.y*k + fs/2]);
+      const {w, h} = badge(fs, i.n); mkBadge(i, i.x*k, i.y*k, w, h);
+      boxes.push([i.x*k - w/2, i.y*k - h/2, i.x*k + w/2, i.y*k + h/2]);
     });
     items.filter(i => i.r < fitNeed(fs, i.n)).forEach(i => {
-      const c = [i.x*k, i.y*k], w = String(i.n).length*fs*.62 + 12, h = fs + 6;
+      const c = [i.x*k, i.y*k], {w, h} = badge(fs, i.n);
       const o = placeOut(c, i.P, i.d, w, h, 8, boxes) || (() => { const ed = edgeDist(c, i.d, i.P), r = ed + 8 + w/2;
         return {x: c[0] + i.d[0]*r, y: c[1] + i.d[1]*r, b: null, dir: i.d, ed}; })();
       if (o.b) boxes.push(o.b);
-      const NS = 'http://www.w3.org/2000/svg', pill = document.createElementNS(NS, 'rect'), dot = document.createElementNS(NS, 'circle');
-      pill.setAttribute('class', 'pill'); pill.setAttribute('fill', i.fill);
-      pill.setAttribute('x', ((o.x - w/2)/k).toFixed(1)); pill.setAttribute('y', ((o.y - h/2)/k).toFixed(1));
-      pill.setAttribute('width', (w/k).toFixed(1)); pill.setAttribute('height', (h/k).toFixed(1)); pill.setAttribute('rx', (h/2/k).toFixed(1));
+      const dot = document.createElementNS(NS, 'circle');
+      mkBadge(i, o.x, o.y, w, h);
       dot.setAttribute('class', 'dot'); dot.setAttribute('cx', i.x); dot.setAttribute('cy', i.y); dot.setAttribute('r', (2.2/k).toFixed(2));
-      i.g.insertBefore(pill, i.tx); i.g.insertBefore(dot, i.ln);
+      i.g.insertBefore(dot, i.ln);
       const dx = c[0] - o.x, dy = c[1] - o.y, L = Math.hypot(dx, dy) || 1;
       const tt = Math.min((w/2) / Math.max(1e-6, Math.abs(dx/L)), (h/2) / Math.max(1e-6, Math.abs(dy/L)));
       i.ln.setAttribute('x1', i.x); i.ln.setAttribute('y1', i.y);
@@ -1443,7 +1453,7 @@ if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if
 addEventListener('resize', () => { clearTimeout(rzT); rzT = setTimeout(() => { if (view === 'board') fitBoardLabels(); }, 150); });
 function sketch(tw){
   const [cols, areas] = SKETCH[tw.name];
-  return `<div class="mosaic" style="grid-template-columns:repeat(${cols},minmax(0,1fr))">${tw.ns.map(n => `<button class="tile" data-n="${n}" style="grid-area:${areas[n]};--tc:${T[n].fill};--ti:${T[n].ink}">${n}</button>`).join('')}</div>
+  return `<div class="mosaic" style="grid-template-columns:repeat(${cols},minmax(0,1fr))">${tw.ns.map(n => `<button class="tile" data-n="${n}" style="grid-area:${areas[n]};--tc:${T[n].fill};--ti:${T[n].ink}"><span class="nbs">${n}</span></button>`).join('')}</div>
     <p class="pending">Ο χάρτης έρχεται σύντομα</p>`;
 }
 function renderBoard(poly){

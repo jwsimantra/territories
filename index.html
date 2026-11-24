@@ -524,7 +524,7 @@ nav button.on .ico .mp{fill:var(--sheet);stroke:none}
       <button onclick="openSettings()" title="Ρυθμίσεις" aria-label="Ρυθμίσεις"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h9"/><path d="M19 7h1"/><path d="M4 17h3"/><path d="M13 17h7"/><circle class="d1" cx="16" cy="7" r="2.5"/><circle class="d1" cx="10" cy="17" r="2.5"/></svg></button>
     </div>
   </header>
-  <main id="main" data-ver="Territory Hub · v5.5"><div class="empty"><span class="spin"></span><br><br>Φόρτωση…</div></main>
+  <main id="main" data-ver="Territory Hub · v5.6"><div class="empty"><span class="spin"></span><br><br>Φόρτωση…</div></main>
   <nav>
     <button data-tab="map" class="on" onclick="go('map')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="d ns" d="M9 4l6 2.5V20l-6-2.5z"/><path d="M3 6.5 9 4l6 2.5L21 4v13.5L15 20l-6-2.5L3 20z"/><path d="M9 4v13.5"/><path d="M15 6.5V20"/></svg><span>Χάρτης</span></button>
     <button data-tab="list" onclick="go('list')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.3 L11.2 3.6 L12.4 11.2 L5.3 12.8 Z"/><path class="d1" d="M11.2 3.6 L20 5.3 L19.1 12 L12.4 11.2 Z"/><path d="M5.3 12.8 L12.4 11.2 L14.1 20.4 L4.4 20.4 Z"/><path class="d" d="M12.4 11.2 L19.1 12 L20 19.1 L14.1 20.4 Z"/></svg><span>Τομείς</span></button>
@@ -543,7 +543,7 @@ nav button.on .ico .mp{fill:var(--sheet);stroke:none}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-var APP_VERSION='5.5', SCRIPT_NEEDS='3.4';
+var APP_VERSION='5.6', SCRIPT_NEEDS='3.4';
 /* ==================================================================
    Η ΜΟΝΗ ΓΡΑΜΜΗ ΠΟΥ ΙΣΩΣ ΧΡΕΙΑΣΤΕΙ ΝΑ ΑΛΛΑΞΕΙΣ
    ================================================================== */
@@ -712,8 +712,10 @@ function polyPaths(list,p,highlight){
   var out='';
   list.forEach(function(t){
     var gg=geoOf(t.id); if(!gg||!gg.polygons) return;
-    var hi=!highlight||t.id===highlight;
-    var c=highlight?(t.id===highlight?col(t.s):'var(--idle)'):colMode(t.s);
+    /* highlight: ένας τομέας (id) ή λίστα από ids — οι υπόλοιποι αχνοί */
+    var on=highlight&&(Array.isArray(highlight)?highlight.indexOf(t.id)>=0:t.id===highlight);
+    var hi=!highlight||on;
+    var c=highlight?(on?col(t.s):'var(--idle)'):colMode(t.s);
     gg.polygons.forEach(function(pl){
       var d=pl.coords.map(function(cc,i){
         return (i?'L':'M')+(wx(cc[1],p.z)+p.ox).toFixed(1)+' '+(wy(cc[0],p.z)+p.oy).toFixed(1); }).join('')+'Z';
@@ -1286,18 +1288,18 @@ function openCo(){
   if(!need.length) h+='<div class="empty" style="padding:22px 0">Όλοι ολοκληρωμένοι ✓</div>';
   else {
     h+='<div class="cs" style="margin-top:-8px">'+need.length+(need.length===1?' τομέας να ολοκληρωθεί':' τομείς να ολοκληρωθούν')+'</div><div class="tiles">';
-    towns.forEach(function(n,i){ var list=inTown(n), k=by[n].length;
+    towns.forEach(function(n,i){ var list=inTown(n), k=by[n].length, ids=by[n].map(function(t){ return t.id; });
       h+='<button class="tile" onclick="closeCo();openTown(\''+esc(n)+'\')">'+
-        '<div class="mini" data-co="'+i+'">'+miniSvg(list,150,96)+'</div><div class="ft">'+
+        '<div class="mini" data-co="'+i+'">'+miniSvg(list,150,96,ids)+'</div><div class="ft">'+
         '<div class="tn">'+esc(n)+'</div><div class="tc"><b style="color:var(--text);font-size:12px">'+k+'</b> από '+list.length+' να ολοκληρωθούν</div>'+
-        '<div class="bars">'+list.map(function(t){ return '<i style="background:'+colMode(t.s)+'"></i>'; }).join('')+'</div></div></button>'; });
+        '<div class="bars">'+list.map(function(t){ return '<i style="background:'+(ids.indexOf(t.id)>=0?col(t.s):'var(--idle)')+'"></i>'; }).join('')+'</div></div></button>'; });
     h+='</div>';
   }
   h+='<div class="btns" style="margin-top:16px"><button class="btn" onclick="closeCo()">Κλείσιμο</button></div>';
   var m=modal(h); m.classList.add('co');
   /* χάρτης φόντου στις μικρογραφίες, όπως στην αρχική */
   [].forEach.call(m.querySelectorAll('.mini[data-co]'),function(el){ var n=towns[+el.getAttribute('data-co')];
-    el.innerHTML=miniTiles(inTown(n),el.clientWidth||150,el.clientHeight||96); });
+    el.innerHTML=miniTiles(inTown(n),el.clientWidth||150,el.clientHeight||96,by[n].map(function(t){ return t.id; })); });
 }
 function closeCo(){ document.querySelectorAll('.scrim.co').forEach(function(e){ e.remove(); }); }
 
@@ -2671,6 +2673,7 @@ function buildReport(y){
 }
 /* Ιστορικό εκδόσεων: πρώτος αριθμός = μεγάλη αλλαγή, δεύτερος = βελτίωση */
 var VLOG=[
+  ['5.6','Επίσκεψη επισκόπου: στους μικρούς χάρτες χρωματίζονται μόνο οι τομείς που μένουν'],
   ['5.5','Επίσκεψη επισκόπου: λίστα ανά περιοχή με μικρό χάρτη · καθάρισμα κώδικα'],
   ['5.4','Επίσκεψη επισκόπου: ξανά όπως στην 5.2 — οι δοσμένοι που λήγουν πριν την επίσκεψη δεν μετράνε'],
   ['5.2','Διόρθωση ημερομηνιών στο iPhone · λίστα επίσκεψης επισκόπου με εικονίδια τομέων'],
