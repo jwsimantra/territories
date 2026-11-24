@@ -42,7 +42,7 @@
 }
 
 /* Διαθέσιμοι κατά προτεραιότητα (μήνες από την τελευταία ολοκλήρωση):
-   g1 πράσινο (<8) · g2 κιτρινοπράσινο (8–12) · g3 κόκκινο (12+) · μπλε = δικός σου · γκρι = μη διαθέσιμος */
+   g1 πράσινο · g2 κιτρινοπράσινο · g3 κόκκινο (από το «πολύ παλιό» των ρυθμίσεων, αρχικά 8 μήνες) · μπλε = δικός σου · γκρι = μη διαθέσιμος */
 :root{ --g1:#6CCB9C; --g2:#DAE36C; --g3:#F07464; --g1t:#7BD6A9; --g2t:#DDE572; --g3t:#F58474; --late:#F07464;
   --ok:#6FD3C0; --ok-soft:rgba(111,211,192,.12); --mine:#4A82D6; --mine-soft:rgba(74,130,214,.14); }
 :root[data-theme="light"]{ --g1:#5DB889; --g2:#BFCC3A; --g3:#E25A48; --g1t:#16774A; --g2t:#687500; --g3t:#B9351F; --late:#C8412F;
@@ -378,7 +378,7 @@ nav button.on .ico .mp{fill:var(--sheet);stroke:none}
     </div></div>
     <button class="whob" id="who" hidden></button>
   </header>
-  <main id="main" data-ver="My Territories · v2.8"><div class="empty"><span class="spin"></span><br><br>Φόρτωση…</div></main>
+  <main id="main" data-ver="My Territories · v2.10"><div class="empty"><span class="spin"></span><br><br>Φόρτωση…</div></main>
   <nav id="nav">
     <button data-tab="free" class="on" onclick="go('free')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="d ns" d="M9 4l6 2.5V20l-6-2.5z"/><path d="M3 6.5 9 4l6 2.5L21 4v13.5L15 20l-6-2.5L3 20z"/><path d="M9 4v13.5"/><path d="M15 6.5V20"/></svg><span>Διαθέσιμοι τομείς</span></button>
     <button data-tab="mine" onclick="go('mine')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.3 L11.2 3.6 L12.4 11.2 L5.3 12.8 Z"/><path class="d1" d="M11.2 3.6 L20 5.3 L19.1 12 L12.4 11.2 Z"/><path d="M5.3 12.8 L12.4 11.2 L14.1 20.4 L4.4 20.4 Z"/><circle class="mb" cx="18.2" cy="18.2" r="5.3"/><circle class="mp" cx="18.2" cy="16.8" r="1.5"/><path class="mp" d="M15.7 21.2c0-1.5 1.1-2.3 2.5-2.3s2.5.8 2.5 2.3"/></svg><span>Οι τομείς μου</span></button>
@@ -390,7 +390,7 @@ nav button.on .ico .mp{fill:var(--sheet);stroke:none}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-var APP_VERSION='2.8';
+var APP_VERSION='2.10';
 var BOARD_URL=(function(){ var u=location.href.split('#')[0].split('?')[0]; return u.replace(/[^\/]*$/,'')+'board.html'; })();
 /* ==================================================================
    Σελίδα αιτήσεων — ίδια δεδομένα, ίδια εμφάνιση με την εφαρμογή του
@@ -608,7 +608,7 @@ function loadImg(url){
   var p=new Promise(function(res){
     var i=new Image(), done=false, tm=null; i.crossOrigin='anonymous';
     var fin=function(v){ if(done) return; done=true; clearTimeout(tm); if(!v) delete CARD_IMG[url]; res(v); };
-    tm=setTimeout(function(){ fin(null); },7000);
+    tm=setTimeout(function(){ fin(null); },6000);
     i.onload=function(){ fin(i); }; i.onerror=function(){ fin(null); }; i.src=url; });
   CARD_IMG[url]=p;
   var ks=Object.keys(CARD_IMG); if(ks.length>400) delete CARD_IMG[ks[0]];
@@ -628,7 +628,7 @@ var CARD_RANK={motorway:3,trunk:3,primary:3,secondary:3,motorway_link:2,trunk_li
   tertiary:2,tertiary_link:2,unclassified:1,residential:1,living_street:1,pedestrian:1};
 function cardRoadsFetch(q){
   /* ρωτάει τον 1ο διακομιστή· αν αργεί πάνω από 2,5" ρωτάει και τον επόμενο — κρατάει την πρώτη απάντηση.
-     Το πολύ 9": μετά η κάρτα βγαίνει χωρίς τους δικούς μας δρόμους (με τους δρόμους του υποβάθρου) */
+     Το πολύ 7": μετά η κάρτα βγαίνει χωρίς τους δικούς μας δρόμους (με τους δρόμους του υποβάθρου) */
   return new Promise(function(res){
     var N=CARD_OVERPASS.length, next=0, failed=0, done=false, ctls=[], hedge=null, dead=null;
     var fin=function(v){ if(done) return; done=true; clearInterval(hedge); clearTimeout(dead);
@@ -643,7 +643,7 @@ function cardRoadsFetch(q){
           return x.type==='way' && x.geometry && x.geometry.length>1 && CARD_RANK[(x.tags||{}).highway]; })); })
         .catch(function(){ if(++failed>=N) fin(null); else start(); });
     };
-    start(); hedge=setInterval(start,2500); dead=setTimeout(function(){ fin(null); },9000);
+    start(); hedge=setInterval(start,2500); dead=setTimeout(function(){ fin(null); },7000);
   });
 }
 /* οι δρόμοι κάθε τομέα φυλάγονται στη συσκευή (30 μέρες) — από τη 2η φορά η κάρτα δεν περιμένει τίποτα */
@@ -1122,7 +1122,10 @@ function drawLeaflet(elId,list,opts){
 /* ---------- χρώματα: διαθέσιμοι κατά προτεραιότητα, δικός σου μπλε, υπόλοιποι γκρι ---------- */
 function col(s){ if(s.mine) return 'var(--mine)'; if(s.state==='ready') return ageCol(s.rested); return 'var(--idle)'; }
 /* ζώνες προτεραιότητας: 1 = κάτω από 8 μήνες · 2 = 8–12 μήνες · 3 = 12 μήνες και πάνω (ή ποτέ) */
-function bandOf(m){ return (m===Infinity||m>=12)?3:m>=8?2:1; }
+/* όρια προτεραιότητας: «πολύ παλιό» = age_max (ρύθμιση της Territory Hub), μεσαία = στη μέση από τη μη διαθεσιμότητα */
+function ageEdges(){ var lo=+D.settings.rest_months||0, hi=Math.max(lo+1,+D.settings.age_max||8); return [(lo+hi)/2,hi]; }
+function nfmt(n){ n=Math.round(n*10)/10; return n%1?String(n).replace('.',','):String(n); }
+function bandOf(m){ var e=ageEdges(); return (m===Infinity||m>=e[1])?3:m>=e[0]?2:1; }
 function ageCol(m){ return 'var(--g'+bandOf(m)+')'; }
 function ageTxt(m){ return 'var(--g'+bandOf(m)+'t)'; }
 function monthsNum(m){ return m===Infinity?'—':String(Math.floor(m)); }
@@ -1166,6 +1169,7 @@ function apply(j){
   D.settings.hold_months=+(D.settings.hold_months||4);
   D.settings.rest_months=+(D.settings.rest_months||4);
   D.settings.warn_days=+(D.settings.warn_days||14);
+  D.settings.age_max=+(D.settings.age_max||8);
   if(j.boundaries) D.geo=j.boundaries;
   bump();
 }
@@ -1352,7 +1356,8 @@ function lateNotes(mine){
 }
 var band=0;   /* φίλτρο προτεραιότητας από το υπόμνημα: 0 = όλοι */
 function setBand(b){ band=(band===b?0:b); var y=$('#main').scrollTop; render(); $('#main').scrollTop=y; }
-var PRIO={3:['Υψηλή','12+ μήνες'],2:['Μεσαία','8 – 12 μήνες'],1:['Κανονική','έως 8 μήνες']};
+var PRIO={3:['Υψηλή',''],2:['Μεσαία',''],1:['Κανονική','']};
+function prioLabels(){ var e=ageEdges(); PRIO[3][1]=nfmt(e[1])+'+ μήνες'; PRIO[2][1]=nfmt(e[0])+' – '+nfmt(e[1])+' μήνες'; PRIO[1][1]='έως '+nfmt(e[0])+' μήνες'; }
 function prioName(m){ return {3:'Υψηλή',2:'Μεσαία',1:'Κανονική'}[bandOf(m)]+' προτεραιότητα'; }
 function monthsAgo(m){ return m===Infinity?'δεν έχει ολοκληρωθεί ποτέ':Math.floor(m)+' μήνες'; }
 /* κουτί «Οι τομείς μου» στην κορυφή */
@@ -1373,7 +1378,7 @@ function viewFree(){
   var mine=all().filter(function(t){ return t.s.mine; });
   var pend=myPending(), tw=towns();
   var allFree=[]; tw.forEach(function(x){ allFree=allFree.concat(x.free); });
-  var cnt={1:0,2:0,3:0}; allFree.forEach(function(t){ cnt[bandOf(t.s.rested)]++; });
+  prioLabels(); var cnt={1:0,2:0,3:0}; allFree.forEach(function(t){ cnt[bandOf(t.s.rested)]++; });
   $('#ttl').textContent='Διαθέσιμοι τομείς';
 
   var h=myBox(mine,pend);

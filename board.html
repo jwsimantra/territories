@@ -905,9 +905,7 @@ body.boardmode .locate,body.boardmode .hint,body.boardmode .fake{display:none}
         <button class="icon" id="themeBtn" aria-label="Σκούρο / ανοιχτό">
           <svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17z" fill="var(--duo)" stroke="none"/></svg>
         </button>
-        <a class="req" id="reqTop" href="aitisi.html">
-          <svg class="ic" viewBox="0 0 24 24"><rect class="d" x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9z"/><path d="M5 6v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6"/><path d="M9 13l2 2 4-4"/></svg>
-          <span><b>Αίτηση τομέα</b><small>στο My Territories</small></span></a>
+
       </div>
     </div>
     <div class="row2">
@@ -915,9 +913,7 @@ body.boardmode .locate,body.boardmode .hint,body.boardmode .fake{display:none}
         <a href="#polygyros" id="tabP">Πολύγυρος</a>
         <a href="#choria" id="tabC">Χωριά</a>
       </nav>
-      <a class="mine" id="mineBtn" href="aitisi.html#mine">
-        <svg class="ic" viewBox="0 0 24 24"><circle class="d" cx="12" cy="8" r="4"/><circle cx="12" cy="8" r="4"/><path d="M4.5 20.5c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"/></svg>
-        <span>Οι τομείς μου</span></a>
+
     </div>
   </header>
 
@@ -951,11 +947,10 @@ body.boardmode .locate,body.boardmode .hint,body.boardmode .fake{display:none}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
 // ▼▼ Paste the address of your Apps Script web app (the same one the Hub uses) between the quotes ▼▼
-const BOARD_VERSION = '1.6';
+const BOARD_VERSION = '1.7';
 const API_URL = 'https://script.google.com/macros/s/AKfycbwRUO7Zf1Ngkx3HSNbu1DjIjPaAo2RWF8MSYGdJZIZeLDE3k5Nk_gogN6YNIiYw8ffi/exec';
 /* οι άλλες σελίδες είναι στον ίδιο φάκελο με αυτή — έτσι οι σύνδεσμοι δουλεύουν όπου κι αν ανέβει */
 const HERE = location.href.split('#')[0].split('?')[0].replace(/[^\/]*$/, '');
-const REQUEST_URL = HERE + 'aitisi.html';
 const BOARD_URL = HERE + 'board.html';
 /* καθαρός χάρτης χωρίς ανάγλυφο, ανοιχτός ή σκούρος όπως η σελίδα */
 const BASE_TILE = dark => 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_' + (dark ? 'Dark' : 'Light') + '_Gray_Base/MapServer/tile/';
@@ -1613,8 +1608,6 @@ document.getElementById('locate').onclick = function(){
 };
 
 // ---------- search & start ----------
-document.getElementById('reqTop').href = REQUEST_URL;
-document.getElementById('mineBtn').href = REQUEST_URL + '#mine';
 document.getElementById('find').addEventListener('submit', e => {
   e.preventDefault();
   const inp = document.getElementById('findNum'), n = +inp.value;

@@ -278,6 +278,12 @@ input[type="date"]{padding:9px 6px 9px 10px}
   align-items:center;gap:12px;box-shadow:0 12px 30px -12px rgba(0,0,0,.7)}
 #toast.on{display:flex}
 #toast span{flex:1;font-size:13.5px}
+#saving{position:fixed;left:50%;transform:translate(-50%,8px);top:calc(8px + var(--safe-t,0px));z-index:60;opacity:0;pointer-events:none;
+  background:var(--raised);border:1px solid var(--rule);border-radius:99px;padding:6px 13px 6px 10px;font-size:12px;font-weight:600;
+  color:var(--muted);display:flex;align-items:center;gap:7px;box-shadow:0 4px 16px rgba(0,0,0,.18);transition:opacity .2s,transform .2s;white-space:nowrap}
+#saving.on{opacity:1;transform:translate(-50%,0)}
+#saving i{width:10px;height:10px;border-radius:50%;border:2px solid var(--accent);border-right-color:transparent;animation:sp .8s linear infinite}
+#saving i.off{border-color:var(--coral);animation:none}
 #toast button{color:var(--accent);font-weight:700;font-size:13px}
 .spin{width:18px;height:18px;border:2px solid var(--rule);border-top-color:var(--accent);
   border-radius:50%;animation:sp .7s linear infinite;display:inline-block;vertical-align:-3px}
@@ -370,6 +376,38 @@ nav button.on .ico .mp{fill:var(--sheet);stroke:none}
 .ystats em{font-style:normal;color:var(--coral);font-weight:600}
 .ystats i{font-style:normal;color:var(--faint);font-size:11px;margin-left:4px}
 .vlog{margin-top:8px;font-size:12.5px}
+/* ρυθμίσεις σε ομάδες */
+.sgrp{background:var(--raised);border:1px solid var(--rule-soft);border-radius:14px;padding:12px 14px 14px;margin:12px 0}
+.sgrp.hl{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-wash)}
+.sgrp h4{display:flex;align-items:center;gap:8px;margin:0 0 4px;font-size:14px;font-weight:700;color:var(--text)}
+.sgrp h4 .ico{width:19px;height:19px;--icobg:var(--raised)}
+.sgrp label{margin-top:10px}
+.sgrp input{background:var(--sheet)}
+.sgrp .kv:last-of-type{border-bottom:0}
+.s2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.s3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.nbox{display:flex;align-items:center;background:var(--sheet);border:1px solid var(--rule);border-radius:9px;overflow:hidden}
+.nbox input{border:0;border-radius:0;background:transparent;padding:10px 4px 10px 11px;flex:1}
+.nbox span{padding:0 10px 0 2px;font-size:12px;color:var(--faint);white-space:nowrap}
+.s3 .nbox span{padding-right:7px}
+/* κάρτες στην αρχική: επίσκεψη επισκόπου, έλεγχοι */
+.alert{display:flex;align-items:center;gap:11px;width:100%;text-align:left;margin:0 0 10px;padding:11px 13px;
+  background:var(--sheet);border:1px solid var(--rule-soft);border-left:4px solid var(--amber);border-radius:12px}
+.alert.co{border-left-color:var(--blue)}
+.cobar{display:flex;align-items:center;gap:9px;width:100%;text-align:left;margin:0 0 12px;padding:9px 12px;font-size:13px;color:var(--muted);
+  background:var(--sheet);border:1px solid var(--rule-soft);border-left:3px solid var(--blue);border-radius:10px}
+.cobar .ico{width:17px;height:17px;flex:0 0 auto}
+.cobar b{color:var(--text);font-weight:700}
+.cobar.ok{border-left-color:var(--accent)}
+.cobar.soft{border-left-color:var(--rule)}
+.alert.co.ok{border-left-color:var(--accent)}
+.alert.soft{border-left-color:var(--rule)}
+.alert b{display:block;font-size:13.5px;font-weight:700;line-height:1.3}
+.alert small{display:block;font-size:12px;color:var(--muted);margin-top:2px;line-height:1.35}
+.alert small em{font-style:normal;font-weight:800;color:var(--coral);font-size:13px}
+.alert .ai{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:0 0 auto;background:var(--raised);border:1px solid var(--rule)}
+.alert .ai .ico{width:19px;height:19px}
+@media (min-width:900px){ .alert{margin-bottom:12px} }
 .vlog summary{cursor:pointer;color:var(--accent);font-weight:600;padding:6px 0}
 .vlog div{display:flex;gap:10px;padding:6px 0;border-bottom:1px solid var(--rule-soft);color:var(--muted);line-height:1.4}
 .vlog b{flex:0 0 38px;color:var(--text)}
@@ -490,7 +528,7 @@ nav button.on .ico .mp{fill:var(--sheet);stroke:none}
       <button onclick="openSettings()" title="Ρυθμίσεις" aria-label="Ρυθμίσεις"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h9"/><path d="M19 7h1"/><path d="M4 17h3"/><path d="M13 17h7"/><circle class="d1" cx="16" cy="7" r="2.5"/><circle class="d1" cx="10" cy="17" r="2.5"/></svg></button>
     </div>
   </header>
-  <main id="main" data-ver="Territory Hub · v4.5"><div class="empty"><span class="spin"></span><br><br>Φόρτωση…</div></main>
+  <main id="main" data-ver="Territory Hub · v5.1"><div class="empty"><span class="spin"></span><br><br>Φόρτωση…</div></main>
   <nav>
     <button data-tab="map" class="on" onclick="go('map')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="d ns" d="M9 4l6 2.5V20l-6-2.5z"/><path d="M3 6.5 9 4l6 2.5L21 4v13.5L15 20l-6-2.5L3 20z"/><path d="M9 4v13.5"/><path d="M15 6.5V20"/></svg><span>Χάρτης</span></button>
     <button data-tab="list" onclick="go('list')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.3 L11.2 3.6 L12.4 11.2 L5.3 12.8 Z"/><path class="d1" d="M11.2 3.6 L20 5.3 L19.1 12 L12.4 11.2 Z"/><path d="M5.3 12.8 L12.4 11.2 L14.1 20.4 L4.4 20.4 Z"/><path class="d" d="M12.4 11.2 L19.1 12 L20 19.1 L14.1 20.4 Z"/></svg><span>Τομείς</span></button>
@@ -509,7 +547,7 @@ nav button.on .ico .mp{fill:var(--sheet);stroke:none}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-var APP_VERSION='4.5', SCRIPT_NEEDS='3.1';
+var APP_VERSION='5.1', SCRIPT_NEEDS='3.4';
 /* ==================================================================
    Η ΜΟΝΗ ΓΡΑΜΜΗ ΠΟΥ ΙΣΩΣ ΧΡΕΙΑΣΤΕΙ ΝΑ ΑΛΛΑΞΕΙΣ
    ================================================================== */
@@ -547,7 +585,10 @@ function $(s){ return document.querySelector(s); }
 function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){
   return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
 function today(){ return new Date().toISOString().slice(0,10); }
-function pd(s){ if(!s) return null; var p=String(s).slice(0,10).split('-');
+function pd(s){ if(!s) return null;
+  var g=String(s).trim().match(/^(\d{1,2})[\/.](\d{1,2})[\/.](\d{4})/);   /* 4/5/2026 όπως το δείχνει μερικές φορές το φύλλο */
+  if(g) return new Date(+g[3],+g[2]-1,+g[1]);
+  var p=String(s).slice(0,10).split('-');
   return p.length===3?new Date(+p[0],+p[1]-1,+p[2]):null; }
 function fmt(d){ d=(typeof d==='string')?pd(d):d; if(!d) return '—';
   return d.toLocaleDateString('el-GR',{day:'2-digit',month:'short',year:'numeric'}); }
@@ -577,7 +618,7 @@ function statusOf(t,now){
   if(open){
     var out=pd(open.date_out), due=addM(out,D.settings.hold_months), left=dys(now,due);
     return {state:left<0?'overdue':(left<=D.settings.warn_days?'due':'out'),
-      holder:open.person,rowId:open.row_id,dateOut:out,dueOn:due,
+      holder:open.person,rowId:open.row_id,dateOut:out,dueOn:due,checked:+open.checked||0,
       daysLeft:left,daysHeld:dys(out,now),rows:rows};
   }
   var rets=rows.filter(function(r){return r.date_in;}).map(function(r){return r.date_in;}).sort();
@@ -585,9 +626,16 @@ function statusOf(t,now){
   if(!last) return {state:'ready',rested:Infinity,never:true,band:5,rows:rows};
   var ld=pd(last), r=monthsSince(ld,now);
   if(r<D.settings.rest_months) return {state:'resting',rested:r,lastReturned:ld,readyOn:addM(ld,D.settings.rest_months),rows:rows};
-  return {state:'ready',rested:r,band:r<6?1:r<8?2:r<10?3:r<12?4:5,lastReturned:ld,rows:rows};
+  return {state:'ready',rested:r,band:bandOf(r),lastReturned:ld,rows:rows};
 }
 function isOut(s){ return ['out','due','overdue'].indexOf(s.state)>=0; }
+/* 5 αποχρώσεις: από τους μήνες μη διαθεσιμότητας μέχρι το «πολύ παλιό» (ρύθμιση, αρχικά 8) */
+function bandEdges(){ var lo=+D.settings.rest_months||0, hi=Math.max(lo+1,+D.settings.age_max||8), st=(hi-lo)/4;
+  return [lo,lo+st,lo+2*st,lo+3*st,hi]; }
+function bandOf(r){ var e=bandEdges(); return r>=e[4]?5:r<e[1]?1:r<e[2]?2:r<e[3]?3:4; }
+function nfmt(n){ n=Math.round(n*10)/10; return n%1?String(n).replace('.',','):String(n); }
+function bandLabels(){ var e=bandEdges(); return [nfmt(e[0])+'–'+nfmt(e[1]),nfmt(e[1])+'–'+nfmt(e[2]),
+  nfmt(e[2])+'–'+nfmt(e[3]),nfmt(e[3])+'–'+nfmt(e[4]),nfmt(e[4])+'+']; }
 function col(s){
   if(s.state==='overdue') return 'var(--coral)';
   if(s.state==='due') return 'var(--amber)';
@@ -798,6 +846,9 @@ function apply(j){
   D.settings.hold_months=+(D.settings.hold_months||4);
   D.settings.rest_months=+(D.settings.rest_months||4);
   D.settings.warn_days=+(D.settings.warn_days||14);
+  D.settings.age_max=+(D.settings.age_max||8);                 /* «πολύ παλιός» από τόσους μήνες */
+  D.settings.check1=+(D.settings.check1||2);                   /* 1ος έλεγχος «τελείωσε;» */
+  D.settings.check2=+(D.settings.check2||3);                   /* 2ος έλεγχος */
   if(j.boundaries) D.geo=j.boundaries;
   bump();
 }
@@ -815,7 +866,8 @@ function fetchGeo(then){
         D.geo=g.boundaries; geoSet(g.boundaries);
         try{ localStorage.setItem('tomeis_geo_at',String(Date.now()));
              localStorage.setItem('tomeis_geo_ms',String(Date.now()-t0)); }catch(e){}
-        var geo=D.geo; apply(g); D.geo=geo; cacheSet(g); render(); if(then) then(g);
+        if(sendBusy()){ syncAfter=true; if(then) then(g); return; }
+        var geo=D.geo; apply(g); D.geo=geo; cacheSet(g); overlay(); render(); if(then) then(g);
       }
     }).catch(function(){});
 }
@@ -823,20 +875,29 @@ function fetchGeo(then){
    Γι' αυτό μια παράδοση/επιστροφή ενημερώνεται σε ένα δευτερόλεπτο. */
 var lastFresh=0;
 /* φρέσκα δεδομένα που ήρθαν μαζί με την απάντηση μιας αποθήκευσης */
-function applyFresh(d){ var geo=D.geo; apply(d); D.geo=geo; cacheSet(d); lastFresh=Date.now(); render(); }
+function applyFresh(d){ var geo=D.geo; apply(d); D.geo=geo; cacheSet(d); overlay(); lastFresh=Date.now(); render(); }
+var refreshP=null;
 function refresh(then){
-  /* μόλις ήρθαν φρέσκα δεδομένα από την αποθήκευση — δεν χρειάζεται δεύτερο αίτημα */
+  /* μόλις ήρθαν φρέσκα δεδομένα — δεν χρειάζεται δεύτερο αίτημα */
   if(Date.now()-lastFresh<5000){ if(then) then({}); return Promise.resolve(); }
+  /* αποθηκεύονται ακόμα αλλαγές: η ανανέωση γίνεται μόνη της μόλις τελειώσουν */
+  if(sendBusy()){ syncAfter=true; if(then) then({}); return Promise.resolve(); }
+  if(refreshP){ if(then) refreshP.then(function(j){ then(j||{}); }); return refreshP; }
+  var seq=confirmSeq;
   /* Το .catch πιάνει ΜΟΝΟ το δίκτυο — αλλιώς ένα λάθος στην οθόνη θα
      εμφανιζόταν σαν πρόβλημα σύνδεσης και θα κρυβόταν η επιβεβαίωση. */
-  return fetch(API+'?geo=0',{redirect:'follow'}).then(function(r){ return r.json(); })
+  refreshP=fetch(API+'?geo=0',{redirect:'follow'}).then(function(r){ return r.json(); })
     .then(function(j){
       if(!j.ok) throw new Error(j.error||'σφάλμα');
-      var geo=D.geo; apply(j); D.geo=geo; cacheSet(j); lastFresh=Date.now();
+      /* στο μεταξύ αποθηκεύτηκε κάτι άλλο: αυτά τα δεδομένα είναι ήδη παλιά */
+      if(seq!==confirmSeq||sendBusy()){ syncAfter=true; return j; }
+      var geo=D.geo; apply(j); D.geo=geo; cacheSet(j); overlay(); lastFresh=Date.now();
       render(); return j;
     })
     .catch(function(){ toast('Δεν ανανεώθηκαν τα δεδομένα'); return null; })
-    .then(function(j){ if(then) then(j||{}); });
+    .then(function(j){ refreshP=null; if(!sendBusy()&&syncAfter) syncSoon(); return j; });
+  if(then) refreshP.then(function(j){ then(j||{}); });
+  return refreshP;
 }
 function manualRefresh(){
   var b=$('#reloadBtn'); if(b) b.classList.add('spin-on');
@@ -847,12 +908,15 @@ function manualRefresh(){
 function load(){
   var c=cacheGet(), g=geoGet();
   if(c && c.boundaries && !g){ g=c.boundaries; geoSet(g); cacheSet(c); }   /* μεταφορά από την παλιά μορφή */
-  if(c){ apply(c); if(g) D.geo=g; render(); }
+  if(c){ apply(c); if(g) D.geo=g; }
+  replayOutbox();                           /* αλλαγές που δεν πρόλαβαν να σταλούν την προηγούμενη φορά */
+  if(c) render();
   var haveGeo=!!(D.geo&&D.geo.maps&&Object.keys(D.geo.maps).length);
   fetch(API+'?geo=0',{redirect:'follow'}).then(function(r){return r.json();})
     .then(function(j){
       if(!j.ok) throw new Error(j.error||'σφάλμα');
-      var geo=D.geo; apply(j); D.geo=geo; render(); cacheSet(j); lastFresh=Date.now();
+      if(sendBusy()&&cacheGet()) syncAfter=true;
+      else { var geo=D.geo; apply(j); D.geo=geo; cacheSet(j); overlay(); render(); lastFresh=Date.now(); }
       var missing=D.territories.some(function(t){ return t.mymaps_id && !geoOf(t.id); });
       if(!haveGeo || missing || geoAge()>GEO_MAX_AGE) fetchGeo();
     })
@@ -867,12 +931,16 @@ function load(){
 function optimistic(b){
   var td=today();
   switch(b.action){
-    case 'giveOut': D.assignments.push({row_id:'tmp-'+Date.now(),territory_id:b.territory,person:b.person,
+    case 'giveOut': if(!b._tmp) b._tmp='tmp-'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+      if(D.assignments.some(function(a){ return a.row_id===b._tmp||a.row_id===tmpMap[b._tmp]; })) return true;
+      D.assignments.push({row_id:b._tmp,territory_id:b.territory,person:b.person,
       date_out:b.date||td,date_in:''}); return true;
-    case 'takeBack': D.assignments.forEach(function(a){ if(a.territory_id===b.territory && !a.date_in) a.date_in=b.date||td; }); return true;
-    case 'editRow': D.assignments.forEach(function(a){ if(String(a.row_id)===String(b.rowId)){
-      a.person=b.person; a.date_out=b.dateOut; a.date_in=b.dateIn||''; } }); return true;
-    case 'undo': D.assignments=D.assignments.filter(function(a){ return String(a.row_id)!==String(b.rowId); }); return true;
+    case 'takeBack': D.assignments.forEach(function(a){ if(a.territory_id===b.territory && !a.date_in){ a.date_in=b.date||td;
+      if(b.took!==undefined&&b.took!=='') a.took_days=b.took; } }); return true;
+    case 'markChecked': D.assignments.forEach(function(a){ if(sameRow(a.row_id,b.rowId)) a.checked=b.stage; }); return true;
+    case 'editRow': D.assignments.forEach(function(a){ if(sameRow(a.row_id,b.rowId)){
+      a.person=b.person; a.date_out=b.dateOut; a.date_in=b.dateIn||''; if(b.took!==undefined) a.took_days=b.took; } }); return true;
+    case 'undo': D.assignments=D.assignments.filter(function(a){ return !sameRow(a.row_id,b.rowId); }); return true;
     case 'seenReq': (D.requests||[]).forEach(function(r){ if(!b.rowId||String(r.row_id)===String(b.rowId)) r.status='seen'; }); return true;
     case 'cancelReq': D.requests=(D.requests||[]).filter(function(r){ return String(r.row_id)!==String(b.rowId); }); return true;
     case 'savePerson': if(!D.people.some(function(p){ return p.name===b.name; })) D.people.push({name:b.name,active:'TRUE'}); return true;
@@ -889,11 +957,56 @@ function optimistic(b){
   }
   return false;
 }
+/* Αποθήκευση στο παρασκήνιο.
+   Η αλλαγή φαίνεται αμέσως· οι αποστολές πάνε μία-μία στη σειρά και φυλάγονται στη συσκευή
+   μέχρι να τις επιβεβαιώσει το Google — αν κλείσεις την εφαρμογή ή χαθεί το σήμα, στέλνονται
+   την επόμενη φορά. Κάθε αποστολή έχει δικό της κωδικό (opId), ώστε να μη γίνει ποτέ δύο φορές. */
+var OUTBOX='tomeis_outbox', sendQ=[], inFlight=null, confirmSeq=0, syncAfter=false, tmpMap={}, retryT=null;
+var INSTANT={giveOut:1,takeBack:1,editRow:1,undo:1,seenReq:1,cancelReq:1,savePerson:1,saveSetting:1,markChecked:1};
+function isInstant(b){ return b.action==='batch'?(b.ops||[]).every(isInstant):!!INSTANT[b.action]; }
+function realId(x){ return tmpMap[x]||x; }
+function sameRow(id,x){ return String(id)===String(x)||String(id)===String(realId(x)); }
+function sendBusy(){ return !!inFlight||sendQ.length>0; }
+function outboxGet(){ try{ return JSON.parse(localStorage.getItem(OUTBOX)||'[]')||[]; }catch(e){ return []; } }
+function outboxPut(a){ try{ if(a.length) localStorage.setItem(OUTBOX,JSON.stringify(a)); else localStorage.removeItem(OUTBOX); }catch(e){} }
+function outboxDrop(id){ outboxPut(outboxGet().filter(function(b){ return b.opId!==id; })); }
+/* οι αλλαγές που δεν έχουν επιβεβαιωθεί ακόμα, ξανά πάνω στα δεδομένα του φύλλου */
+function overlay(){
+  var p=(inFlight?[inFlight.body]:[]).concat(sendQ.map(function(x){ return x.body; }));
+  p.forEach(function(b){ try{ optimistic(b); }catch(e){} }); if(p.length) bump();
+}
+function replayOutbox(){
+  var ob=outboxGet(); if(!ob.length) return;
+  ob.forEach(function(b){ if(sendQ.some(function(x){ return x.body.opId===b.opId; })) return;
+    try{ optimistic(b); }catch(e){}
+    sendQ.push({body:b,done:function(){},instant:true,replay:true}); });
+  bump(); saveBadge(); setTimeout(pump,300);
+}
 function post(body,done,raw){
-  var st=0, changed=false;
-  body.withData=true;
+  done=done||function(){};
+  if(!body.opId) body.opId=Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+  delete body.withData;                                   /* η απάντηση μένει μικρή — γρηγορότερα */
+  var changed=false;
   if(!raw){ try{ changed=optimistic(body); }catch(e){} if(changed){ bump(); render(); } }
-  var undoLocal=function(){ if(changed){ lastFresh=0; refresh(); } };
+  var it={body:body,done:done,instant:!raw&&changed&&isInstant(body)};
+  var ob=outboxGet(); ob.push(body); outboxPut(ob);
+  sendQ.push(it); saveBadge(); pump();
+  /* η επιβεβαίωση στην οθόνη δεν περιμένει το Google */
+  if(it.instant){ it.done=function(){}; try{ done(localReply(body)); }catch(e){} }
+}
+function localReply(b){
+  if(b.action==='batch') return {ok:true,local:true,results:(b.ops||[]).map(localReply)};
+  return {ok:true,local:true,rowId:b._tmp||b.rowId};
+}
+function pump(){
+  if(inFlight||!sendQ.length) return;
+  clearTimeout(retryT);
+  var it=inFlight=sendQ.shift(), body=it.body, st=0, t0=Date.now();
+  /* προσωρινά ids (αλλαγή πριν φτάσει η ανάθεση) → τα πραγματικά */
+  var fix=function(o){ if(o.rowId&&tmpMap[o.rowId]) o.rowId=tmpMap[o.rowId]; (o.ops||[]).forEach(fix); };
+  fix(body);
+  var end=function(){ inFlight=null; saveBadge(); if(sendQ.length) pump(); else syncSoon(); };
+  var undoLocal=function(){ lastFresh=0; syncAfter=true; };
   fetch(API,{method:'POST',redirect:'follow',
     headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)})
     .then(function(r){ st=r.status; return r.text(); })
@@ -901,21 +1014,53 @@ function post(body,done,raw){
       var j;
       try{ j=JSON.parse(txt); }
       catch(e){
+        outboxDrop(body.opId); undoLocal(); end();
         alert('Το Google απάντησε κάτι που δεν κατάλαβα (κωδικός '+st+').\n\n'+
               String(txt).replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').slice(0,180)+
               '\n\nΣυνήθως σημαίνει ότι το script χρειάζεται νέα ανάπτυξη (Deploy → New version).');
-        undoLocal(); return;
+        return;
       }
+      outboxDrop(body.opId);
       /* παλιό script χωρίς batch: στέλνουμε τις ενέργειες μία-μία */
-      if(!j.ok && body.action==='batch' && /batch/.test(String(j.error))){ runSeq(body.ops,done); return; }
-      if(!j.ok){ alert('Σφάλμα: '+j.error); undoLocal(); return; }
+      if(!j.ok && body.action==='batch' && /batch/.test(String(j.error))){ inFlight=null; runSeq(body.ops,it.done); return; }
+      if(!j.ok){ undoLocal(); end();
+        /* σε επανάληψη μετά από κλείσιμο, ό,τι είχε ήδη γίνει απαντά με λάθος — δεν ενοχλούμε */
+        if(!it.replay) alert('Σφάλμα: '+j.error);
+        return; }
+      /* τα πραγματικά ids των νέων αναθέσεων */
+      var map=function(b,r){ if(!b||!r) return;
+        if(b.action==='giveOut'&&b._tmp&&r.rowId){ tmpMap[b._tmp]=r.rowId;
+          D.assignments.forEach(function(a){ if(a.row_id===b._tmp) a.row_id=r.rowId; }); }
+        if(b.action==='batch') (b.ops||[]).forEach(function(o,i){ map(o,(r.results||[])[i]); }); };
+      map(body,j);
+      sendQ.forEach(function(x){ fix(x.body); });
+      var ob=outboxGet(); ob.forEach(fix); outboxPut(ob);
+      confirmSeq++;
+      lastSave={ms:Date.now()-t0,srv:j.ms||null,at:Date.now()};
+      try{ localStorage.setItem('tomeis_save_ms',JSON.stringify(lastSave)); }catch(e){}
       if(j.data) applyFresh(j.data);
-      done(j);
-    }).catch(function(e){ alert('Δεν στάλθηκε: '+e.message+'\n(έλεγξε τη σύνδεση)'); undoLocal(); });
+      end();
+      it.done(j);
+    }).catch(function(){
+      /* χωρίς σήμα: μένει στη σειρά και ξαναδοκιμάζει (στο Google δεν θα γίνει δύο φορές) */
+      inFlight=null; sendQ.unshift(it); saveBadge(true);
+      clearTimeout(retryT); retryT=setTimeout(pump,15000);
+    });
+}
+var lastSave=null, syncT=null;
+function syncSoon(){ clearTimeout(syncT); syncT=setTimeout(function(){ if(sendBusy()) return; syncAfter=false; lastFresh=0; refresh(); },400); }
+addEventListener('online',function(){ if(sendQ.length&&!inFlight) pump(); });
+function saveBadge(offline){
+  var n=sendQ.length+(inFlight?1:0), e=document.getElementById('saving');
+  if(!e){ e=document.createElement('div'); e.id='saving'; document.body.appendChild(e); }
+  if(!n){ e.classList.remove('on'); return; }
+  e.innerHTML=offline?'<i class="off"></i>Χωρίς σύνδεση — θα σταλεί μόλις γίνει δυνατό'
+    :'<i></i>Αποθήκευση'+(n>1?' ('+n+')':'')+'…';
+  e.classList.add('on');
 }
 function runSeq(ops,done){
   var res=[], i=0;
-  (function next(){ if(i>=ops.length){ lastFresh=0; done({ok:true,results:res}); return; }
+  (function next(){ if(i>=ops.length){ lastFresh=0; done({ok:true,results:res}); syncSoon(); return; }
     post(ops[i++],function(j){ res.push(j); next(); },true); })();
 }
 /* πολλές ενέργειες σε ΕΝΑ αίτημα */
@@ -947,7 +1092,7 @@ function rerender(){ var e=document.getElementById('q'), p=e?e.selectionStart:0;
 function newReqs(){ return (D.requests||[]).filter(function(r){ return r.status!=='seen'; }); }
 function bell(){
   var d=$('#bellDot'); if(!d) return;
-  var n=newReqs().length;
+  var n=newReqs().length; try{ n+=pendingChecks().length; }catch(e){}
   d.textContent=n>9?'9+':String(n); d.classList.toggle('on',n>0);
 }
 /* ανανέωση = ζητάει τον τομέα που ήδη κρατάει */
@@ -970,10 +1115,10 @@ function boardUrl(){ return pubUrl().replace(/aitisi\.html$/,'board.html'); }
 /* σύγκριση εκδόσεων 2.10 > 2.9 */
 function verNum(v){ var p=String(v||'0').split('.'); return (+p[0]||0)*1000+(+p[1]||0); }
 function appUrl(){ return location.href.split('#')[0].split('?')[0]; }
-var shareKind='pub';
+var shareKind='board';
 function shareApp(kind){
   if(kind) shareKind=kind;
-  var pub=shareKind==='pub', brd=shareKind==='board';
+  var pub=false, brd=shareKind==='board';
   var url=pub?pubUrl():brd?boardUrl():appUrl();
   var msg=pub
     ? 'Σελίδα αιτήσεων τομέων:\n'+url+'\n\nΕπιλογή ονόματος την πρώτη φορά· μετά εμφανίζονται οι ελεύθεροι τομείς και οι δικοί σας.'
@@ -982,7 +1127,6 @@ function shareApp(kind){
   var ttl=pub?'Σελίδα αιτήσεων':brd?'Πίνακας τομέων':'Εφαρμογή διαχείρισης';
   var d=modal('<h2>Κοινοποίηση</h2>'+
     '<div class="seg" style="margin:6px 0 12px">'+
-      '<button class="'+(pub?'on':'')+'" id="kP">Αιτήσεις</button>'+
       '<button class="'+(brd?'on':'')+'" id="kB">Πίνακας</button>'+
       '<button class="'+(pub||brd?'':'on')+'" id="kA">Διαχείριση</button></div>'+
     '<div class="cs">'+(pub?'Χωρίς κωδικό — μόνο προβολή και αιτήσεις':brd?'Χάρτης όλων των τομέων — μόνο προβολή'
@@ -997,7 +1141,6 @@ function shareApp(kind){
       '<small>Σάρωση με την κάμερα</small></div></button>'+
     (pub||brd?'<button class="opt" id="aO"><span class="ic">'+ic('open')+'</span><div><b>Άνοιγμα</b>'+
       '<small>Προβολή '+(brd?'του Πίνακα τομέων':'της σελίδας αιτήσεων')+'</small></div></button>':''));
-  d.querySelector('#kP').onclick=function(){ if(!pub){ d.remove(); shareApp('pub'); } };
   d.querySelector('#kB').onclick=function(){ if(!brd){ d.remove(); shareApp('board'); } };
   d.querySelector('#kA').onclick=function(){ if(pub||brd){ d.remove(); shareApp('app'); } };
   d.querySelector('#aS').onclick=function(){ d.remove();
@@ -1018,8 +1161,8 @@ function openRequests(){
   document.querySelectorAll('.scrim.reqs').forEach(function(e){ e.remove(); });
   var rs=(D.requests||[]).slice().reverse();
   var waiting=rs.filter(function(r){ return r.kind==='waiting'; });
-  var h='<h2 class="ht">'+ic('bell')+'Αιτήσεις</h2>';
-  if(!rs.length) h+='<div class="empty" style="padding:24px 0">Τίποτα ακόμα.</div>';
+  var h='<h2 class="ht">'+ic('bell')+'Ειδοποιήσεις</h2>'+checksHtml();
+  if(!rs.length && !pendingChecks().length) h+='<div class="empty" style="padding:24px 0">Τίποτα ακόμα.</div>';
   if(waiting.length){
     h+='<h3>Σε αναμονή</h3>';
     waiting.forEach(function(r){
@@ -1043,9 +1186,10 @@ function openRequests(){
          '</div>';
     });
   }
-  if(newReqs().length) h+='<div class="btns" style="margin-top:14px">'+
-    '<button class="btn" id="seenAll">'+ic('check')+'Τα είδα όλα</button></div>';
+  h+='<div class="btns" style="margin-top:14px">'+(newReqs().length?'<button class="btn" id="seenAll">'+ic('check')+'Τα είδα όλα</button>':'')+
+    '<button class="btn" id="reqX">Κλείσιμο</button></div>';
   var d=modal(h); d.classList.add('reqs');
+  d.querySelector('#reqX').onclick=function(){ d.remove(); };
   var b=d.querySelector('#seenAll');
   if(b) b.onclick=function(){ d.remove(); post({action:'seenReq'},function(){ toast('Σημειώθηκαν ως διαβασμένα'); }); };
 }
@@ -1071,12 +1215,110 @@ function render(){
   viewPeople();
 }
 
+/* ================= ΕΛΕΓΧΟΙ «ΤΕΛΕΙΩΣΕ;» =================
+   Μετά από 2 μήνες, μετά από 3, και τις τελευταίες ημέρες πριν τη λήξη (ρυθμίσεις):
+   ρωτάς τον κάτοχο αν τελείωσε· «Ρώτησα» κρύβει την υπενθύμιση μέχρι το επόμενο στάδιο. */
+function checkStage(s){
+  if(!isOut(s)) return 0;
+  if(s.daysLeft<=D.settings.warn_days) return 3;
+  var m=s.daysHeld/30.44;
+  return m>=D.settings.check2?2:m>=D.settings.check1?1:0;
+}
+function pendingChecks(){
+  return all().filter(function(t){ var st=checkStage(t.s); return st&&st>(t.s.checked||0); })
+    .sort(function(a,b){ return b.s.daysHeld-a.s.daysHeld; });
+}
+function checkWhy(t){ var s=t.s, st=checkStage(s);
+  if(st===3) return s.daysLeft<0?'εκπρόθεσμος '+durTxt(s.daysLeft):'λήγει σε '+durTxt(s.daysLeft);
+  return 'τον έχει '+monthsTxt(s.daysHeld/30.44); }
+function checksCard(){
+  var n=pendingChecks().length; if(!n) return '';
+  return '<button class="alert" onclick="openRequests()"><span class="ai">'+ic('bell')+'</span><div><b>'+n+
+    (n===1?' τομέας':' τομείς')+' για έλεγχο</b><small>Ρώτα αν τελείωσαν — πάτησε για τη λίστα</small></div></button>';
+}
+function checksHtml(){
+  var cs=pendingChecks(); if(!cs.length) return '';
+  var h='<h3>Ρώτα αν τελείωσαν</h3>';
+  cs.forEach(function(t){ var st=checkStage(t.s), id='\''+t.id+'\'';
+    h+='<div class="req new"><div class="w">'+esc(t.name)+'</div>'+
+      '<div class="m">'+esc(t.s.holder)+' · από '+fmt(t.s.dateOut)+' · <b style="color:'+col(t.s)+'">'+checkWhy(t)+'</b></div>'+
+      '<div class="rbtns"><button class="btn" onclick="checkDone('+id+')">'+ic('ret')+'Τελείωσε</button>'+
+      '<button class="btn" onclick="checkAsked('+id+','+st+')">'+ic('check')+'Όχι ακόμα</button></div></div>'; });
+  return h;
+}
+function checkAsked(id,st){ var t=byId(id); if(!t) return;
+  post({action:'markChecked',rowId:t.s.rowId,stage:st},function(){});
+  openRequests(); }
+function checkDone(id){ document.querySelectorAll('.scrim.reqs').forEach(function(e){ e.remove(); }); doTakeBack(id); }
+
+/* ================= ΕΠΙΣΚΕΨΗ ΕΠΙΣΚΟΠΟΥ ΠΕΡΙΟΧΗΣ =================
+   Έρχεται κάθε 5,5–6,5 μήνες και ελέγχει το έντυπο των τελευταίων 12 μηνών.
+   Αν ξέρεις την εβδομάδα, τη γράφεις· αλλιώς υπολογίζεται από την τελευταία επίσκεψη. */
+function addD(d,n){ return new Date(d.getFullYear(),d.getMonth(),d.getDate()+n); }
+function coVisit(){
+  var S=D.settings, now=new Date(), last=pd(S.co_last), next=pd(S.co_next);
+  if(next && dys(next,now)>7){ last=next; next=null; }        /* πέρασε: γίνεται η «τελευταία» */
+  if(next) return {exact:true,from:next,to:addD(next,6),last:last};
+  if(!last) return null;
+  var from=addD(addM(last,5),15), to=addD(addM(last,6),15);
+  return {exact:false,from:from,to:to,last:last,passed:dys(to,now)>0};
+}
+function lastDone(t){
+  var rows=(D._by&&D._by[t.id])||D.assignments.filter(function(a){ return a.territory_id===t.id; });
+  var d=String(t.last_completed||'').slice(0,10);
+  rows.forEach(function(a){ var i=String(a.date_in||'').slice(0,10); if(i&&i>d) d=i; });
+  return d;
+}
+/* Ποιοι τομείς πρέπει να ολοκληρωθούν ώστε στο έντυπο των 12 μηνών πριν την επίσκεψη να φαίνονται όλοι.
+   Ένας τομέας θέλει το πολύ «μήνες κράτησης» (4) για να τελειώσει:
+   όσοι είναι ήδη δοσμένοι και λήγουν πριν την επίσκεψη θεωρούνται ότι θα ολοκληρωθούν· οι υπόλοιποι μετράνε. */
+function coNeed(v){
+  var lim=isoD(addM(v.to,-12));
+  return all().filter(function(t){ var d=lastDone(t); if(d&&d>=lim) return false;
+      return !(isOut(t.s)&&t.s.dueOn<=v.from); })
+    .sort(function(a,b){ return lastDone(a).localeCompare(lastDone(b)); });
+}
+/* ως πότε πρέπει να δοθούν για να προλάβουν (επίσκεψη − μήνες κράτησης) */
+function coGiveBy(v){ return addM(v.from,-D.settings.hold_months); }
+function coWhen(v){
+  var o={day:'numeric',month:'short'}, y=v.to.getFullYear();
+  var span=v.from.toLocaleDateString('el-GR',o)+' – '+v.to.toLocaleDateString('el-GR',o)+' '+y;
+  var left=dys(new Date(),v.from);
+  return (v.exact?'εβδομάδα '+span:'περίπου '+span)+(left>0?' · σε '+durTxt(left):left>-7?' · τώρα':'');
+}
+function coCard(){
+  var v=coVisit();
+  if(!v||v.passed) return '<button class="cobar soft" onclick="openSettings(\'co\')">'+ic('people')+
+    '<span>Επίσκεψη επισκόπου · <b>όρισε ημερομηνία</b></span></button>';
+  var n=coNeed(v).length;
+  return '<button class="cobar'+(n?'':' ok')+'" onclick="openCo()">'+ic('people')+
+    '<span>Επίσκεψη επισκόπου σε '+durTxt(Math.max(0,dys(new Date(),v.from)))+' · '+
+    (n?'<b>'+n+'</b> '+(n===1?'τομέας':'τομείς')+' να ολοκληρωθούν':'<b>όλοι ολοκληρωμένοι ✓</b>')+'</span></button>';
+}
+function openCo(){
+  var v=coVisit(); if(!v) return openSettings('co');
+  var need=coNeed(v), by=coGiveBy(v), late=by<new Date();
+  var h='<h2 class="ht">'+ic('people')+'Επίσκεψη επισκόπου</h2><div class="cs">'+coWhen(v)+'</div>';
+  if(!need.length) h+='<div class="empty" style="padding:22px 0">Όλοι ολοκληρωμένοι ✓</div>';
+  else {
+    h+='<div class="cs" style="margin-top:-8px">'+need.length+(need.length===1?' τομέας':' τομείς')+' · να δοθούν '+
+      (late?'<b style="color:var(--coral)">άμεσα</b>':'ως <b>'+fmt(by)+'</b>')+'</div><div class="hist">';
+    need.forEach(function(t){ var d=lastDone(t), s=t.s;
+      h+='<button class="hrow" onclick="closeCo();open_(\''+t.id+'\')"><b>'+esc(t.name)+'</b><span>'+
+        (isOut(s)?'<i style="font-style:normal;color:var(--amber)">λήγει '+fmt(s.dueOn)+'</i>':(d?fmt(d):'ποτέ'))+'</span></button>'; });
+    h+='</div>';
+  }
+  h+='<div class="btns" style="margin-top:16px"><button class="btn" onclick="closeCo()">Κλείσιμο</button></div>';
+  var m=modal(h); m.classList.add('co');
+}
+function closeCo(){ document.querySelectorAll('.scrim.co').forEach(function(e){ e.remove(); }); }
+
 /* ================= ΧΑΡΤΗΣ ================= */
 function viewMap(){
   var ts=all().filter(match);
   var ready=ts.filter(function(t){return t.s.state==='ready';});
   var rest=ts.filter(function(t){return t.s.state==='resting';});
-  var old=ready.filter(function(t){return t.s.rested>=12;});
+  var old=ready.filter(function(t){return t.s.rested>=D.settings.age_max;});
   var by={}; ts.forEach(function(t){ (by[t.town]=by[t.town]||[]).push(t); });
   var towns=Object.keys(by).map(function(n){
     var need=0; by[n].forEach(function(t){ if(t.s.state==='ready') need=Math.max(need,t.s.rested===Infinity?999:t.s.rested); });
@@ -1091,7 +1333,8 @@ function viewMap(){
     '<div class="sums">'+
     '<div class="sum"><b>'+ready.length+'</b><span>διαθέσιμοι</span></div>'+
     '<div class="sum"><b>'+rest.length+'</b><span>μη διαθέσιμοι</span></div>'+
-    '<div class="sum"><b style="color:var(--n5)">'+old.length+'</b><span>12+ μήνες</span></div></div><div class="tiles">';
+    '<div class="sum"><b style="color:var(--n5)">'+old.length+'</b><span>'+nfmt(D.settings.age_max)+'+ μήνες</span></div></div>'+
+    coCard()+'<div class="tiles">';
   towns.forEach(function(tn,idx){
     h+='<button class="tile" onclick="openTown(\''+esc(tn.name)+'\')">'+
       '<div class="mini" data-mm="'+idx+'">'+miniSvg(tn.list,150,96)+'</div><div class="ft">'+
@@ -1129,7 +1372,7 @@ function legend(){
   var h='<div class="legend"><h4>Τι σημαίνουν τα χρώματα</h4>';
   if(free){
     h+='<div class="lramp">'+[1,2,3,4,5].map(function(i){ return '<i style="background:var(--n'+i+')"></i>'; }).join('')+'</div>'+
-      '<div class="lramplab"><span>4–6</span><span>6–8</span><span>8–10</span><span>10–12</span><span>12+</span></div>'+
+      '<div class="lramplab">'+bandLabels().map(function(x){ return '<span>'+x+'</span>'; }).join('')+'</div>'+
       '<p style="margin:7px 0 0;font-size:11px;color:var(--faint);text-align:center">μήνες από την τελευταία επιστροφή</p>';
   }
   h+='<div class="lgrid">';
@@ -1184,6 +1427,7 @@ function rowFor(t,peers){
   if(isOut(s)) dt=esc(s.holder)+' · από '+fmt(s.dateOut);
   else if(s.state==='resting') dt='επεστράφη '+fmt(s.lastReturned);
   else dt=s.never?'δεν εργάστηκε ποτέ':'επεστράφη '+fmt(s.lastReturned);
+  var tp=typicalTook(t); if(tp&&!tp.held) dt+=' · συνήθως ~'+durTxt(tp.days);
   return '<button class="row" onclick="open_(\''+t.id+'\')">'+
     '<div class="thumb">'+miniSvg(peers||inTown(t.town),52,44,t.id)+'</div>'+
     '<div class="info"><div class="nm">'+esc(t.name)+'</div><div class="dt">'+dt+'</div></div>'+
@@ -1345,6 +1589,9 @@ function viewDetail(){
     h+='<div class="kv"><span>Τελευταία επιστροφή</span><b>'+(s.never?'ποτέ':fmt(s.lastReturned))+'</b></div>'+
        '<div class="kv"><span>Περιμένει</span><b style="color:'+col(s)+'">'+monthsTxt(s.rested)+'</b></div>';
   }
+  var tp=typicalTook(t);
+  if(tp) h+='<div class="kv"><span>'+(tp.held?'Συνήθως κρατιέται':'Συνήθως ολοκληρώνεται σε')+'</span><b>~'+durTxt(tp.days)+
+    ' <small style="color:var(--faint);font-weight:500">· '+tp.n+(tp.n===1?' φορά':' φορές')+'</small></b></div>';
   h+='<div class="btns" style="margin-top:14px"><button class="btn" onclick="terrForm({id:\''+t.id+'\'})">'+
     ic('edit')+'Επεξεργασία τομέα</button></div>';
   h+='<h3>Ιστορικό</h3><div class="hist">';
@@ -1352,6 +1599,7 @@ function viewDetail(){
   if(!rs.length) h+='<div>Καμία εγγραφή</div>';
   rs.forEach(function(r){ h+='<button class="hrow" onclick="editRow(\''+esc(r.row_id)+'\')">'+
     '<b>'+esc(r.person)+'</b><span>'+fmt(r.date_out)+' → '+(r.date_in?fmt(r.date_in):'—')+
+    (String(r.took_days||'')!==''&&+r.took_days>0?' · '+durTxt(+r.took_days):'')+
     ic('edit')+'</span></button>'; });
   if(rs.length) h+='<p style="margin:8px 0 0;font-size:11.5px;color:var(--faint)">'+
     'Πάτησε μια γραμμή για διόρθωση ή διαγραφή.</p>';
@@ -1633,8 +1881,9 @@ function terrForm(o){
 
 /* ---------- σημειώσεις για κάθε υπηρεσιακό έτος (στο παράθυρο εκτύπωσης) ---------- */
 function isoD(d){ return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2); }
-function yearStats(y){
-  var r=svcYear(y), F=isoD(r.from), T=isoD(r.to);
+function yearStats(y){ return rangeStats(svcYear(y)); }
+function rangeStats(r){
+  var F=isoD(r.from), T=isoD(r.to);
   var list=D.territories.filter(function(t){ return String(t.active).toUpperCase()!=='FALSE' &&
     (!t.added || String(t.added).slice(0,10)<=T); });
   var done=list.filter(function(t){
@@ -1692,8 +1941,8 @@ function doGiveOut(id){
     var give={action:'giveOut',territory:id,person:name,date:date};
     var after=function(j){
       var rid=j.rowId||(j.results&&j.results[j.results.length-1]&&j.results[j.results.length-1].rowId);
-      refresh(); toast(t.name+' → '+name,'Αναίρεση',function(){
-        post({action:'undo',rowId:rid},function(){ refresh(); toast('Αναιρέθηκε'); }); }); };
+      toast(t.name+' → '+name,'Αναίρεση',function(){
+        post({action:'undo',rowId:rid},function(){ toast('Αναιρέθηκε'); }); }); };
     if(save) postMany([{action:'savePerson',name:name},give],after); else post(give,after);
   };
 }
@@ -1712,10 +1961,12 @@ function editRow(rowId){
     '<label>Ημερομηνία παράδοσης</label><input type="date" id="eO" value="'+esc(String(r.date_out||'').slice(0,10))+'">'+
     '<label>Ημερομηνία επιστροφής <span style="text-transform:none;letter-spacing:0">(κενό = ακόμα δοσμένος)</span></label>'+
     '<input type="date" id="eI" value="'+esc(String(r.date_in||'').slice(0,10))+'">'+
+    tookField(!!r.date_in&&String(r.took_days||'')==='')+
     '<div class="btns" style="margin-top:18px"><button class="btn" id="eX">Άκυρο</button>'+
     '<button class="btn pri" id="eS">Αποθήκευση</button></div>'+
     '<div class="btns"><button class="btn warn" id="eD">Διαγραφή εγγραφής</button></div>');
   var sel=d.querySelector('#eP'), inp=d.querySelector('#eN');
+  tookWire(d,'#eO','#eI');
   sel.onchange=function(){ inp.style.display=this.value==='__new__'?'':'none'; if(this.value==='__new__') inp.focus(); };
   d.querySelector('#eX').onclick=function(){ d.remove(); };
   d.querySelector('#eS').onclick=function(){
@@ -1725,24 +1976,61 @@ function editRow(rowId){
     if(!o){ alert('Χρειάζεται ημερομηνία παράδοσης'); return; }
     if(i && i<o){ alert('Η επιστροφή δεν μπορεί να είναι πριν την παράδοση'); return; }
     d.remove();
-    post({action:'editRow',rowId:rowId,person:nm,dateOut:o,dateIn:i},function(){
-      refresh(); toast('Η εγγραφή διορθώθηκε'); });
+    post({action:'editRow',rowId:rowId,person:nm,dateOut:o,dateIn:i,took:i?tookValue(d,o,i):''},function(){
+      toast('Η εγγραφή διορθώθηκε'); });
   };
   d.querySelector('#eD').onclick=function(){
     if(!confirm('Να διαγραφεί οριστικά αυτή η εγγραφή;')) return;
     d.remove();
-    post({action:'undo',rowId:rowId},function(){ refresh(); toast('Η εγγραφή διαγράφηκε'); });
+    post({action:'undo',rowId:rowId},function(){ toast('Η εγγραφή διαγράφηκε'); });
   };
+}
+/* Πόσο κράτησε η κάλυψη: μετριέται μόνο του από την ανάθεση ως την ημερομηνία ολοκλήρωσης.
+   «Αβέβαιο» = δεν το σημειώνουμε (π.χ. τελείωσε νωρίτερα αλλά δεν ξέρεις πότε). */
+function tookField(uncertain){
+  return '<div class="kv" style="margin-top:8px"><span>Χρόνος κάλυψης</span><b id="kT">—</b></div>'+
+    '<div class="check" style="margin-top:8px"><input type="checkbox" id="kU"'+(uncertain?' checked':'')+'>'+
+    '<label for="kU" style="margin:0;text-transform:none;letter-spacing:0;font-size:13.5px;color:var(--muted)">'+
+    'Αβέβαιο — να μη μετρηθεί</label></div>';
+}
+function tookWire(d,outDate,inSel){
+  var upd=function(){ var i=d.querySelector(inSel), t=d.querySelector('#kT'), x=i&&pd(i.value),
+      o=String(outDate).charAt(0)==='#'?pd(d.querySelector(outDate).value):asD(outDate);
+    var un=d.querySelector('#kU').checked;
+    t.textContent=un?'αβέβαιο':(o&&x&&x>=o)?durTxt(dys(o,x)):'—'; t.style.color=un?'var(--faint)':''; };
+  d.querySelector('#kU').addEventListener('change',function(){ upd(); });
+  [inSel].concat(String(outDate).charAt(0)==='#'?[outDate]:[]).forEach(function(sel){ var i=d.querySelector(sel);
+    if(i){ i.addEventListener('input',upd); i.addEventListener('change',upd); } }); upd();
+}
+function asD(x){ return x instanceof Date?new Date(x.getFullYear(),x.getMonth(),x.getDate()):pd(x); }
+function tookValue(d,outDate,inDate){
+  if(d.querySelector('#kU').checked) return '';
+  var o=asD(outDate), x=asD(inDate); return (o&&x&&x>=o)?dys(o,x):'';
+}
+/* πόσο χρειάζεται συνήθως ο τομέας: από ό,τι έχεις σημειώσει (αλλιώς πόσο κρατιέται συνήθως) */
+function median(a){ a=a.slice().sort(function(x,y){ return x-y; }); var m=Math.floor(a.length/2);
+  return a.length%2?a[m]:(a[m-1]+a[m])/2; }
+function typicalTook(t){
+  var rows=(D._by&&D._by[t.id])||D.assignments.filter(function(a){ return a.territory_id===t.id; });
+  var took=rows.map(function(a){ return String(a.took_days||'')===''?NaN:+a.took_days; }).filter(function(x){ return isFinite(x)&&x>0; });
+  if(took.length) return {days:median(took),n:took.length};
+  var held=rows.filter(function(a){ return a.date_out&&a.date_in; }).map(function(a){ return dys(pd(a.date_out),pd(a.date_in)); })
+    .filter(function(x){ return x>0; });
+  if(held.length) return {days:median(held),n:held.length,held:true};
+  return null;
 }
 function doTakeBack(id){
   var t=byId(id), s=t.s;
   var d=modal('<h2>Επιστροφή</h2><div class="cs">'+esc(t.name)+' · '+esc(s.holder)+'</div>'+
     '<label>Ημερομηνία</label><input type="date" id="rD" value="'+today()+'">'+
+    tookField(false)+
     '<div class="btns" style="margin-top:18px"><button class="btn" id="rX">Άκυρο</button>'+
     '<button class="btn pri" id="rO">Επιστροφή</button></div>');
   d.querySelector('#rX').onclick=function(){ d.remove(); };
-  d.querySelector('#rO').onclick=function(){ var date=d.querySelector('#rD').value; d.remove();
-    post({action:'takeBack',territory:id,date:date},function(){ refresh(); toast(t.name+' επεστράφη'); }); };
+  tookWire(d,s.dateOut,'#rD');
+  d.querySelector('#rO').onclick=function(){ var date=d.querySelector('#rD').value, took=tookValue(d,s.dateOut,date); d.remove();
+    var b={action:'takeBack',territory:id,date:date}; if(took!=='') b.took=took;
+    post(b,function(){ toast(t.name+' επεστράφη'); }); };
 }
 /* Κοινοποίηση τομέα: τα κουμπιά βρίσκονται πάνω στη σελίδα του τομέα */
 function mapsLink(t){ return 'https://www.google.com/maps/d/viewer?mid='+t.mymaps_id; }
@@ -1780,7 +2068,7 @@ function loadImg(url){
   var p=new Promise(function(res){
     var i=new Image(), done=false, tm=null; i.crossOrigin='anonymous';
     var fin=function(v){ if(done) return; done=true; clearTimeout(tm); if(!v) delete CARD_IMG[url]; res(v); };
-    tm=setTimeout(function(){ fin(null); },7000);
+    tm=setTimeout(function(){ fin(null); },6000);
     i.onload=function(){ fin(i); }; i.onerror=function(){ fin(null); }; i.src=url; });
   CARD_IMG[url]=p;
   var ks=Object.keys(CARD_IMG); if(ks.length>400) delete CARD_IMG[ks[0]];
@@ -1800,7 +2088,7 @@ var CARD_RANK={motorway:3,trunk:3,primary:3,secondary:3,motorway_link:2,trunk_li
   tertiary:2,tertiary_link:2,unclassified:1,residential:1,living_street:1,pedestrian:1};
 function cardRoadsFetch(q){
   /* ρωτάει τον 1ο διακομιστή· αν αργεί πάνω από 2,5" ρωτάει και τον επόμενο — κρατάει την πρώτη απάντηση.
-     Το πολύ 9": μετά η κάρτα βγαίνει χωρίς τους δικούς μας δρόμους (με τους δρόμους του υποβάθρου) */
+     Το πολύ 7": μετά η κάρτα βγαίνει χωρίς τους δικούς μας δρόμους (με τους δρόμους του υποβάθρου) */
   return new Promise(function(res){
     var N=CARD_OVERPASS.length, next=0, failed=0, done=false, ctls=[], hedge=null, dead=null;
     var fin=function(v){ if(done) return; done=true; clearInterval(hedge); clearTimeout(dead);
@@ -1815,7 +2103,7 @@ function cardRoadsFetch(q){
           return x.type==='way' && x.geometry && x.geometry.length>1 && CARD_RANK[(x.tags||{}).highway]; })); })
         .catch(function(){ if(++failed>=N) fin(null); else start(); });
     };
-    start(); hedge=setInterval(start,2500); dead=setTimeout(function(){ fin(null); },9000);
+    start(); hedge=setInterval(start,2500); dead=setTimeout(function(){ fin(null); },7000);
   });
 }
 /* οι δρόμοι κάθε τομέα φυλάγονται στη συσκευή (30 μέρες) — από τη 2η φορά η κάρτα δεν περιμένει τίποτα */
@@ -2261,30 +2549,35 @@ var GRMONTH=['Ιανουάριος','Φεβρουάριος','Μάρτιος','�
   'Αύγουστος','Σεπτέμβριος','Οκτώβριος','Νοέμβριος','Δεκέμβριος'];
 function yearTitle(y){ var r=svcYear(y);
   return GRMONTH[r.from.getMonth()]+' '+r.from.getFullYear()+' – '+GRMONTH[r.to.getMonth()]+' '+r.to.getFullYear(); }
-function openReport(){
-  var cur=curSvcYear(), opts='';
+function last12(){ var to=new Date(), from=addD(addM(to,-12),1);
+  return {from:from,to:new Date(to.getFullYear(),to.getMonth(),to.getDate()),label:fmt(from)+' – '+fmt(to),period:true}; }
+function openReport(pick){
+  /* κοντά στην επίσκεψη του επισκόπου, προτείνεται το 12μηνο */
+  var cv=coVisit(); if(!pick && cv && !cv.passed && dys(new Date(),cv.from)<=45) pick='last12';
+  var cur=curSvcYear(), opts='<option value="last12"'+(pick==='last12'?' selected':'')+'>Τελευταίοι 12 μήνες (ως σήμερα)</option>';
   var first=cur-1;
   D.assignments.forEach(function(a){
     var y=+String(a.date_out||'').slice(0,4); if(y && y<first) first=y; });
   for(var y=cur+5;y>=first;y--)
-    opts+='<option value="'+y+'"'+(y===cur?' selected':'')+'>'+y+'–'+(y+1)+'</option>';
+    opts+='<option value="'+y+'"'+(y===cur&&pick!=='last12'?' selected':'')+'>'+y+'–'+(y+1)+'</option>';
   /* σημειώσεις: πόσους τομείς είχαμε κάθε έτος και πόσοι δεν ολοκληρώθηκαν (μόνο στην εφαρμογή) */
   all();
-  var notes='';
+  var l12=rangeStats(last12()), notes='<button data-y="last12"'+(pick==='last12'?' class="on"':'')+'><b>Τελευταίοι 12 μήνες</b>'+
+    '<span>'+l12.n+' τομείς · <em>'+l12.not+'</em> δεν ολοκληρώθηκαν</span></button>';
   for(var yy=cur;yy>=Math.max(first,cur-5);yy--){
     var st=yearStats(yy);
     if(!st.n) continue;
-    notes+='<button data-y="'+yy+'"'+(yy===cur?' class="on"':'')+'><b>'+yy+'–'+(yy+1)+(yy===cur?'<i>τρέχον</i>':'')+'</b>'+
+    notes+='<button data-y="'+yy+'"'+(yy===cur&&pick!=='last12'?' class="on"':'')+'><b>'+yy+'–'+(yy+1)+(yy===cur?'<i>τρέχον</i>':'')+'</b>'+
       '<span>'+st.n+' τομείς · <em>'+st.not+'</em> '+(yy===cur?'δεν ολοκληρώθηκαν ακόμα':'δεν ολοκληρώθηκαν')+'</span></button>';
   }
   var d=modal('<h2>Έντυπο διορισμού τομέα</h2>'+
-    '<div class="cs">Ένα υπηρεσιακό έτος ανά εκτύπωση — Σεπτέμβριος έως Αύγουστος</div>'+
+    '<div class="cs">Ένα υπηρεσιακό έτος (Σεπτέμβριος–Αύγουστος) ή οι τελευταίοι 12 μήνες — π.χ. για την επίσκεψη του επισκόπου</div>'+
     (notes?'<label>Σημειώσεις ανά έτος</label><div class="ystats">'+notes+'</div>':'')+
-    '<label>Υπηρεσιακό έτος</label><select id="rY">'+opts+'</select>'+
+    '<label>Περίοδος</label><select id="rY">'+opts+'</select>'+
     '<div class="btns" style="margin-top:18px"><button class="btn" id="rX">Άκυρο</button>'+
     '<button class="btn pri" id="rO">Εκτύπωση</button></div>');
   d.querySelector('#rX').onclick=function(){ d.remove(); };
-  d.querySelector('#rO').onclick=function(){ var y=+d.querySelector('#rY').value; d.remove(); buildReport(y); };
+  d.querySelector('#rO').onclick=function(){ var y=d.querySelector('#rY').value; d.remove(); buildReport(y==='last12'?'last12':+y); };
   var sel=d.querySelector('#rY'), marks=d.querySelectorAll('.ystats button');
   var mark=function(){ [].forEach.call(marks,function(b){ b.classList.toggle('on',b.getAttribute('data-y')===sel.value); }); };
   [].forEach.call(marks,function(b){ b.onclick=function(){ sel.value=b.getAttribute('data-y'); mark(); }; });
@@ -2318,7 +2611,7 @@ function townCode(name){
   return _codes[name]||'';
 }
 function buildReport(y){
-  var r=svcYear(y), from=r.from, to=r.to;
+  var r=y==='last12'?last12():svcYear(y), from=r.from, to=r.to;
   var iso=function(d){ return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2); };
   var F=iso(from), T=iso(to), SLOTS=4;
   var dsh=function(v){ return v?fmt(pd(v)):''; };
@@ -2379,7 +2672,7 @@ function buildReport(y){
   var out='';
   for(var p=0;p<pages;p++){
     out+='<div class="rpage"><div class="rhead"><h1>ΕΝΤΥΠΟ ΔΙΟΡΙΣΜΟΥ ΤΟΜΕΑ</h1>'+
-      '<div class="ryear">Υπηρεσιακό Έτος:<span class="box">'+r.label+'</span>'+
+      '<div class="ryear">'+(r.period?'Περίοδος:':'Υπηρεσιακό Έτος:')+'<span class="box">'+r.label+'</span>'+
       (pages>1?'<span class="rpg">'+(p+1)+'/'+pages+'</span>':'')+'</div></div>'+
       '<table class="rtab">'+cols+'<thead>'+head+'</thead>'+
       rowsHtml.slice(p*per,(p+1)*per).join('')+'</table></div>';
@@ -2388,9 +2681,12 @@ function buildReport(y){
   pa.className=ios?'ios':'pc'; pa.innerHTML=out;
   setTimeout(function(){ window.print(); },80);
 }
-/* ---------- Ειδοποιήσεις στο κινητό (μέσω της δωρεάν εφαρμογής ntfy ή email) ---------- */
 /* Ιστορικό εκδόσεων: πρώτος αριθμός = μεγάλη αλλαγή, δεύτερος = βελτίωση */
 var VLOG=[
+  ['5.1','Επίσκεψη επισκόπου: μετράει ότι κάθε τομέας θέλει έως 4 μήνες · πιο μικρή κάρτα και λιτή λίστα · ο χρόνος κάλυψης μετριέται μόνος του (εκτός αν «Αβέβαιο») · κλείσιμο ειδοποιήσεων χωρίς απάντηση'],
+  ['5.0','Επίσκεψη επισκόπου: πόσοι τομείς μένουν ως τότε · έντυπο τελευταίων 12 μηνών · υπενθυμίσεις «τελείωσε;» στους 2 και 3 μήνες · '+
+    'πόσο κράτησε η κάλυψη και πόσο χρειάζεται συνήθως κάθε τομέας · χρώματα ως 8 μήνες (ρύθμιση) · νέες ρυθμίσεις σε ομάδες · χωρίς ειδοποιήσεις και σύνδεσμο My Territories'],
+  ['4.6','Οι αλλαγές γίνονται αμέσως και αποθηκεύονται στο παρασκήνιο, με ένδειξη «Αποθήκευση…» · δεν χάνονται αν κλείσεις την εφαρμογή'],
   ['4.5','Κάρτα PDF πολύ πιο γρήγορη (ετοιμάζεται μόλις ανοίξεις τον τομέα) · κουμπί Google Maps στη σελίδα του τομέα'],
   ['4.4','Κάρτα PDF στα χωριά: πιο έντονα ονόματα δρόμων, και στους στριφογυριστούς δρόμους'],
   ['4.3','Κάρτα PDF: κεντρικοί δρόμοι κίτρινοι, πολύ πιο καθαροί'],
@@ -2410,48 +2706,6 @@ var VLOG=[
   ['1.2','Έντυπο διορισμού (εκτύπωση) · κάρτα PDF'],
   ['1.1','Διόρθωση εγγραφών και αναίρεση'],
   ['1.0','Πρώτη έκδοση: χάρτης, τομείς, άτομα, παράδοση και επιστροφή']];
-function notifyHtml(){
-  var topic=String(D.settings.notify_ntfy||''), mail=String(D.settings.notify_email||'');
-  return '<h3>Ειδοποιήσεις στο κινητό</h3>'+
-    '<p class="hint" style="margin:0 0 8px">Ειδοποίηση όταν κάποιος ζητά τομέα, ζητά ανανέωση ή δηλώνει ολοκλήρωση.</p>'+
-    (topic?
-      '<div class="kv"><span>Κωδικός καναλιού</span><b class="code">'+esc(topic)+'</b></div>'+
-      '<ol class="nlist"><li>Εγκατάσταση της δωρεάν εφαρμογής <b>ntfy</b> '+
-        '(<a href="https://apps.apple.com/app/ntfy/id1625396347" target="_blank" rel="noopener">iPhone</a> · '+
-        '<a href="https://play.google.com/store/apps/details?id=io.heckel.ntfy" target="_blank" rel="noopener">Android</a>).</li>'+
-        '<li>Στο ntfy: <b>+</b> → επικόλληση του κωδικού → <b>Subscribe</b>. Να επιτραπούν οι ειδοποιήσεις.</li>'+
-        '<li>«Δοκιμή» για έλεγχο.</li></ol>'+
-      '<div class="btns"><button class="btn" id="nC">'+ic('link')+'Αντιγραφή κωδικού</button>'+
-        '<button class="btn" id="nT">'+ic('bell')+'Δοκιμή</button></div>'+
-      '<div class="btns"><button class="btn warn" id="nOff">'+ic('cancel')+'Διακοπή ειδοποιήσεων</button></div>'
-     :'<div class="btns"><button class="btn pri" id="nOn">'+ic('bell')+'Ενεργοποίηση στο κινητό</button></div>')+
-    '<label>Και με email <span style="text-transform:none;letter-spacing:0">(προαιρετικό)</span></label>'+
-    '<div class="srow"><input id="nE" type="email" placeholder="όνομα@gmail.com" value="'+esc(mail)+'">'+
-      '<button class="addsq" id="nES" title="Αποθήκευση email" style="margin:0;height:auto">'+ic('check')+'</button></div>';
-}
-function wireNotify(d){
-  var q=function(id){ return d.querySelector('#'+id); };
-  var save=function(pairs,msg,reopen){
-    postMany(pairs.map(function(p){ return {action:'saveSetting',key:p[0],value:p[1]}; }),function(){
-      toast(msg); if(reopen){ d.remove(); openSettings(); setTimeout(function(){
-        var c=document.querySelector('.scrim .card'); if(c) c.scrollTop=c.scrollHeight; },60); } });
-  };
-  var on=q('nOn'); if(on) on.onclick=function(){
-    var a='abcdefghjkmnpqrstuvwxyz23456789', c='th-';
-    for(var i=0;i<14;i++) c+=a[Math.floor(Math.random()*a.length)];
-    save([['notify_ntfy',c],['app_url',appUrl()]],'Ειδοποιήσεις ενεργές — ακολούθησε τα 3 βήματα',true); };
-  var cp=q('nC'); if(cp) cp.onclick=function(){ copy(String(D.settings.notify_ntfy)); toast('Ο κωδικός αντιγράφηκε'); };
-  var te=q('nT'); if(te) te.onclick=function(){ toast('Αποστολή δοκιμής…');
-    apiCall({action:'testNotify'}).then(function(j){ toast(j.sent?'Στάλθηκε — έλεγξε το κινητό':'Δεν στάλθηκε'); })
-      .catch(function(e){ toast(e.message); }); };
-  var off=q('nOff'); if(off) off.onclick=function(){ save([['notify_ntfy','']],'Οι ειδοποιήσεις σταμάτησαν',true); };
-  var es=q('nES'); if(es) es.onclick=function(){ var v=q('nE').value.trim();
-    if(v && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)){ toast('Το email δεν φαίνεται σωστό'); return; }
-    save([['notify_email',v],['app_url',appUrl()]],v?'Θα έρχεται και email':'Χωρίς email',false); };
-  [].forEach.call(d.querySelectorAll('[data-restore]'),function(b){ b.onclick=function(){
-    var id=b.getAttribute('data-restore'); b.disabled=true;
-    post({action:'saveTerritory',id:id,active:true},function(){ toast('Ο τομέας επανήλθε'); }); }; });
-}
 /* αποσυρμένοι τομείς: επαναφορά */
 function retiredHtml(){
   var r=D.territories.filter(function(t){ return String(t.active).toUpperCase()==='FALSE'; });
@@ -2460,41 +2714,73 @@ function retiredHtml(){
     return '<div class="kv"><span style="text-transform:none;letter-spacing:0;font-size:13.5px;color:var(--text)">'+esc(t.name||t.id)+'</span>'+
       '<b><button class="lnk" style="color:var(--accent);font-weight:600" data-restore="'+esc(t.id)+'">Επαναφορά</button></b></div>'; }).join('');
 }
-function openSettings(){
-  var withMap=D.territories.filter(function(t){ return t.mymaps_id; }).length, ok=0, bad=[];
+function sgrp(id,icon,title,body){
+  return '<section class="sgrp" id="g_'+id+'"><h4>'+ic(icon)+title+'</h4>'+body+'</section>'; }
+function numIn(id,lab,val,min,max,suf,step){
+  return '<div class="nin"><label for="'+id+'">'+lab+'</label><div class="nbox"><input type="number" id="'+id+'" value="'+val+'" min="'+min+'" max="'+max+'" step="'+(step||1)+'" inputmode="decimal"><span>'+suf+'</span></div></div>'; }
+function openSettings(focus){
+  var S=D.settings, withMap=D.territories.filter(function(t){ return t.mymaps_id; }).length, ok=0, bad=[];
   if(D.geo) D.territories.forEach(function(t){ if(!t.mymaps_id) return;
     var g=geoOf(t.id); if(g&&g.polygons&&g.polygons.length) ok++; else bad.push(t.id); });
-  var d=modal('<h2>Ρυθμίσεις</h2><div class="cs">Αποθηκεύονται στο φύλλο</div>'+
-    '<label>Μήνες κράτησης</label><input type="number" id="sH" value="'+D.settings.hold_months+'" min="1" max="24">'+
-    '<label>Μήνες μη διαθεσιμότητας</label><input type="number" id="sR" value="'+D.settings.rest_months+'" min="0" max="24">'+
-    '<label>Προειδοποίηση (ημέρες πριν)</label><input type="number" id="sW" value="'+D.settings.warn_days+'" min="0" max="90">'+
-    '<div class="btns" style="margin-top:16px"><button class="btn pri" id="sS">Αποθήκευση</button></div>'+
-    '<h3>Χάρτες</h3><div class="kv"><span>Φορτώθηκαν</span><b'+(bad.length?' style="color:var(--coral)"':'')+'>'+
-      (D.geo?ok+' από '+withMap:'—')+'</b></div>'+
-    (bad.length?'<div class="kv"><span>Πρόβλημα</span><b style="color:var(--coral)">'+bad.join(', ')+'</b></div>':'')+
-    '<div class="kv"><span>Ηλικία ορίων</span><b>'+(isFinite(geoAge())?durTxt(geoAge()/86400000):'—')+'</b></div>'+
-    '<div class="kv"><span>Τελευταίο κατέβασμα</span><b>'+
-      ((+localStorage.getItem('tomeis_geo_ms')||0)?Math.round(localStorage.getItem('tomeis_geo_ms')/1000)+' δευτ.':'—')+'</b></div>'+
-    '<p style="margin:8px 0 10px;font-size:12.5px;color:var(--faint);line-height:1.5">'+
-      'Η «Ανανέωση χαρτών» ξαναδιαβάζει τα όρια από το Google My Maps. Χρειάζεται μόνο '+
-      'όταν σχεδιάσεις νέο τομέα ή αλλάξεις ένα σχήμα — αλλιώς τα όρια κρατιούνται '+
-      'αποθηκευμένα για 6 ώρες για να ανοίγει γρήγορα η εφαρμογή.</p>'+
-    '<div class="btns" style="margin-top:2px"><button class="btn" id="sM">Ανανέωση χαρτών</button></div>'+
-    '<h3>Έκδοση</h3><div class="kv"><span>Territory Hub</span><b>v'+APP_VERSION+'</b></div>'+
-    '<div class="kv"><span>Script (Code.gs)</span><b'+(verNum(D.scriptVersion)<verNum(SCRIPT_NEEDS)?' style="color:var(--coral)"':'')+'>'+
-      (D.scriptVersion?'v'+D.scriptVersion:'παλιά έκδοση')+'</b></div>'+
-    (verNum(D.scriptVersion)<verNum(SCRIPT_NEEDS)?'<p class="hint" style="margin:6px 0 0">Χρειάζεται Code.gs v'+SCRIPT_NEEDS+' — '+
-      'επικόλλησε το νέο και κάνε Deploy → Manage deployments → New version.</p>':'')+
-    '<details class="vlog"><summary>Ιστορικό εκδόσεων</summary>'+VLOG.map(function(v){
-      return '<div><b>v'+v[0]+'</b><span>'+v[1]+'</span></div>'; }).join('')+'</details>'+
-    notifyHtml()+retiredHtml());
-  wireNotify(d);
-  d.querySelector('#sS').onclick=function(){
-    var v=[['hold_months',d.querySelector('#sH').value],['rest_months',d.querySelector('#sR').value],
-           ['warn_days',d.querySelector('#sW').value]]; d.remove();
-    postMany(v.map(function(x){ return {action:'saveSetting',key:x[0],value:x[1]}; }),function(){
-      refresh(); toast('Αποθηκεύτηκε'); }); };
-  d.querySelector('#sM').onclick=function(){ d.remove();
+  var v=coVisit();
+  var ls=null; try{ ls=JSON.parse(localStorage.getItem('tomeis_save_ms')||'null'); }catch(e){}
+  var sec=function(m){ return (m/1000).toFixed(1).replace('.',',')+' δευτ.'; };
+  var h='<h2 class="ht">'+ic('settings')+'Ρυθμίσεις</h2><div class="cs">Ισχύουν για όλους — αποθηκεύονται στο φύλλο</div>'+
+    sgrp('rules','map','Τομείς',
+      '<div class="s2">'+numIn('sH','Κράτηση',S.hold_months,1,24,'μήνες')+numIn('sR','Μη διαθέσιμος μετά',S.rest_months,0,24,'μήνες')+'</div>'+
+      '<div class="hint">Πόσο κρατάει κάποιος τον τομέα, και πόσο «ξεκουράζεται» ο τομέας μετά την επιστροφή.</div>')+
+    sgrp('rem','bell','Υπενθυμίσεις',
+      '<div class="s3">'+numIn('sC1','1ος έλεγχος',S.check1,0.5,24,'μήνες',0.5)+numIn('sC2','2ος έλεγχος',S.check2,0.5,24,'μήνες',0.5)+
+        numIn('sW','Πριν τη λήξη',S.warn_days,0,90,'ημέρες')+'</div>'+
+      '<div class="hint">Στο κουδούνι εμφανίζεται «Ρώτα αν τελείωσε» όταν κάποιος έχει τον τομέα τόσους μήνες, και ξανά λίγο πριν τη λήξη.</div>')+
+    sgrp('col','theme','Χρώματα χάρτη',
+      numIn('sA','Πιο σκούρο χρώμα από',S.age_max,S.rest_months+1,36,'μήνες')+
+      '<div class="lramp" style="margin-top:10px">'+[1,2,3,4,5].map(function(i){ return '<i style="background:var(--n'+i+')"></i>'; }).join('')+'</div>'+
+      '<div class="lramplab" id="sAl">'+bandLabels().map(function(x){ return '<span>'+x+'</span>'; }).join('')+'</div>'+
+      '<div class="hint">Μήνες από την τελευταία ολοκλήρωση. Ισχύει για τον χάρτη και τις λίστες.</div>')+
+    sgrp('co','people','Επίσκεψη επισκόπου περιοχής',
+      '<label for="sL">Τελευταία επίσκεψη</label><input type="date" id="sL" value="'+esc(String(S.co_last||'').slice(0,10))+'">'+
+      '<label for="sN">Επόμενη επίσκεψη <span style="text-transform:none;letter-spacing:0">(αν την ξέρεις)</span></label><input type="date" id="sN" value="'+esc(String(S.co_next||'').slice(0,10))+'">'+
+      '<div class="hint">Για την επόμενη γράψε τη Δευτέρα της εβδομάδας. Αν δεν την ξέρεις, υπολογίζεται 5½–6½ μήνες μετά την τελευταία.'+
+        (v&&!v.passed?'<br><b style="color:var(--text)">Τώρα: '+coWhen(v)+'</b>':'')+'</div>')+
+    '<div class="btns" style="margin-top:14px"><button class="btn pri" id="sS">'+ic('check')+'Αποθήκευση</button></div>'+
+    sgrp('maps','pin','Χάρτες',
+      '<div class="kv"><span>Φορτώθηκαν</span><b'+(bad.length?' style="color:var(--coral)"':'')+'>'+(D.geo?ok+' από '+withMap:'—')+'</b></div>'+
+      (bad.length?'<div class="kv"><span>Πρόβλημα</span><b style="color:var(--coral)">'+bad.join(', ')+'</b></div>':'')+
+      '<div class="kv"><span>Ηλικία ορίων</span><b>'+(isFinite(geoAge())?durTxt(geoAge()/86400000):'—')+'</b></div>'+
+      '<div class="hint">Η ανανέωση χρειάζεται μόνο όταν σχεδιάσεις νέο τομέα ή αλλάξεις σχήμα στο My Maps.</div>'+
+      '<div class="btns" style="margin-top:10px"><button class="btn" id="sM">'+ic('refresh')+'Ανανέωση χαρτών</button></div>')+
+    (retiredHtml()?sgrp('ret','cancel','Αποσυρμένοι τομείς',retiredHtml().replace(/^<h3>[^<]*<\/h3>/,'')):'')+
+    sgrp('info','open','Πληροφορίες',
+      '<div class="kv"><span>Territory Hub</span><b>v'+APP_VERSION+'</b></div>'+
+      '<div class="kv"><span>Script (Code.gs)</span><b'+(verNum(D.scriptVersion)<verNum(SCRIPT_NEEDS)?' style="color:var(--coral)"':'')+'>'+
+        (D.scriptVersion?'v'+D.scriptVersion:'παλιά έκδοση')+'</b></div>'+
+      (verNum(D.scriptVersion)<verNum(SCRIPT_NEEDS)?'<p class="hint" style="margin:6px 0 0">Χρειάζεται Code.gs v'+SCRIPT_NEEDS+' — '+
+        'επικόλλησε το νέο και κάνε Deploy → Manage deployments → New version.</p>':'')+
+      (ls?'<div class="kv"><span>Τελευταία αποθήκευση</span><b>'+sec(ls.ms)+(ls.srv&&ls.srv.total?' <small style="color:var(--faint);font-weight:500">· Google '+sec(ls.srv.total)+'</small>':'')+'</b></div>':'')+
+      '<details class="vlog"><summary>Ιστορικό εκδόσεων</summary>'+VLOG.map(function(x){
+        return '<div><b>v'+x[0]+'</b><span>'+x[1]+'</span></div>'; }).join('')+'</details>');
+  var d=modal(h);
+  var q=function(id){ return d.querySelector('#'+id); };
+  q('sA').oninput=function(){ var keep=D.settings.age_max; D.settings.age_max=+this.value||keep;
+    q('sAl').innerHTML=bandLabels().map(function(x){ return '<span>'+x+'</span>'; }).join(''); D.settings.age_max=keep; };
+  [].forEach.call(d.querySelectorAll('[data-restore]'),function(b){ b.onclick=function(){
+    var id=b.getAttribute('data-restore'); b.disabled=true;
+    post({action:'saveTerritory',id:id,active:true},function(){ toast('Ο τομέας επανήλθε'); }); }; });
+  q('sS').onclick=function(){
+    var num=function(id,min,max,def){ var x=parseFloat(String(q(id).value).replace(',','.')); return isFinite(x)?Math.min(max,Math.max(min,x)):def; };
+    var hold=num('sH',1,24,S.hold_months), rest=num('sR',0,24,S.rest_months);
+    var c1=num('sC1',.5,24,S.check1), c2=num('sC2',.5,24,S.check2); if(c2<c1){ var tmp=c1; c1=c2; c2=tmp; }
+    var v=[['hold_months',hold],['rest_months',rest],['warn_days',num('sW',0,90,S.warn_days)],
+      ['check1',c1],['check2',c2],['age_max',Math.max(rest+1,num('sA',1,36,S.age_max))],
+      ['co_last',q('sL').value||''],['co_next',q('sN').value||'']];
+    /* μόνο ό,τι άλλαξε */
+    v=v.filter(function(x){ return String(S[x[0]]===undefined?'':S[x[0]]).slice(0,10)!==String(x[1]); });
+    d.remove();
+    if(!v.length){ toast('Καμία αλλαγή'); return; }
+    postMany(v.map(function(x){ return {action:'saveSetting',key:x[0],value:x[1]}; }),function(){ toast('Αποθηκεύτηκε'); });
+    bump(); render(); };
+  q('sM').onclick=function(){ d.remove();
     toast('Ανανέωση χαρτών… μπορεί να πάρει ένα λεπτό');
     post({action:'refreshMaps'},function(){
       fetchGeo(function(){
@@ -2504,6 +2790,7 @@ function openSettings(){
                          :'Οι χάρτες ανανεώθηκαν');
       });
     }); };
+  if(focus){ var g=q('g_'+focus); if(g){ g.classList.add('hl'); setTimeout(function(){ g.scrollIntoView({block:'start'}); },50); } }
 }
 
 applyTheme();
