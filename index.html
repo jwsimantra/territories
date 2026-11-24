@@ -382,6 +382,13 @@ nav button.on .ico .mp{fill:var(--sheet);stroke:none}
 .ystats em{font-style:normal;color:var(--coral);font-weight:600}
 .ystats i{font-style:normal;color:var(--faint);font-size:11px;margin-left:4px}
 .vlog{margin-top:8px;font-size:12.5px}
+/* επίσκεψη επισκόπου: μία γραμμή στην αρχική */
+.cobar{display:flex;align-items:center;gap:9px;width:100%;text-align:left;margin:0 0 12px;padding:9px 12px;font-size:13px;color:var(--muted);
+  background:var(--sheet);border:1px solid var(--rule-soft);border-left:3px solid var(--blue);border-radius:10px}
+.cobar .ico{width:17px;height:17px;flex:0 0 auto}
+.cobar b{color:var(--text);font-weight:700}
+.cobar.ok{border-left-color:var(--accent)}
+.cobar.soft{border-left-color:var(--rule)}
 /* ρυθμίσεις σε ομάδες */
 .sgrp{background:var(--raised);border:1px solid var(--rule-soft);border-radius:14px;padding:12px 14px 14px;margin:12px 0}
 .sgrp.hl{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-wash)}
@@ -397,23 +404,6 @@ nav button.on .ico .mp{fill:var(--sheet);stroke:none}
 .nbox span{padding:0 10px 0 2px;font-size:12px;color:var(--faint);white-space:nowrap}
 .s3 .nbox span{padding-right:7px}
 /* κάρτες στην αρχική: επίσκεψη επισκόπου, έλεγχοι */
-.alert{display:flex;align-items:center;gap:11px;width:100%;text-align:left;margin:0 0 10px;padding:11px 13px;
-  background:var(--sheet);border:1px solid var(--rule-soft);border-left:4px solid var(--amber);border-radius:12px}
-.alert.co{border-left-color:var(--blue)}
-.cobar{display:flex;align-items:center;gap:9px;width:100%;text-align:left;margin:0 0 12px;padding:9px 12px;font-size:13px;color:var(--muted);
-  background:var(--sheet);border:1px solid var(--rule-soft);border-left:3px solid var(--blue);border-radius:10px}
-.cobar .ico{width:17px;height:17px;flex:0 0 auto}
-.cobar b{color:var(--text);font-weight:700}
-.cobar.ok{border-left-color:var(--accent)}
-.cobar.soft{border-left-color:var(--rule)}
-.alert.co.ok{border-left-color:var(--accent)}
-.alert.soft{border-left-color:var(--rule)}
-.alert b{display:block;font-size:13.5px;font-weight:700;line-height:1.3}
-.alert small{display:block;font-size:12px;color:var(--muted);margin-top:2px;line-height:1.35}
-.alert small em{font-style:normal;font-weight:800;color:var(--coral);font-size:13px}
-.alert .ai{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:0 0 auto;background:var(--raised);border:1px solid var(--rule)}
-.alert .ai .ico{width:19px;height:19px}
-@media (min-width:900px){ .alert{margin-bottom:12px} }
 .vlog summary{cursor:pointer;color:var(--accent);font-weight:600;padding:6px 0}
 .vlog div{display:flex;gap:10px;padding:6px 0;border-bottom:1px solid var(--rule-soft);color:var(--muted);line-height:1.4}
 .vlog b{flex:0 0 38px;color:var(--text)}
@@ -534,7 +524,7 @@ nav button.on .ico .mp{fill:var(--sheet);stroke:none}
       <button onclick="openSettings()" title="Ρυθμίσεις" aria-label="Ρυθμίσεις"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h9"/><path d="M19 7h1"/><path d="M4 17h3"/><path d="M13 17h7"/><circle class="d1" cx="16" cy="7" r="2.5"/><circle class="d1" cx="10" cy="17" r="2.5"/></svg></button>
     </div>
   </header>
-  <main id="main" data-ver="Territory Hub · v5.4"><div class="empty"><span class="spin"></span><br><br>Φόρτωση…</div></main>
+  <main id="main" data-ver="Territory Hub · v5.5"><div class="empty"><span class="spin"></span><br><br>Φόρτωση…</div></main>
   <nav>
     <button data-tab="map" class="on" onclick="go('map')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="d ns" d="M9 4l6 2.5V20l-6-2.5z"/><path d="M3 6.5 9 4l6 2.5L21 4v13.5L15 20l-6-2.5L3 20z"/><path d="M9 4v13.5"/><path d="M15 6.5V20"/></svg><span>Χάρτης</span></button>
     <button data-tab="list" onclick="go('list')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.3 L11.2 3.6 L12.4 11.2 L5.3 12.8 Z"/><path class="d1" d="M11.2 3.6 L20 5.3 L19.1 12 L12.4 11.2 Z"/><path d="M5.3 12.8 L12.4 11.2 L14.1 20.4 L4.4 20.4 Z"/><path class="d" d="M12.4 11.2 L19.1 12 L20 19.1 L14.1 20.4 Z"/></svg><span>Τομείς</span></button>
@@ -553,7 +543,7 @@ nav button.on .ico .mp{fill:var(--sheet);stroke:none}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-var APP_VERSION='5.4', SCRIPT_NEEDS='3.4';
+var APP_VERSION='5.5', SCRIPT_NEEDS='3.4';
 /* ==================================================================
    Η ΜΟΝΗ ΓΡΑΜΜΗ ΠΟΥ ΙΣΩΣ ΧΡΕΙΑΣΤΕΙ ΝΑ ΑΛΛΑΞΕΙΣ
    ================================================================== */
@@ -1110,32 +1100,25 @@ function reqText(r){
   if(r.kind==='waiting')  return '<b>'+esc(r.person)+'</b> · '+(isRenew(r)?'ανανέωση':'αίτηση')+' · '+esc(nm);
   return esc(r.person)+' — '+esc(nm);
 }
-/* Η διεύθυνση της σελίδας αιτήσεων βγαίνει από τη διεύθυνση αυτής εδώ:
-   .../index.html  ->  .../aitisi.html  (δουλεύει και σε υποφάκελο) */
-function pubUrl(){
+/* ο Πίνακας τομέων είναι δίπλα σε αυτό το αρχείο: .../index.html -> .../board.html */
+function boardUrl(){
   var u=location.href.split('#')[0].split('?')[0];
-  if(/\/[^\/]*\.html?$/i.test(u)) return u.replace(/\/[^\/]*\.html?$/i,'/aitisi.html');
-  return u.replace(/\/?$/,'/')+'aitisi.html';
+  return /\/[^\/]*\.html?$/i.test(u)?u.replace(/\/[^\/]*\.html?$/i,'/board.html'):u.replace(/\/?$/,'/')+'board.html';
 }
-function boardUrl(){ return pubUrl().replace(/aitisi\.html$/,'board.html'); }
 /* σύγκριση εκδόσεων 2.10 > 2.9 */
 function verNum(v){ var p=String(v||'0').split('.'); return (+p[0]||0)*1000+(+p[1]||0); }
 function appUrl(){ return location.href.split('#')[0].split('?')[0]; }
 var shareKind='board';
 function shareApp(kind){
   if(kind) shareKind=kind;
-  var pub=false, brd=shareKind==='board';
-  var url=pub?pubUrl():brd?boardUrl():appUrl();
-  var msg=pub
-    ? 'Σελίδα αιτήσεων τομέων:\n'+url+'\n\nΕπιλογή ονόματος την πρώτη φορά· μετά εμφανίζονται οι ελεύθεροι τομείς και οι δικοί σας.'
-    : brd ? 'Πίνακας τομέων — όλοι οι τομείς στον χάρτη:\n'+url
-    : 'Εφαρμογή διαχείρισης τομέων:\n'+url;
-  var ttl=pub?'Σελίδα αιτήσεων':brd?'Πίνακας τομέων':'Εφαρμογή διαχείρισης';
+  var brd=shareKind==='board', url=brd?boardUrl():appUrl();
+  var msg=brd?'Πίνακας τομέων — όλοι οι τομείς στον χάρτη:\n'+url:'Εφαρμογή διαχείρισης τομέων:\n'+url;
+  var ttl=brd?'Πίνακας τομέων':'Εφαρμογή διαχείρισης';
   var d=modal('<h2>Κοινοποίηση</h2>'+
     '<div class="seg" style="margin:6px 0 12px">'+
       '<button class="'+(brd?'on':'')+'" id="kB">Πίνακας</button>'+
-      '<button class="'+(pub||brd?'':'on')+'" id="kA">Διαχείριση</button></div>'+
-    '<div class="cs">'+(pub?'Χωρίς κωδικό — μόνο προβολή και αιτήσεις':brd?'Χάρτης όλων των τομέων — μόνο προβολή'
+      '<button class="'+(brd?'':'on')+'" id="kA">Διαχείριση</button></div>'+
+    '<div class="cs">'+(brd?'Χάρτης όλων των τομέων — μόνο προβολή'
       :'<b style="color:var(--coral)">Πλήρης πρόσβαση</b> — μόνο σε όσους βοηθούν στη διαχείριση')+'</div>'+
     '<div style="background:var(--raised);border:1px solid var(--rule);border-radius:10px;'+
       'padding:12px 14px;font-size:13px;word-break:break-all;margin-bottom:14px">'+esc(url)+'</div>'+
@@ -1145,10 +1128,10 @@ function shareApp(kind){
       '<small>Για επικόλληση όπου θέλεις</small></div></button>'+
     '<button class="opt" id="aQ"><span class="ic">'+ic('qr')+'</span><div><b>QR κωδικός</b>'+
       '<small>Σάρωση με την κάμερα</small></div></button>'+
-    (pub||brd?'<button class="opt" id="aO"><span class="ic">'+ic('open')+'</span><div><b>Άνοιγμα</b>'+
-      '<small>Προβολή '+(brd?'του Πίνακα τομέων':'της σελίδας αιτήσεων')+'</small></div></button>':''));
+    (brd?'<button class="opt" id="aO"><span class="ic">'+ic('open')+'</span><div><b>Άνοιγμα</b>'+
+      '<small>Προβολή του Πίνακα τομέων</small></div></button>':''));
   d.querySelector('#kB').onclick=function(){ if(!brd){ d.remove(); shareApp('board'); } };
-  d.querySelector('#kA').onclick=function(){ if(pub||brd){ d.remove(); shareApp('app'); } };
+  d.querySelector('#kA').onclick=function(){ if(brd){ d.remove(); shareApp('app'); } };
   d.querySelector('#aS').onclick=function(){ d.remove();
     if(navigator.share) navigator.share({title:'Τομείς',text:msg}).catch(function(){});
     else { copy(msg); toast('Αντιγράφηκε'); } };
@@ -1237,11 +1220,6 @@ function pendingChecks(){
 function checkWhy(t){ var s=t.s, st=checkStage(s);
   if(st===3) return s.daysLeft<0?'εκπρόθεσμος '+durTxt(s.daysLeft):'λήγει σε '+durTxt(s.daysLeft);
   return 'τον έχει '+monthsTxt(s.daysHeld/30.44); }
-function checksCard(){
-  var n=pendingChecks().length; if(!n) return '';
-  return '<button class="alert" onclick="openRequests()"><span class="ai">'+ic('bell')+'</span><div><b>'+n+
-    (n===1?' τομέας':' τομείς')+' για έλεγχο</b><small>Ρώτα αν τελείωσαν — πάτησε για τη λίστα</small></div></button>';
-}
 function checksHtml(){
   var cs=pendingChecks(); if(!cs.length) return '';
   var h='<h3>Ρώτα αν τελείωσαν</h3>';
@@ -1284,8 +1262,6 @@ function coNeed(v){
       return !(isOut(t.s)&&t.s.dueOn<=v.from); })
     .sort(function(a,b){ return lastDone(a).localeCompare(lastDone(b)); });
 }
-/* ως πότε πρέπει να δοθούν για να προλάβουν (επίσκεψη − μήνες κράτησης) */
-function coGiveBy(v){ return addM(v.from,-D.settings.hold_months); }
 function coWhen(v){
   var o={day:'numeric',month:'short'}, y=v.to.getFullYear();
   var span=v.from.toLocaleDateString('el-GR',o)+' – '+v.to.toLocaleDateString('el-GR',o)+' '+y;
@@ -1303,19 +1279,25 @@ function coCard(){
 }
 function openCo(){
   var v=coVisit(); if(!v) return openSettings('co');
-  var need=coNeed(v);
+  var need=coNeed(v), by={};
+  need.forEach(function(t){ (by[t.town]=by[t.town]||[]).push(t); });
+  var towns=Object.keys(by).sort(function(a,b){ return by[b].length-by[a].length||a.localeCompare(b,'el'); });
   var h='<h2 class="ht">'+ic('people')+'Επίσκεψη επισκόπου</h2><div class="cs">'+coWhen(v)+'</div>';
   if(!need.length) h+='<div class="empty" style="padding:22px 0">Όλοι ολοκληρωμένοι ✓</div>';
   else {
-    h+='<div class="cs" style="margin-top:-8px">'+need.length+(need.length===1?' τομέας να ολοκληρωθεί':' τομείς να ολοκληρωθούν')+'</div>';
-    need.forEach(function(t){ var s=t.s;
-      h+='<button class="row" onclick="closeCo();open_(\''+t.id+'\')">'+
-        '<div class="thumb">'+miniSvg(inTown(t.town),52,44,t.id)+'</div>'+
-        '<div class="info"><div class="nm">'+esc(t.name)+'</div>'+
-        (isOut(s)?'<div class="dt" style="color:var(--blue)">'+esc(s.holder)+'</div>':'')+'</div></button>'; });
+    h+='<div class="cs" style="margin-top:-8px">'+need.length+(need.length===1?' τομέας να ολοκληρωθεί':' τομείς να ολοκληρωθούν')+'</div><div class="tiles">';
+    towns.forEach(function(n,i){ var list=inTown(n), k=by[n].length;
+      h+='<button class="tile" onclick="closeCo();openTown(\''+esc(n)+'\')">'+
+        '<div class="mini" data-co="'+i+'">'+miniSvg(list,150,96)+'</div><div class="ft">'+
+        '<div class="tn">'+esc(n)+'</div><div class="tc"><b style="color:var(--text);font-size:12px">'+k+'</b> από '+list.length+' να ολοκληρωθούν</div>'+
+        '<div class="bars">'+list.map(function(t){ return '<i style="background:'+colMode(t.s)+'"></i>'; }).join('')+'</div></div></button>'; });
+    h+='</div>';
   }
   h+='<div class="btns" style="margin-top:16px"><button class="btn" onclick="closeCo()">Κλείσιμο</button></div>';
   var m=modal(h); m.classList.add('co');
+  /* χάρτης φόντου στις μικρογραφίες, όπως στην αρχική */
+  [].forEach.call(m.querySelectorAll('.mini[data-co]'),function(el){ var n=towns[+el.getAttribute('data-co')];
+    el.innerHTML=miniTiles(inTown(n),el.clientWidth||150,el.clientHeight||96); });
 }
 function closeCo(){ document.querySelectorAll('.scrim.co').forEach(function(e){ e.remove(); }); }
 
@@ -2689,6 +2671,7 @@ function buildReport(y){
 }
 /* Ιστορικό εκδόσεων: πρώτος αριθμός = μεγάλη αλλαγή, δεύτερος = βελτίωση */
 var VLOG=[
+  ['5.5','Επίσκεψη επισκόπου: λίστα ανά περιοχή με μικρό χάρτη · καθάρισμα κώδικα'],
   ['5.4','Επίσκεψη επισκόπου: ξανά όπως στην 5.2 — οι δοσμένοι που λήγουν πριν την επίσκεψη δεν μετράνε'],
   ['5.2','Διόρθωση ημερομηνιών στο iPhone · λίστα επίσκεψης επισκόπου με εικονίδια τομέων'],
   ['5.1','Επίσκεψη επισκόπου: μετράει ότι κάθε τομέας θέλει έως 4 μήνες · πιο μικρή κάρτα και λιτή λίστα · ο χρόνος κάλυψης μετριέται μόνος του (εκτός αν «Αβέβαιο») · κλείσιμο ειδοποιήσεων χωρίς απάντηση'],

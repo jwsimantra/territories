@@ -745,17 +745,10 @@ header{flex:0 0 auto;background:var(--ground);border-bottom:1px solid var(--soft
 .tools{margin-left:auto;display:flex;align-items:center;gap:2px}
 .icon{width:38px;height:38px;border:0;background:none;border-radius:10px;display:grid;place-items:center;cursor:pointer;color:var(--text);text-decoration:none}
 .icon:hover{background:var(--raised)}
-.req{display:flex;align-items:center;gap:8px;margin-left:4px;padding:7px 12px 7px 10px;border-radius:12px;background:var(--accent);color:var(--accent-ink);text-decoration:none;white-space:nowrap;box-shadow:0 6px 16px -8px var(--accent)}
-.req b{display:block;font-size:14px;font-weight:800;line-height:1.1}
-.req small{display:block;font-size:10px;font-weight:600;opacity:.8;line-height:1.2}
-.req svg.ic{width:22px;height:22px}
-.req svg.ic .d{fill:var(--accent-ink);fill-opacity:.3}
 .row2{display:flex;gap:8px}
 .seg{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--raised);border:1px solid var(--rule);border-radius:10px;padding:2px}
 .seg a,.seg button{text-align:center;padding:8px 6px;border-radius:8px;border:0;background:none;text-decoration:none;color:var(--muted);font-weight:600;font-size:14.5px;cursor:pointer}
 .seg [aria-current="page"],.seg [aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);font-weight:700}
-.mine{display:flex;align-items:center;gap:7px;color:var(--text);text-decoration:none;padding:0 12px;border-radius:10px;border:1px solid var(--rule);background:var(--sheet);font-weight:600;font-size:14px;cursor:pointer;white-space:nowrap}
-.mine[aria-pressed="true"]{border-color:var(--accent);background:var(--wash);color:var(--accent)}
 
 .stage{position:relative;flex:1 1 auto;min-height:0}
 #map{position:absolute;inset:0;background:var(--paper);
@@ -870,11 +863,6 @@ body.boardmode .locate,body.boardmode .hint,body.boardmode .fake{display:none}
 .btn.pri svg.ic .d{fill:var(--accent-ink);fill-opacity:.35}
 .btn.wide{grid-column:1/-1}
 .btn[disabled]{opacity:.6;cursor:progress}
-.reqbtn{display:flex;align-items:center;gap:12px;margin-top:10px;padding:13px 14px;border-radius:14px;border:2px solid var(--accent);background:var(--wash);color:var(--text);text-decoration:none}
-.reqbtn svg.ic{width:26px;height:26px;color:var(--accent)}
-.reqbtn b{display:block;font-size:16px;font-weight:800;color:var(--accent)}
-.reqbtn small{display:block;font-size:12.5px;color:var(--muted)}
-.reqbtn .go{margin-left:auto;font-size:20px;font-weight:700;color:var(--accent)}
 .reqnote{margin:14px 0 0;font-size:13px;color:var(--muted);display:flex;gap:8px;align-items:flex-start}
 .reqnote a{color:var(--accent);font-weight:600}
 .soonlist{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
@@ -948,7 +936,7 @@ body.boardmode .locate,body.boardmode .hint,body.boardmode .fake{display:none}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
 // ▼▼ Paste the address of your Apps Script web app (the same one the Hub uses) between the quotes ▼▼
-const BOARD_VERSION = '1.8';
+const BOARD_VERSION = '1.9';
 const API_URL = 'https://script.google.com/macros/s/AKfycbwRUO7Zf1Ngkx3HSNbu1DjIjPaAo2RWF8MSYGdJZIZeLDE3k5Nk_gogN6YNIiYw8ffi/exec';
 /* οι άλλες σελίδες είναι στον ίδιο φάκελο με αυτή — έτσι οι σύνδεσμοι δουλεύουν όπου κι αν ανέβει */
 const HERE = location.href.split('#')[0].split('?')[0].replace(/[^\/]*$/, '');
@@ -1062,7 +1050,6 @@ function loadSizes(fromSheet){
   document.documentElement.style.setProperty('--map-num', SIZES.mapNum + 'px');
 }
 loadSizes();
-const needR = n => Math.max(11 * SIZES.mapNum / 15, String(n).length * SIZES.mapNum * .34 + 4);
 /* θέση έξω από τον τομέα που δεν πέφτει πάνω σε άλλον αριθμό: δοκιμάζει γωνίες γύρω από την κατεύθυνση «προς τα έξω» */
 const overlaps = (b, boxes) => boxes.some(o => b[0] < o[2] && b[2] > o[0] && b[1] < o[3] && b[3] > o[1]);
 function placeOut(c, P, d, w, h, gap, boxes){
@@ -1198,9 +1185,8 @@ function buildLayers(){
   });
 }
 buildLayers();
-const leaders = L.layerGroup().addTo(map);
 function placeLabels(){
-  const z = map.getZoom(); leaders.clearLayers();
+  const z = map.getZoom();
   /* όσο απομακρύνεσαι, τα σήματα μικραίνουν ώστε να μην πέφτουν το ένα πάνω στο άλλο (όχι κάτω από 9 px) */
   const rs = Object.values(T).filter(t => t.ll && t.label).map(t => innerR(merc(t.lp[0], t.lp[1], z), t.ll.map(p => merc(p[0], p[1], z)))).sort((a, b) => a - b);
   const med = rs.length ? rs[Math.floor(rs.length * .4)] : 99, full = SIZES.mapNum * 1.15;
